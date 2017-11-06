@@ -5,12 +5,13 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public class PictureGeneratorScript : MonoBehaviour {
+public class PictureGeneratorScript : MonoBehaviour
+{
 
     private string basePath = "Assets/Resources\\";
     private List<string> paths = new List<string>();
 
-	public void GeneratePictures() {
+    public void GeneratePictures() {
         Debug.Log("Generating Pictures");
 
         TraverseMap("Assets/Resources");
@@ -19,7 +20,7 @@ public class PictureGeneratorScript : MonoBehaviour {
     private void TraverseMap(string path) {
 
         try {
-            foreach (string s in Directory.GetDirectories(path)) {
+            foreach(string s in Directory.GetDirectories(path)) {
                 TraverseMap(s);
             }
             foreach(string s in Directory.GetFiles(path)) {
@@ -29,8 +30,7 @@ public class PictureGeneratorScript : MonoBehaviour {
                 }
             }
             ChangeSettings();
-    }
-        catch (Exception e){
+        } catch(Exception e) {
             Debug.Log("Caught exception: " + e.ToString());
         }
     }
@@ -38,12 +38,14 @@ public class PictureGeneratorScript : MonoBehaviour {
     private void ChangeSettings() {
         AssetDatabase.Refresh();
 
-        foreach (string relPath in paths) {
+        foreach(string relPath in paths) {
             AssetDatabase.ImportAsset(relPath);
             TextureImporter importer = AssetImporter.GetAtPath(relPath) as TextureImporter;
-            if (importer) {
+            if(importer) {
                 importer.textureType = TextureImporterType.Sprite;
-            } 
+                importer.spriteImportMode = SpriteImportMode.Single;
+                importer.SaveAndReimport();
+            }
             AssetDatabase.WriteImportSettingsIfDirty(relPath);
         }
     }
@@ -51,7 +53,7 @@ public class PictureGeneratorScript : MonoBehaviour {
     private void GeneratePNG(string path, string dir) {
 
         int subLength = basePath.Length;
-        
+
         string sub = path.Remove(path.Length - 7, 7);
         string prefabName = sub.Remove(0, dir.Length + 1);
         sub = sub.Remove(0, subLength);
@@ -62,7 +64,7 @@ public class PictureGeneratorScript : MonoBehaviour {
             if(preview) {
                 preview.alphaIsTransparency = true;
                 //Sprite sprite = Sprite.Create(preview, new Rect(0.0f, 0.0f, preview.width, preview.height), new Vector2(0.5f, 0.5f));
-               
+
                 byte[] bytes = preview.EncodeToPNG();
 
                 string dataPath = Application.dataPath;
@@ -81,5 +83,5 @@ public class PictureGeneratorScript : MonoBehaviour {
         } else {
             Debug.Log("Preview object is null");
         }
-     }
+    }
 }

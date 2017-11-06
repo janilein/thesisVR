@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 222334641607389282}
   - component: {fileID: 114069163962621860}
   - component: {fileID: 114850033210445076}
+  - component: {fileID: 114281198204069252}
   m_Layer: 5
   m_Name: UISpawnButton
   m_TagString: Untagged
@@ -73,6 +74,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114281198204069252
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1865092019546692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bdfa2fd064e7324692fd9d4c80c47f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114504826216392690
 MonoBehaviour:
   m_ObjectHideFlags: 1

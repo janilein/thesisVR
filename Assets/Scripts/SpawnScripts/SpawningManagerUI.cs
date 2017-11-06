@@ -6,10 +6,13 @@
     using System.Collections.Generic;
     using System.IO;
     using UnityEngine;
+    using UnityEngine.Events;
+    using UnityEngine.EventSystems;
     using UnityEngine.UI;
 
     public class SpawningManagerUI : SpawningManager {
         public GameObject button;
+        EventTrigger eventTrigger = null;
 
         private void Awake() {
             Manager = GameObject.Find("GUI").transform.GetComponent<UIManager>();
@@ -51,6 +54,7 @@
                         buttonObj.GetComponentInChildren<Text>().text = activeObjects[y].name;
                         buttonObj.transform.name = y.ToString();
                         tempButton.onClick.AddListener(() => ObjectButtonClicked(temp));
+                        //tempButton.OnPointerEnter
                     }
                 }
             } else {

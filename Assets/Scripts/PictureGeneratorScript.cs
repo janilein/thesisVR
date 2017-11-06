@@ -8,6 +8,7 @@ using UnityEngine;
 public class PictureGeneratorScript : MonoBehaviour {
 
     private string basePath = "Assets/Resources\\";
+    private List<string> paths = new List<string>();
 
 	public void GeneratePictures() {
         Debug.Log("Generating Pictures");
@@ -18,7 +19,7 @@ public class PictureGeneratorScript : MonoBehaviour {
     private void TraverseMap(string path) {
 
         try {
-            foreach(string s in Directory.GetDirectories(path)) {
+            foreach (string s in Directory.GetDirectories(path)) {
                 TraverseMap(s);
             }
             foreach(string s in Directory.GetFiles(path)) {
@@ -27,9 +28,23 @@ public class PictureGeneratorScript : MonoBehaviour {
                     GeneratePNG(s, path);
                 }
             }
-        }
+            ChangeSettings();
+    }
         catch (Exception e){
             Debug.Log("Caught exception: " + e.ToString());
+        }
+    }
+
+    private void ChangeSettings() {
+        AssetDatabase.Refresh();
+
+        foreach (string relPath in paths) {
+            AssetDatabase.ImportAsset(relPath);
+            TextureImporter importer = AssetImporter.GetAtPath(relPath) as TextureImporter;
+            if (importer) {
+                importer.textureType = TextureImporterType.Sprite;
+            } 
+            AssetDatabase.WriteImportSettingsIfDirty(relPath);
         }
     }
 
@@ -46,15 +61,20 @@ public class PictureGeneratorScript : MonoBehaviour {
             Texture2D preview = AssetPreview.GetAssetPreview(previewObject);
             if(preview) {
                 preview.alphaIsTransparency = true;
-
+                //Sprite sprite = Sprite.Create(preview, new Rect(0.0f, 0.0f, preview.width, preview.height), new Vector2(0.5f, 0.5f));
+               
                 byte[] bytes = preview.EncodeToPNG();
 
                 string dataPath = Application.dataPath;
                 dataPath = dataPath.Substring(0, dataPath.Length - 7);  //Remove "Assets" part
                 dataPath += "/" + dir + "/" + prefabName + ".png";
+                //dataPath += "/" + dir + "/" + prefabName + ".asset";
 
-                //Debug.Log("Final datapath: " + dataPath);
+                ////Debug.Log("Final datapath: " + dataPath);
                 System.IO.File.WriteAllBytes(dataPath, bytes);
+                string relPath = dir + "/" + prefabName + ".png";
+                paths.Add(relPath);
+                //AssetDatabase.CreateAsset(sprite, dataPath);
             } else {
                 Debug.Log("Preview texture is null");
             }

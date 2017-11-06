@@ -46,6 +46,10 @@
             LoadAllObjects();
         }
 
+        public string GetActivePart() {
+            return this.activePart;
+        }
+
         protected virtual void LoadNextButtons(bool down) {
        
         }

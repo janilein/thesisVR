@@ -12,7 +12,7 @@
 
     public class SpawningManagerUI : SpawningManager {
         public GameObject button;
-        EventTrigger eventTrigger = null;
+        //EventTrigger eventTrigger = null;
 
         private void Awake() {
             Manager = GameObject.Find("GUI").transform.GetComponent<UIManager>();

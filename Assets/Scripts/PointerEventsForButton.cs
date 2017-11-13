@@ -26,15 +26,17 @@ public class PointerEventsForButton : MonoBehaviour, IPointerEnterHandler , IPoi
         string enteredButton = enteredObject.transform.GetComponentInChildren<Text>().text;
         string activePart = spawningManager.GetActivePart();
         //Debug.Log("Active part: " + activePart);
-        string loadPath = activePart + "/Sprites/" + enteredButton;
+        string loadPath = activePart + "/" + enteredButton;
         Debug.Log("Load path: " + loadPath);
         //Sprite sprite = Resources.Load(loadPath) as Sprite ;
         var sprite = Resources.Load<Sprite>(loadPath);
-        if (sprite) {
+        if (!sprite) {
             Debug.Log("Sprite is null");
+        } else {
+            Debug.Log("Sprite not null: " + sprite.ToString());
+            preview.GetComponent<Image>().sprite = sprite;
+            preview.GetComponent<SpriteRenderer>().sprite = sprite;
         }
-        preview.GetComponent<Image>().sprite = sprite;
-        preview.GetComponent<SpriteRenderer>().sprite = sprite;
 
         Debug.Log("entered button: " + enteredButton);
     }

@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.IO;
     using UnityEngine;
+    using UnityEngine.UI;
 
     public class SpawningManagerHover : SpawningManager {
 
@@ -181,10 +182,24 @@
                         dataSelector.Id = objectIndex.ToString();
                         dataSelector.Label = ((GameObject)activeObjects[objectIndex]).name;
                         dataSelector.IsEnabled = true;
+
+                        string loadPath = activePart + "/" + ((GameObject)activeObjects[objectIndex]).name;
+                        var sprite = Resources.Load<Sprite>(loadPath);
+                        if (!sprite) {
+                            Debug.Log("Sprite null");
+                        } else {
+                            GameObject image = t.Find("HoverAlphaButtonRectRenderer-Default/Canvas/Image").gameObject;
+                            image.SetActive(true);
+                            image.GetComponent<Image>().sprite = sprite;
+                            image.GetComponent<SpriteRenderer>().sprite = sprite;
+                        }
+
                     } else {
                         dataSelector.Id = "";
                         dataSelector.Label = "";
                         dataSelector.IsEnabled = false;
+                        GameObject image = t.Find("HoverAlphaButtonRectRenderer-Default/Canvas/Image").gameObject;
+                        image.SetActive(false);
 
                     }
                     objectIndex++;

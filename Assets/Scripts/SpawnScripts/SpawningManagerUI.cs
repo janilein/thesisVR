@@ -41,6 +41,7 @@
                     if (category) {
                         buttonObj.GetComponentInChildren<Text>().text = resourceFolders[y];
                         buttonObj.transform.name = resourceFolders[y];
+                        buttonObj.GetComponent<PointerEventsForButton>().enabled = false;
 
                         DirectoryInfo dir = new DirectoryInfo("Assets/Resources/" + resourceFolders[y]);
                         FileInfo[] info = dir.GetFiles("*.*");

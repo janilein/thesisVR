@@ -1,0 +1,2 @@
+type:huis
+kleur:bruin

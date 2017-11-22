@@ -56,6 +56,9 @@ public class ObjectManager : MonoBehaviour {
 
     public static void SetAndLockGameObject(GameObject newObject) {
         instance.previousObject = null;
+        if (instance.currentObject && instance.currentObject.tag.Equals("Highlightable")) {
+            instance.currentObject.GetComponent<SelectableObject>().RemoveHighlight();
+        }
         instance.currentObject = newObject;
         LockCurrentObject();
 

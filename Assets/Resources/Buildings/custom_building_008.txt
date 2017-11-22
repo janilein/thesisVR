@@ -1,2 +1,28 @@
-type:huis
-kleur:blauw
+{
+	"type":"appartement",
+	"standalone":[
+		{
+			"verdiepingen":2
+		}
+	],
+	"attr":[
+		{
+			"type":"verdieping",
+			"standalone":[
+					{
+						"etage":1
+						"kleur":"blauw"
+					}
+			]
+		},
+		{
+			"type":"verdieping",
+			"standalone":[
+					{
+						"etage":2
+						"kleur":"groen"
+					}
+			]
+		}
+	]
+}

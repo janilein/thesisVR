@@ -33,7 +33,7 @@ public class HashtableParser {
     }
 
     //This function reads all lines in a file given a certain (relative) path to the file, get called from ConstructDictionary();
-    public List<string> GetFileLines(string path) { //CHANGED PRIVATE STATIC -> LOOK IN TO THIS
+    private static List<string> GetFileLines(string path) { 
         try {
             string[] stringArray = System.IO.File.ReadAllLines(path);
             List<string> stringList = new List<string>(stringArray);  //Convert string[] to List<string>
@@ -95,91 +95,51 @@ public class HashtableParser {
     public void PrintHashTable(Hashtable o) {
         this.objectID = 0;
         worldObjects = new List<WorldObject>();
-        PrintObject(o);
+        ParseTable(o);
     }
 
-    private void PrintObject(Hashtable o, int levelOfDepth = 0, int parentID = -1, WorldObject parentObject = null) {   //We use levelOfDepth to see how deep we are in the tree structure (or in your mom)
-                                                                                                                        //parentID is to link leaf to branch or branch to branch, root has parentID = -1 and parentObject null
-        bool isLeaf = true;
-        int myID = objectID++;
-        WorldObject newParent = null;
+    private void ParseTable(Hashtable o, WorldObject parent = null) {
+        bool isLeaf = o.ContainsKey("attr") ? false : true;
 
-        //Check if hashtable contains an attribute (meaning it is a branch)
-        if (o.ContainsKey("attr")) {
-            isLeaf = false;
-        }
-
-        foreach (DictionaryEntry entry in o) { //Wait with doing the attributes till the last moment because the order is inversed (see above)
-                                               //Reason for this is that we first need to have the parent for all attr children, so attr should be dealt with latest
-
-            if (!entry.Key.Equals("attr")) {    //Key is not attr, check what it is then, see if dictionary contains the key
-                List<string> valueList = new List<string>();
-
-                //Check if key is in dictionary
-                if (!dictionary.TryGetValue((string)entry.Key, out valueList)) { //Dictionary does not contain key
-                    Debug.Log("#### Key " + "\"" + (string)entry.Key + "\"" + " not found in dictionary ####");
+        if (isLeaf) {
+            if (parent != null) {
+                foreach (DictionaryEntry entry in o) {
+                    parent.AddDirectAttribute((string)entry.Key, (string)entry.Value);
                 }
-
-                //For now, we don't take into account whether or not the dictionary contains/allows a certain Key / Value, just put it in the WorldObject
-                newParent = new WorldObject((string)entry.Key, (string)entry.Value, myID, isLeaf, parentObject, parentID);
-                worldObjects.Add(newParent);
-
-                if (parentObject == null) {
-                    this.rootObject = newParent; //Root does not have a parent
-                }
+            } else {
+                Debug.Log("Leaf has no parent");
             }
-        }
-        if (!isLeaf) {  //If it's not a leaf, means it still has attributes.
-                        //If we get key = "attr" it means we have to go 1 level deeper. In the arraylist is just another hashtable, so get it out
-            System.Object entry = null;
-            ArrayList list;
-            try {
-                entry = o["attr"];
-                list = (ArrayList)entry;    //Get ArrayList out of the Hashtable
-            } catch (Exception exc) {
-                Debug.Log("Could not cast attr to arraylist, information:");
-                Debug.Log('\t' + "Value: " + entry.ToString());
-                Debug.Log('\t' + "Level of depth: " + levelOfDepth);
-                Debug.Log('\t' + exc.Message);
-                return;
+        } else {    //Not a leaf
+            WorldObject newParent = null; //Parent to add children to in next recursion
+
+            foreach (DictionaryEntry entry in o) {  //Loop over entries in hashtable
+                if (!entry.Key.Equals("attr")) {    //Only consider whatever is not attr
+                    WorldObject worldObject = new WorldObject((string)entry.Key, (string)entry.Value);
+                    newParent = worldObject;
+                    worldObject.SetParent(parent);
+                    if (parent != null) { 
+                        parent.AddChild(worldObject);   //Add the newly made worldObject as child to its parent
+                    } else {
+                        rootObject = worldObject;
+                        Debug.Log("new worldobject has no parent");
+                    }
+               }
             }
 
-            foreach (System.Object obj in list) {  //ArrayList containt Hashtable(s)
-                try {   //try to cast the objects in it to Hashtable
-                    Hashtable table = (Hashtable)obj;
-                    PrintObject(table, levelOfDepth + 1, myID, newParent);
-                } catch (Exception exc) { //Cast failed, what object it is then?
-                    Debug.Log("Cast to hashtable failed, object: " + obj.ToString());
-                    Debug.Log(exc.Message);
-                }
+            //Consider the attr part
+            System.Object attr = o["attr"];         //Returns value for key = "attr", is ArrayList with Hashtables
+            ArrayList attrList = (ArrayList)attr;   //Cast to arraylist
+            foreach (Hashtable table in attrList) { //Loop over all hashtables in the arraylist
+                ParseTable(table, newParent);
             }
-        }
-    }
-
-    /*For each WorldObject, set the correct children.
-     * At time of creating the WorldObjects, only the parents are known,
-     * so know the children must be added to the parents
-     */
-    public void LinkWorldObjects() {
-        if (worldObjects == null || worldObjects.Count == 0) {
-            Debug.Log("No WorldObjects exist");
-            return;
-        }
-
-        foreach (WorldObject obj in worldObjects) {
-            //Set children correctly
-            WorldObject parentObject = obj.GetParent();
-            if (parentObject == null)   //Root does not have a parent object
-                continue;
-
-            parentObject.AddChild(obj);
         }
     }
 
     //Is called as last step in Main (Program) to show all constructed WorldObject
     public void PrintWorldObjects() {
         if (this.rootObject != null)
-            rootObject.PrintWorldObject();
+            //rootObject.PrintWorldObject();
+            rootObject.PrintObjectInfo();
         else
             Debug.Log("rootObject is null");
     }

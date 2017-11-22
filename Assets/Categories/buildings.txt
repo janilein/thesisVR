@@ -1,4 +1,2 @@
 huis
-kerk
-flat
 appartement

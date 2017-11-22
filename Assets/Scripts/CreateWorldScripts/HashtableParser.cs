@@ -7,8 +7,6 @@ using UnityEngine;
 
 public class HashtableParser {
     private Dictionary<string, List<string>> dictionary;
-    private int objectID = 0;
-    private List<WorldObject> worldObjects;
     private WorldObject rootObject = null;
 
     public HashtableParser() {
@@ -93,8 +91,6 @@ public class HashtableParser {
 
     //Is the first function that is called from Main (Program) to convert the converted JSON (which has been converted to Hashtable) to the WorldObjects
     public void PrintHashTable(Hashtable o) {
-        this.objectID = 0;
-        worldObjects = new List<WorldObject>();
         ParseTable(o);
     }
 
@@ -104,33 +100,62 @@ public class HashtableParser {
         if (isLeaf) {
             if (parent != null) {
                 foreach (DictionaryEntry entry in o) {
-                    parent.AddDirectAttribute((string)entry.Key, (string)entry.Value);
+
+                    //Check if key-value exists in a certain dictionary
+                    string key = (string)entry.Key;
+                    string value = (string)entry.Value;
+                    bool allowKeyValuePair = CheckAllowedPair(key, value);
+
+                    if (allowKeyValuePair) {
+                        Debug.Log("Key " + key + " Value " + value + " allowed by dictionary (isLeaf)");
+                        parent.AddDirectAttribute(key, value);
+                    } else {
+                        Debug.Log("Key " + key + " Value " + value + " not allowed by dictionary (isLeaf)");
+                    }
                 }
             } else {
-                Debug.Log("Leaf has no parent");
+                Debug.Log("Leaf has no parent -------------------");
+                foreach(DictionaryEntry entry in o) {
+                    Debug.Log("Key: " + (string)entry.Key + " value: " + (string)entry.Value);
+                }
+                Debug.Log("-----------------");
             }
         } else {    //Not a leaf
             WorldObject newParent = null; //Parent to add children to in next recursion
+            bool allowKeyValuePair = false;
 
             foreach (DictionaryEntry entry in o) {  //Loop over entries in hashtable
                 if (!entry.Key.Equals("attr")) {    //Only consider whatever is not attr
-                    WorldObject worldObject = new WorldObject((string)entry.Key, (string)entry.Value);
-                    newParent = worldObject;
-                    worldObject.SetParent(parent);
-                    if (parent != null) { 
-                        parent.AddChild(worldObject);   //Add the newly made worldObject as child to its parent
+
+                    string key = (string)entry.Key;
+                    string value = (string)entry.Value;
+                    allowKeyValuePair = allowKeyValuePair || CheckAllowedPair(key, value);
+
+                    if (allowKeyValuePair) {
+                        Debug.Log("Key " + key + " Value " + value + " allowed by dictionary (is no leaf)");
+                        WorldObject worldObject = new WorldObject(key, value);
+                        newParent = worldObject;
+                        worldObject.SetParent(parent);
+                        if (parent != null) {
+                            parent.AddChild(worldObject);   //Add the newly made worldObject as child to its parent
+                        } else {
+                            rootObject = worldObject;
+                            Debug.Log("new worldobject has no parent");
+                        }
                     } else {
-                        rootObject = worldObject;
-                        Debug.Log("new worldobject has no parent");
+                        Debug.Log("Key " + key + " Value " + value + " NOT allowed by dictionary (is no leaf)");
                     }
                }
             }
 
-            //Consider the attr part
-            System.Object attr = o["attr"];         //Returns value for key = "attr", is ArrayList with Hashtables
-            ArrayList attrList = (ArrayList)attr;   //Cast to arraylist
-            foreach (Hashtable table in attrList) { //Loop over all hashtables in the arraylist
-                ParseTable(table, newParent);
+            //Only consider the attr part if the main part was allowed
+            if (allowKeyValuePair) {
+                //Consider the attr part
+                System.Object attr = o["attr"];         //Returns value for key = "attr", is ArrayList with Hashtables
+                ArrayList attrList = (ArrayList)attr;   //Cast to arraylist
+                foreach (Hashtable table in attrList) { //Loop over all hashtables in the arraylist
+                    ParseTable(table, newParent);
+                }
             }
         }
     }
@@ -153,6 +178,28 @@ public class HashtableParser {
             }
         }
         return true;
+    }
+
+    private bool CheckAllowedPair(string key, string value) {
+        if (dictionary.ContainsKey(key)) {
+            List<string> values = dictionary[key];
+            if (values.Contains(value)) {
+                return true;   //This key value pair is allowed by the dictionary
+            }
+        } else if (dictionary.ContainsKey("other")) {   //In the 'other' dict, the value doesn't matter, only the key (e.g. for floors, as to not create a 'floor' dict with values 1, 2, 3, ...
+            Debug.Log("\"other\" dict contains key " + key);
+            return true;
+        }
+        return false;
+    }
+
+    public string SearchBestFit() {
+        if(rootObject != null) {
+            return rootObject.SearchBestFit();
+        } else {
+            Debug.Log("Search best fit: rootobject is null");
+            return null;
+        }
     }
 
 }

@@ -2,7 +2,7 @@
 	"type":"appartement",
 	"standalone":[
 		{
-			"verdiepingen":1
+			"verdiepingen":"1"
 		}
 	],
 	"attr":[
@@ -10,7 +10,7 @@
 			"type":"verdieping",
 			"standalone":[
 					{
-						"etage":1
+						"etage":"1",
 						"kleur":"rood"
 					}
 			]

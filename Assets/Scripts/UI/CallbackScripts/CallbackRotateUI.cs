@@ -19,9 +19,6 @@
             sliderRoll = GameObject.Find("GUI/Canvas/RotateButtons/SliderRoll/Slider").GetComponent<Slider>();
             sliderYaw = GameObject.Find("GUI/Canvas/RotateButtons/SliderYaw/Slider").GetComponent<Slider>();
 
-            //Add callback listeners
-            //AddCallbacks();
-
             degreesTextPitch = GameObject.Find("GUI/Canvas/RotateButtons/SliderPitch/Text").GetComponent<Text>();
             degreesTextRoll = GameObject.Find("GUI/Canvas/RotateButtons/SliderRoll/Text").GetComponent<Text>();
             degreesTextYaw = GameObject.Find("GUI/Canvas/RotateButtons/SliderYaw/Text").GetComponent<Text>();

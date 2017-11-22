@@ -1,3 +1,7 @@
 floor
 roof
 verdieping
+etage
+dak
+floors
+verdiepingen

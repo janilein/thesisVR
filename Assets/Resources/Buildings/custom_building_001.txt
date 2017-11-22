@@ -2,7 +2,7 @@
 	"type":"huis",
 	"standalone":[
 		{
-			"verdiepingen":2
+			"verdiepingen":"2"
 		}
 	],
 	"attr":[
@@ -10,7 +10,7 @@
 			"type":"verdieping",
 			"standalone":[
 					{
-						"etage":1
+						"etage":"1",
 						"kleur":"rood"
 					}
 			]
@@ -19,7 +19,7 @@
 			"type":"verdieping",
 			"standalone":[
 					{
-						"etage":2
+						"etage":"2",
 						"kleur":"blauw"
 					}
 			]

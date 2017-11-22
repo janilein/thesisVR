@@ -71,9 +71,9 @@ public class ObjectManager : MonoBehaviour {
             //Debug.Log("GameObject set");
 
             if (!instance.lockedObject && !instance.lockedObjectDeleted) {
-                Debug.Log("lockedObject not null");
+                //Debug.Log("lockedObject not null");
                 if (instance.currentObject != instance.previousObject) {
-                    Debug.Log("current not null & not equal to previous");
+                    //Debug.Log("current not null & not equal to previous");
                     if (instance.previousObject && instance.previousObject.tag.Equals("Highlightable")) {
                         instance.previousObject.GetComponent<SelectableObject>().RemoveHighlight();
                     }

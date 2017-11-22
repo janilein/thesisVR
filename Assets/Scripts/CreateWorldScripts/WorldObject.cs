@@ -58,38 +58,70 @@ public class WorldObject{
 
     public string SearchBestFit() {
         string path = SearchCompatibleRoots();
-        string bestFit = null;
+        Debug.Log("Compatible roots: " + path);
+        List<string> bestFit = null;
+        List<string> bestFitRelative = new List<string>();
         Hashtable poss = null;
         if (path != null) {
             poss = SearchTopTypeInRoot(path);
             if(poss != null) {
                 WorldObject child = children[0];
                 bestFit = child.SearchBestFitFromPossibilities(poss);
+                if (bestFit != null) {
+                    Debug.Log("Best fit not null");
+                    foreach (string s in bestFit) {
+                        Debug.Log("Best fit possibility: " + s);
+                        Debug.Log("Datapath: " + Application.dataPath);
+                        bestFitRelative.Add(GetRelativePath(s));
+                    }
+                } else {
+                    Debug.Log("Best fit null");
+                    return null;
+                }
             } else {
                 Debug.Log("No top type possibilities found.");
+                return null;
             }
         } else {
             Debug.Log("No compatible root found.");
+            return null;
         }
-        return bestFit;
+        return bestFitRelative[0];  //For now
     }
 
+    private string GetRelativePath(string s) {
+        string absolutePath = Application.dataPath; //To assets folder
+        int absolutePathLength = absolutePath.Length;
+        //The "/Resources/" has to be added
+        absolutePathLength += "/Resources/".Length;
+        //Debug.Log("s length: " + s.Length + " abs length: " + absolutePathLength);
+        string relativePath = s.Substring(absolutePathLength, s.Length - absolutePathLength - 1 - 3);
+        //Debug.Log("Relativepath: " + relativePath);
+        return relativePath;
+    }
+
+    //First filter, based on the main category (buildings, roads, ...). This is the very top element (root) in WorldObject
     private string SearchCompatibleRoots() {
         string path = null;
 
         //search top for possible matches
-        DirectoryInfo dir = new DirectoryInfo("Assets/Resources");
-        FileInfo[] info = dir.GetFiles("*.*");
+        //DirectoryInfo dir = new DirectoryInfo("Assets/Resources");
+        string startPath = "Assets\\Resources";
+        string[] dirs = Directory.GetDirectories(startPath);
+        //FileInfo[] info = dir.GetFiles("*.*");
 
-        foreach (FileInfo f in info) {
-            if (f.Name.Substring(0, f.Name.Length - 5).ToLower().Equals(this.GetObjectValue())) {
-                path = f.FullName;
-                break;
+        //Debug.Log("dirs -------------------");
+        foreach(string s in dirs) {
+            //Get actual folder name, without path to it
+            string folder = s.Substring(startPath.Length + 1, s.Length - startPath.Length - 1);
+            if (folder.ToLower().Equals(this.GetObjectValue().ToLower())) {
+                path = s;
             }
         }
         return path;
     }
 
+    //Second filter, checks the type of the child of the root. This is e.g. 'house', 'appartment', ...
     private Hashtable SearchTopTypeInRoot(string path) {
 
         WorldObject child = null;
@@ -99,36 +131,46 @@ public class WorldObject{
             Debug.Log(e.Message);
             return null;
         }
-
         DirectoryInfo dir = new DirectoryInfo(path);
         FileInfo[] info = dir.GetFiles("*.txt");
 
         List<string> possibilities = new List<string>(); //filenames of possible top type matches
 
         foreach (FileInfo f in info) {
+            //Debug.Log("f name: " + f.Name);
+            //Debug.Log("f fullname: " + f.FullName);
+            //Debug.Log("Txt file: " + f.Name);
             string[] lines = File.ReadAllLines(f.FullName);
             string firstLine = lines[1];
             int index = firstLine.IndexOf(":");
             if (index == -1) {
-                Debug.Log("Description file is corrupt. No use of ':'.");
-                return null;
+                Debug.Log("Description file is corrupt. No use of ':'. Name: " + f.FullName);
             }
-            if (firstLine.Substring(0, index).Equals("type")) {
-                string childValue = "\"" + child.GetObjectValue() + "\"";
-                Debug.Log("Root child type value: " + childValue);
-                if (firstLine.Substring(index + 1, firstLine.Length - index - 1).Equals(childValue)) {
-                    possibilities.Add(f.FullName);
+            string type = "\"type\"";
+            try {
+                string typeLine = firstLine.Substring(index - 6, 6);
+                //Debug.Log("typeLine: " + typeLine);
+                if (typeLine.Equals(type)) {
+                    string childValue = "\"" + child.GetObjectValue() + "\"";
+                    //Debug.Log("Root child type value: " + childValue);
+                    string typeValue = firstLine.Substring(index + 1, firstLine.Length - index - 2);
+                    //Debug.Log("typeValue: " + typeValue);
+                    if (typeValue.Equals(childValue)) { 
+                        possibilities.Add(f.FullName);
+                    }
+                } else {
+                    Debug.Log("Description file is corrupt. Not started with type. Name: " + f.FullName);
                 }
-            } else {
-                Debug.Log("Description file is corrupt. Not started with type.");
-                return null;
+            } catch (Exception e) {
+                Debug.Log(e.Message);
             }
         }
-
         Hashtable pathJSON = new Hashtable();
         foreach (string s in possibilities) {
+            Debug.Log("Possibility: " + s);
             string text = File.ReadAllText(s);
             bool success = false;
+            Debug.Log("Pllll");
             Hashtable o = (Hashtable)JSON.JsonDecode(text, ref success);
             if (!success) {
                 Debug.Log("Parse failed");
@@ -138,33 +180,43 @@ public class WorldObject{
                 pathJSON.Add(list, o);
             }
         }
-
+        Debug.Log("SearchTopTypeInRoot returned " + pathJSON.Count + "possibilities");
         return pathJSON;
     }
 
-    private string SearchBestFitFromPossibilities(Hashtable poss){
+    //Iterative step. Based on your own leafs, filter using the standalone variables. Then pass to children
+    public List<string> SearchBestFitFromPossibilities(Hashtable poss){
+        Debug.Log("Search best fit type: " + this.GetObjectType());
+        Debug.Log("Search best fit value: " + this.GetObjectValue());
 
         List<DictionaryEntry> entriesToRemove = new List<DictionaryEntry>();
 
         foreach (DictionaryEntry possJSON in poss) {
             bool shnioké = false;
             Hashtable jsonString = (Hashtable) possJSON.Value;
-            Hashtable standaloneTable = (Hashtable)jsonString["standalone"];
-
-            if (standaloneTable != null) {
-                foreach (DictionaryEntry entry in standaloneTable) {
-                    Debug.Log("Entry key: " + entry.Key + " value: " + entry.Value);
-                    if (directAttributes.Contains(entry.Key)) {
-                        string entryValue = (string)entry.Value;
-                        string myValue = (string)directAttributes[entry.Key];
-                        if (!entryValue.Equals(myValue)) {
-                            shnioké = true;
-                            break;
+            ArrayList standaloneList = (ArrayList)(jsonString["standalone"]);
+            foreach (Hashtable standaloneTable in standaloneList) {
+                if (standaloneTable != null) {
+                    foreach (DictionaryEntry entry in standaloneTable) {
+                        Debug.Log("Entry key: " + entry.Key + " value: " + entry.Value);
+                        if (directAttributes.Contains(entry.Key)) {
+                            Debug.Log("DirectAttributes contains key " + entry.Key);
+                            string entryValue = (string)entry.Value;
+                            string myValue = (string)directAttributes[entry.Key];
+                            if (!entryValue.Equals(myValue)) {
+                                Debug.Log("Shnioke");
+                                Debug.Log("My value: " + myValue);
+                                Debug.Log("Entry value: " + entryValue);
+                                shnioké = true;
+                                break;
+                            }
+                        } else {
+                            Debug.Log("DirectAttributes does NOT contain key " + entry.Key);
                         }
                     }
+                } else {
+                    Debug.Log("Standalone table null");
                 }
-            } else {
-                Debug.Log("Standalone table null");
             }
 
             if (shnioké) {
@@ -179,12 +231,60 @@ public class WorldObject{
         if(poss.Count == 0) {
             Debug.Log("Poss count 0");
             return null;
-        }
 
-        if (HasChildren()) {
-            Debug.Log("has children");
         } else {
-            Debug.Log("has no children");
+
+            if (HasChildren()) {
+                Debug.Log("has children");
+
+                Debug.Log("Poss count: " + poss.Count);
+
+                //Create new poss list
+                Hashtable newPoss = new Hashtable();
+                List<string> pathList;
+                foreach (DictionaryEntry entry in poss) {
+                    Debug.Log("Entry key: " + entry.Key);
+                    Debug.Log("Entry Value: " + entry.Value);
+                    ArrayList attr = (ArrayList)(((Hashtable)entry.Value)["attr"]);
+                    if (attr != null) {
+                        foreach (Hashtable table in attr) {
+                            pathList = new List<string>();
+
+                            pathList.Add((string)((List<string>)entry.Key)[0]);
+                            newPoss.Add(pathList, table);
+                        }
+                    } else {
+                        Debug.Log("Attr is null");
+                    }
+
+                }
+                //Print the newly made table
+                Debug.Log("New poss ---------------");
+                foreach (DictionaryEntry entry in newPoss) {
+                    Debug.Log("Key: " + (((List<string>)entry.Key)[0]) + " Value: " + entry.Value);
+                }
+
+                //For all children, try it with all attrs
+                List<string> possibilities = new List<string>();
+                List<string> result;
+                foreach (WorldObject child in GetChildren()) {
+                    result = child.SearchBestFitFromPossibilities(newPoss);
+                    foreach(string s in result) {
+                        possibilities.Add(s);
+                    }
+                    return possibilities;
+                }
+            } else {
+                Debug.Log("has no children");
+                List<string> possibilities = new List<string>();
+                List<string> result;
+                foreach(DictionaryEntry entry in poss) {
+                    result = (List<string>)entry.Key;
+                    Debug.Log("Adding to result: " + result[0]);
+                    possibilities.Add(result[0]);
+                } 
+                return possibilities;
+            }
         }
         return null;
     }

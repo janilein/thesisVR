@@ -10,7 +10,8 @@ public class WorldObject{
     private string objectType;
     private string objectValue;
     private List<WorldObject> children;     //Children with children
-    private Hashtable directAttributes { get; set; }     //Children without children
+    public Hashtable directAttributes { get; set; }     //Children without children
+    //private Hashtable defaultValues { get; set; }       //default values read in from dictionary file
     private WorldObject parent;
 
     public WorldObject(string objectType = null, string objectValue = null) {
@@ -37,7 +38,7 @@ public class WorldObject{
     }
 
     public void AddDirectAttribute(string key, string value) {
-        this.directAttributes.Add(key, value);
+        this.directAttributes[key] = value;
     }
 
     public void AddChild(WorldObject child) {

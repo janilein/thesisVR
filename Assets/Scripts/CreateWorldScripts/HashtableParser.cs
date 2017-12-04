@@ -10,7 +10,7 @@ public class HashtableParser {
     private WorldObject rootObject = null;
 
     public HashtableParser() {
-        ConstructDictionary();
+        dictionary = new Dictionary<string, List<string>>();
     }
 
     public WorldObject getRootObject() {
@@ -18,14 +18,16 @@ public class HashtableParser {
     }
 
     //This function finds all TXT files in the Dictionary folder. Get called from ConstructDictionary();
-    private static Hashtable FindFiles() {
+    private static Hashtable FindFiles(string basePath) {
         Hashtable table = new Hashtable();  //Hashtable with key = path, and value = name
 
-        DirectoryInfo dir = new DirectoryInfo("Assets/Dictionaries");
+        DirectoryInfo dir = new DirectoryInfo(basePath);
         FileInfo[] info = dir.GetFiles("*.txt");
-        Debug.Log(info.Length);
+        //Debug.Log(info.Length);
         foreach (FileInfo f in info) {
-            table[f.FullName] = f.Name.Substring(0, f.Name.Length - 4); ;
+            if (!f.Name.Equals("defaults.txt")){
+                table[f.FullName] = f.Name.Substring(0, f.Name.Length - 4); ;
+            }
         }
         return table;
     }
@@ -55,9 +57,9 @@ public class HashtableParser {
     }
 
     //This is called in the constructor, initializes the dictionary and calls FindFiles() and GetFileLines()
-    private void ConstructDictionary() {
+    private void ConstructDictionary(string basePath) {
 
-        Hashtable files = FindFiles();
+        Hashtable files = FindFiles(basePath);
         if (files == null) {
             Debug.Log("Files was null");
             return;
@@ -94,8 +96,9 @@ public class HashtableParser {
         ParseTable(o);
     }
 
-    private void ParseTable(Hashtable o, WorldObject parent = null) {
-        bool isLeaf = o.ContainsKey("attr") ? false : true;
+    private void ParseTable(Hashtable o, WorldObject parent = null, string basePath = "Assets/Dictionaries") {
+        LoadDictionary(basePath);
+        bool isLeaf = o.ContainsKey("type") ? false : true;
 
         if (isLeaf) {
             if (parent != null) {
@@ -130,8 +133,8 @@ public class HashtableParser {
                     string key = (string)entry.Key;
                     string value = (string)entry.Value;
                     allowKeyValuePair = allowKeyValuePair || CheckAllowedPair(key, value);
-
                     if (allowKeyValuePair) {
+
                         Debug.Log("Key " + key + " Value " + value + " allowed by dictionary (is no leaf)");
                         WorldObject worldObject = new WorldObject(key, value);
                         newParent = worldObject;
@@ -151,13 +154,45 @@ public class HashtableParser {
             //Only consider the attr part if the main part was allowed
             if (allowKeyValuePair) {
                 //Consider the attr part
-                System.Object attr = o["attr"];         //Returns value for key = "attr", is ArrayList with Hashtables
-                ArrayList attrList = (ArrayList)attr;   //Cast to arraylist
-                foreach (Hashtable table in attrList) { //Loop over all hashtables in the arraylist
-                    ParseTable(table, newParent);
+                string newBasePath = basePath + "/" + newParent.GetObjectValue();
+                SetDefaultValues(newParent, newBasePath);
+                if (o.ContainsKey("attr")) {
+                    System.Object attr = o["attr"];         //Returns value for key = "attr", is ArrayList with Hashtables
+                    ArrayList attrList = (ArrayList)attr;   //Cast to arraylist
+                    
+                    foreach (Hashtable table in attrList) { //Loop over all hashtables in the arraylist
+                        ParseTable(table, newParent, newBasePath);
+                    }
                 }
             }
         }
+    }
+
+    private void SetDefaultValues(WorldObject obj, string basePath) {
+        basePath += "/defaults.txt";
+        List<string> lines = null;
+        lines = GetFileLines(basePath);
+
+        if (lines != null) {
+            foreach (string s in lines) {
+                int index = s.IndexOf(":");
+                if (index == -1) {
+                    Debug.Log("Description file is corrupt. No use of ':'. Name: " + basePath);
+                } else {
+                    string key = s.Substring(0, index);
+                    string value = s.Substring(index + 1, s.Length - index - 1);
+                    Debug.Log("Key: " + key);
+                    Debug.Log("Value: " + value);
+                    obj.AddDirectAttribute(key, value);
+                }
+
+            }
+        }
+    }
+
+    private void LoadDictionary(string basePath) {
+        dictionary.Clear();
+        ConstructDictionary(basePath);
     }
 
     //Is called as last step in Main (Program) to show all constructed WorldObject

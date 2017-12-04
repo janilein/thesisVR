@@ -1,0 +1,3 @@
+color:brown
+floors:4
+roofType:flat

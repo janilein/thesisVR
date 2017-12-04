@@ -1,6 +1,2 @@
-huis
-kerk
-flat
-appartement
 buildings
-verdieping
+streets

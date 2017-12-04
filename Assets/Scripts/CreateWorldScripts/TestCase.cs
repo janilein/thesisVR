@@ -46,28 +46,36 @@ public class TestCase : MonoBehaviour {
                     new JProperty("type", "buildings"),
                     new JProperty("attr", new JArray(
                         new JObject(
-                            new JProperty("type", "appartement"),
+                            new JProperty("type", "apartment"),
                             new JProperty("attr", new JArray(
                                 new JObject(
-                                    new JProperty("verdiepingen", "2"),
-                                    new JProperty("kleur", "blauw")
+                                    new JProperty("floors", "2"),
+                                    new JProperty("color", "blue")
                                     ),
                                 new JObject(
-                                    new JProperty("type", "verdieping"),
+                                    new JProperty("type", "floor"),
                                     new JProperty("attr", new JArray(
                                         new JObject(
-                                            new JProperty("etage", "1"),
-                                            new JProperty("kleur", "groen")
+                                            new JProperty("level", "1"),
+                                            new JProperty("color", "green")
                                             )
                                     )
                                     )
                                 ),
                                 new JObject(
-                                    new JProperty("type", "verdieping"),
+                                    new JProperty("type", "floor"),
                                     new JProperty("attr", new JArray(
                                         new JObject(
-                                            new JProperty("etage", "2"),
-                                            new JProperty("kleur", "geel")
+                                            new JProperty("level", "2"),
+                                            new JProperty("color", "yellow")
+                                            )
+                                        ))
+                                    ),
+                                new JObject(
+                                    new JProperty("type", "roof"),
+                                    new JProperty("attr", new JArray(
+                                        new JObject(
+                                            new JProperty("roofType", "pointy")
                                             )
                                         ))
                                     )
@@ -94,16 +102,17 @@ public class TestCase : MonoBehaviour {
         o = (Hashtable)JSON.JsonDecode(rss.ToString(), ref successParse);
 
         HashtableParser hashParser = new HashtableParser();
-        hashParser.PrintHashTable(o);   //Convert the hashtable to WorldObjects
+        hashParser.PrintHashTable(o);     //Convert the hashtable to WorldObjects
         //hashParser.LinkWorldObjects();  //Link the WorldObjects (set correct children)
         hashParser.PrintWorldObjects();
-        string path = hashParser.SearchBestFit();
-        //WorldObject root = hashParser.getRootObject();
+        //string path = hashParser.SearchBestFit();
+        WorldObject root = hashParser.getRootObject();
+        root.GenerateWorldObject();
         //string path = root.SearchCompatibleGameObject();
-        if (path != null) {
-            //Debug.Log("Spawn path: " + path);
-            GameObject instance = Instantiate(Resources.Load(path, typeof(GameObject)), new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-        }
+        //if (path != null) {
+        //    //Debug.Log("Spawn path: " + path);
+        //    GameObject instance = Instantiate(Resources.Load(path, typeof(GameObject)), new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        //}
         //hashParser.PrintWorldObjects(); //Print all WorldObjects to proofread
     }
 }

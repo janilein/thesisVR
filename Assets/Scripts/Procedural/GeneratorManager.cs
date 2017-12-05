@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GeneratorManager : MonoBehaviour{
+public class GeneratorManager {
 
-	public GameObject GenerateWorldObject(WorldObject obj) {
+	public void GenerateWorldObject(WorldObject obj) {
 
         if (obj.GetObjectValue().Equals("buildings")) {
             Debug.Log("parent is buildings");
@@ -14,6 +14,6 @@ public class GeneratorManager : MonoBehaviour{
             Debug.Log("ne marche pas");
         }
 
-        return null;
+        return;
     }
 }

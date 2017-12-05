@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class Generator {
 
-    public abstract void GenerateWorldObject(WorldObject obj);
+    public void GenerateWorldObject(WorldObject obj) { }
 }

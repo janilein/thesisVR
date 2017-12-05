@@ -67,7 +67,7 @@
                     if (CategoryIndexInRange()) {
                         dataSelector.Id = resourceFolders[categoryIndex];
                         dataSelector.Label = resourceFolders[categoryIndex];
-                        DirectoryInfo dir = new DirectoryInfo("Assets/Resources/" + resourceFolders[categoryIndex]);
+                        DirectoryInfo dir = new DirectoryInfo("Assets/Resources/SpawnResources/" + resourceFolders[categoryIndex]);
                         FileInfo[] info = dir.GetFiles("*.*");
                         if (info.Length != 0) {
                             dataSelector.IsEnabled = true;

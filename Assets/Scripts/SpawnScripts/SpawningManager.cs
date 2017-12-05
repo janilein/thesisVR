@@ -23,7 +23,7 @@
 
 
     protected void InstantiateSpawnButtons() {
-            DirectoryInfo dir = new DirectoryInfo("Assets/Resources");
+            DirectoryInfo dir = new DirectoryInfo("Assets/Resources/SpawnResources");
             FileInfo[] info = dir.GetFiles("*.*");
             resourceFolders = new string[info.Length];
 
@@ -41,7 +41,7 @@
         }
 
         protected void SetActivePart(string newActivePart) {
-            activePart = newActivePart;
+            activePart = "SpawnResources/" + newActivePart;
             LoadAllObjects();
         }
 

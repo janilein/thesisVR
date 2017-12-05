@@ -43,7 +43,7 @@
                         buttonObj.transform.name = resourceFolders[y];
                         buttonObj.GetComponent<PointerEventsForButton>().enabled = false;
 
-                        DirectoryInfo dir = new DirectoryInfo("Assets/Resources/" + resourceFolders[y]);
+                        DirectoryInfo dir = new DirectoryInfo("Assets/Resources/SpawnResources/" + resourceFolders[y]);
                         FileInfo[] info = dir.GetFiles("*.*");
                         if (info.Length != 0) {
                             tempButton.onClick.AddListener(() => CategoryButtonClicked(resourceFolders[temp]));

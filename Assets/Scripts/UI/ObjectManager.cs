@@ -138,7 +138,9 @@ public class ObjectManager : MonoBehaviour {
     }
 
     public static void RotateObject(Vector3 rotateValue) {
-        instance.lockedObject.transform.Rotate(rotateValue);
+        if (instance.lockedObject) {
+            instance.lockedObject.transform.Rotate(rotateValue);
+        }
     }
 
     public static void UndoChanges() {

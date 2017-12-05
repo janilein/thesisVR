@@ -1,2 +1,2 @@
-color:blue
+color:green
 roofType:flat

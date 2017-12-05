@@ -87,16 +87,6 @@ public class TestCase : MonoBehaviour {
                         )
         );
 
-        //JObject rss =
-        //        new JObject(
-        //            new JProperty("type", "buildings"),
-        //            new JProperty("attr", new JArray(
-        //                new JObject(
-        //                    new JProperty("type", "huis"),
-        //                    new JProperty("attr", new JArray(
-        //                        new JObject(
-        //                            new JProperty("kleur", "blauw"))))))));
-
         Debug.Log(rss.ToString());
         bool successParse = true;
         o = (Hashtable)JSON.JsonDecode(rss.ToString(), ref successParse);
@@ -107,12 +97,15 @@ public class TestCase : MonoBehaviour {
         hashParser.PrintWorldObjects();
         //string path = hashParser.SearchBestFit();
         WorldObject root = hashParser.getRootObject();
-        root.GenerateWorldObject();
+        //root.GenerateWorldObject();
         //string path = root.SearchCompatibleGameObject();
         //if (path != null) {
         //    //Debug.Log("Spawn path: " + path);
         //    GameObject instance = Instantiate(Resources.Load(path, typeof(GameObject)), new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         //}
         //hashParser.PrintWorldObjects(); //Print all WorldObjects to proofread
+        Debug.Log("Starting to generate");
+        GeneratorManager manager = new GeneratorManager();
+        manager.GenerateWorldObject(root);
     }
 }

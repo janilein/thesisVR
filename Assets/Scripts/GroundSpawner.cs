@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundSpawner : MonoBehaviour {
+public class GroundSpawner : MonoBehaviour{
 
     public GameObject ground;
 

@@ -1,2 +1,1 @@
-color:blue
 floors:2

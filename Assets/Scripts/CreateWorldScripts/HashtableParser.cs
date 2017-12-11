@@ -8,6 +8,8 @@ using UnityEngine;
 public class HashtableParser {
     private Dictionary<string, List<string>> dictionary;
     private WorldObject rootObject = null;
+    //private Hashtable specifiedDefaults;
+    //private int count = 0;
 
     public HashtableParser() {
         dictionary = new Dictionary<string, List<string>>();
@@ -123,6 +125,9 @@ public class HashtableParser {
                 }
                 Debug.Log("-----------------");
             }
+            //if (count == 2) {
+            //    specifiedDefaults = parent.directAttributes;
+            //}
         } else {    //Not a leaf
             WorldObject newParent = null; //Parent to add children to in next recursion
             bool allowKeyValuePair = false;
@@ -145,6 +150,7 @@ public class HashtableParser {
                             rootObject = worldObject;
                             Debug.Log("new worldobject has no parent");
                         }
+                        //count++;
                     } else {
                         Debug.Log("Key " + key + " Value " + value + " NOT allowed by dictionary (is no leaf)");
                     }
@@ -183,7 +189,15 @@ public class HashtableParser {
                     string value = s.Substring(index + 1, s.Length - index - 1);
                     Debug.Log("Key: " + key);
                     Debug.Log("Value: " + value);
-                    obj.AddDirectAttribute(key, value);
+                    //if (count > 2) {
+                    //    if (specifiedDefaults.Contains(key)) {
+                    //        obj.AddDirectAttribute(key, (string)specifiedDefaults[key]);
+                    //    } else {
+                    //        obj.AddDirectAttribute(key, value);
+                    //    }
+                    //} else {
+                        obj.AddDirectAttribute(key, value);
+                    //}
                 }
 
             }
@@ -222,8 +236,13 @@ public class HashtableParser {
                 return true;   //This key value pair is allowed by the dictionary
             }
         } else if (dictionary.ContainsKey("other")) {   //In the 'other' dict, the value doesn't matter, only the key (e.g. for floors, as to not create a 'floor' dict with values 1, 2, 3, ...
-            Debug.Log("\"other\" dict contains key " + key);
-            return true;
+            List<string> values = dictionary["other"];
+            if (values.Contains(key)) {
+                Debug.Log("\"other\" dict contains key " + key);
+                return true;
+            } else {
+                Debug.Log("\"other\" dict does not contain key " + key);
+            }
         }
         return false;
     }

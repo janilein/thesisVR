@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class Generator {
 
-    public void GenerateWorldObject(WorldObject obj) { }
+    public virtual void GenerateWorldObject(WorldObject obj) { }
 }

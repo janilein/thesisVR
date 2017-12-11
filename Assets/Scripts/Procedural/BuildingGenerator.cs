@@ -13,10 +13,12 @@ public class BuildingGenerator : Generator {
         bounds = new Hashtable();
     }
 
-    public void GenerateWorldObject(WorldObject obj) {
+    public override void GenerateWorldObject(WorldObject obj) {
         //Spawning appartment or house or ...? (For defaults)
         typeOfBuilding = obj.GetObjectValue();
         Debug.Log("Type of building: " + typeOfBuilding);
+
+        Hashtable specifiedDefaults = obj.directAttributes;
 
         bounds.Clear();
 
@@ -59,7 +61,7 @@ public class BuildingGenerator : Generator {
                     Int32.TryParse((string)childAttributes["level"], out floorNumber);
                     if (floorNumbersToGenerate.Contains(floorNumber)) {
                         floorNumbersToGenerate.Remove(floorNumber);
-                        Hashtable floorBounds = GenerateFloor(child, parentTransform);
+                        Hashtable floorBounds = GenerateFloor(child, parentTransform, specifiedDefaults);
                         UpdateBounds(floorBounds);
                     }
                 } else {
@@ -76,27 +78,31 @@ public class BuildingGenerator : Generator {
             child.directAttributes["level"] = floorNumbersToGenerate[0];
             floorNumbersToGenerate.Remove(floorNumbersToGenerate[0]);
             Debug.Log("Generationg partially defined floor");
-            Hashtable floorBounds = GenerateFloor(child, parentTransform);
+            Hashtable floorBounds = GenerateFloor(child, parentTransform, specifiedDefaults);
             UpdateBounds(floorBounds);
         }
 
         //check if there are still fully default
         if(floorNumbersToGenerate.Count != 0) {
             for (int i = 0; i < floorNumbersToGenerate.Count; i++) {
-                Hashtable floorBounds = GenerateDefaultFloor(floorNumbersToGenerate[i], parentTransform);
+                Hashtable floorBounds = GenerateDefaultFloor(floorNumbersToGenerate[i], parentTransform, specifiedDefaults);
                 UpdateBounds(floorBounds);
             }
         }
 
         if (generateRoof) {
             //Generate the roof
-            foreach(WorldObject child in obj.GetChildren()) {
+            foreach (WorldObject child in obj.GetChildren()) {
                 if (child.GetObjectValue().Equals("roof")) {
-                    float height = ((Vector2) bounds["yBounds"]).y; //Max height reached
-                    Hashtable roofBounds = GenerateRoof(child, parentTransform, height);
+                    float height = ((Vector2)bounds["yBounds"]).y; //Max height reached
+                    Hashtable roofBounds = GenerateRoof(child, parentTransform, specifiedDefaults, height);
                     UpdateBounds(roofBounds);
                 }
             }
+        } else {
+            //Generate default roof, ah ja he
+            float height = ((Vector2)bounds["yBounds"]).y; //Max height reached
+            GenerateDefaultRoof(parentTransform, height, specifiedDefaults);
         }
 
         //Update the parent (house) box collider using the bounds
@@ -181,7 +187,7 @@ public class BuildingGenerator : Generator {
     //    return true;
     //}
 
-    private Hashtable GenerateFloor(WorldObject obj, Transform parent) {
+    private Hashtable GenerateFloor(WorldObject obj, Transform parent, Hashtable specifiedDefaults) {
         
         int level = 0;
         Int32.TryParse(((string)obj.directAttributes["level"]), out level);    //Level 1 = ground floor
@@ -226,58 +232,93 @@ public class BuildingGenerator : Generator {
         return bounds;
     }
 
-    private Hashtable GenerateDefaultFloor(int level, Transform parent) {
-
-        level -= 1;
-
-        Debug.Log("Default floor");
-
-        GameObject block = Resources.Load("ProceduralBlocks/Block") as GameObject;
-        if(block == null) {
-            Debug.Log("Block is null");
-            return null;
-        }
-
-        //Height of a block
-        Vector3 scale = block.transform.localScale;
-        float height = scale.y;
-        float width = scale.x;
-        float length = scale.z;
-
-        float xPos = 0;
-        float yPos = height / 2 + level * height;
-        float zPos = 0;
-
-        //Instantiate this block
-        GameObject instantiatedBlock = UnityEngine.Object.Instantiate(block, new Vector3(xPos, yPos, zPos), Quaternion.identity, parent);
-
-        //Find default color
+    private Hashtable GenerateDefaultFloor(int level, Transform parent, Hashtable specifiedDefaults) {
         Hashtable defaults = FindDefaults("floor");
-        if (defaults.ContainsKey("color")) {
-            //It should contain this key, but doesn't hurt to check
-            string color = (string) defaults["color"];
-            Material material = GetMaterial(color);
-            if (material != null) {
-                MeshRenderer renderer = instantiatedBlock.GetComponent<MeshRenderer>();
-                renderer.material = material;
+        string type = "type";
+        string value = "floor";
+        WorldObject floor = new WorldObject(type, value);
+        foreach (DictionaryEntry entry in defaults) {
+            string key = (string)entry.Key;
+            if (!specifiedDefaults.Contains(key)) {
+                string attributeValue = (string)entry.Value;
+                floor.AddDirectAttribute(key, attributeValue);
             } else {
-                Debug.Log("Material is null");
+                floor.AddDirectAttribute(key, (string)specifiedDefaults[key]);
             }
-        } else {
-            Debug.Log("No color default found");
         }
+        string levelText = level.ToString();
+        floor.AddDirectAttribute("level", levelText);
+            Int32.TryParse(((string)floor.directAttributes["level"]), out level);
+        return GenerateFloor(floor, parent, specifiedDefaults);
+        //level -= 1;
 
-        //Return the bounds for this spawned block
-        // (-x, +x), (-y, +y), (-z, +z)
-        Hashtable bounds = new Hashtable();
-        bounds["xBounds"] = new Vector2(xPos - width / 2, xPos + width / 2);
-        bounds["yBounds"] = new Vector2(yPos - height / 2, yPos + height / 2);
-        bounds["zBounds"] = new Vector2(zPos - length / 2, zPos + length / 2);
-        Debug.Log("Spawned floor");
-        return bounds;
+        //Debug.Log("Default floor");
+
+        //GameObject block = Resources.Load("ProceduralBlocks/Block") as GameObject;
+        //if(block == null) {
+        //    Debug.Log("Block is null");
+        //    return null;
+        //}
+
+        ////Height of a block
+        //Vector3 scale = block.transform.localScale;
+        //float height = scale.y;
+        //float width = scale.x;
+        //float length = scale.z;
+
+        //float xPos = 0;
+        //float yPos = height / 2 + level * height;
+        //float zPos = 0;
+
+        ////Instantiate this block
+        //GameObject instantiatedBlock = UnityEngine.Object.Instantiate(block, new Vector3(xPos, yPos, zPos), Quaternion.identity, parent);
+
+        ////Find default color
+        //Hashtable defaults = FindDefaults("floor");
+        //if (defaults.ContainsKey("color")) {
+        //    //It should contain this key, but doesn't hurt to check
+        //    string color = (string) defaults["color"];
+        //    Material material = GetMaterial(color);
+        //    if (material != null) {
+        //        MeshRenderer renderer = instantiatedBlock.GetComponent<MeshRenderer>();
+        //        renderer.material = material;
+        //    } else {
+        //        Debug.Log("Material is null");
+        //    }
+        //} else {
+        //    Debug.Log("No color default found");
+        //}
+
+        ////Return the bounds for this spawned block
+        //// (-x, +x), (-y, +y), (-z, +z)
+        //Hashtable bounds = new Hashtable();
+        //bounds["xBounds"] = new Vector2(xPos - width / 2, xPos + width / 2);
+        //bounds["yBounds"] = new Vector2(yPos - height / 2, yPos + height / 2);
+        //bounds["zBounds"] = new Vector2(zPos - length / 2, zPos + length / 2);
+        //Debug.Log("Spawned floor");
+        //return bounds;
     }
 
-    private Hashtable GenerateRoof(WorldObject obj, Transform parent, float height = 0) {
+    private Hashtable GenerateDefaultRoof(Transform parentTransform, float height, Hashtable specifiedDefaults) {
+        Hashtable defaults = FindDefaults("roof");
+        string type = "type";
+        string value = "roof";
+        WorldObject roof = new WorldObject(type, value);
+        foreach(DictionaryEntry entry in defaults) {
+            string key = (string)entry.Key;
+            if (!specifiedDefaults.Contains(key)) {
+                Debug.Log("#############Specified roof does not contain key " + (string)key);
+                string attributeValue = (string)entry.Value;
+                roof.AddDirectAttribute(key, attributeValue);
+            } else {
+                Debug.Log("#############Specified roof contains key " + (string)key);
+                roof.AddDirectAttribute(key, (string) specifiedDefaults[key]);
+            }    
+        }
+        return GenerateRoof(roof, parentTransform, specifiedDefaults, height);
+    }
+
+    private Hashtable GenerateRoof(WorldObject obj, Transform parent, Hashtable specifiedDefaults, float height = 0) {
 
         Debug.Log("Generationg roof");
 
@@ -299,7 +340,17 @@ public class BuildingGenerator : Generator {
             float roofLength = scale.z;
 
             //Instantiate the roof
-            UnityEngine.Object.Instantiate(flatRoof, new Vector3(xPos, yPos + roofHeight / 2, zPos), Quaternion.identity, parent);
+            GameObject roof = UnityEngine.Object.Instantiate(flatRoof, new Vector3(xPos, yPos + roofHeight / 2, zPos), Quaternion.identity, parent);
+
+            //Get the color
+            string color = (string)obj.directAttributes["color"];
+            Material material = GetMaterial(color);
+            if (material != null) {
+                MeshRenderer[] renderers = roof.GetComponentsInChildren<MeshRenderer>();
+                foreach(MeshRenderer renderer in renderers) {
+                    renderer.material = material;
+                }
+            }
 
             Hashtable bounds = new Hashtable();
             bounds["xBounds"] = new Vector2(xPos - roofWidth / 2, xPos + roofWidth / 2);
@@ -317,7 +368,7 @@ public class BuildingGenerator : Generator {
         }
 
     private Hashtable GenerateMeshRoof(WorldObject obj, Transform parent, float height) {
-        float totalHeight = 2f;
+        float totalHeight = 5f;
         //Pointy roof bestaat uit 4 delen: de 2 schuine delen, en de 2 driehoeken
 
         //Determine the positions for the roof

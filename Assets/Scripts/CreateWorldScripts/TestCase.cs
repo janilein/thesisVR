@@ -49,15 +49,15 @@ public class TestCase : MonoBehaviour {
                             new JProperty("type", "apartment"),
                             new JProperty("attr", new JArray(
                                 new JObject(
-                                    new JProperty("floors", "2"),
+                                    new JProperty("floors", "4"),
                                     new JProperty("color", "blue")
                                     ),
                                 new JObject(
                                     new JProperty("type", "floor"),
                                     new JProperty("attr", new JArray(
                                         new JObject(
-                                            new JProperty("level", "1"),
-                                            new JProperty("color", "green")
+                                            new JProperty("level", "1")//,
+                                            //new JProperty("color", "green")
                                             )
                                     )
                                     )
@@ -68,14 +68,6 @@ public class TestCase : MonoBehaviour {
                                         new JObject(
                                             new JProperty("level", "2"),
                                             new JProperty("color", "yellow")
-                                            )
-                                        ))
-                                    ),
-                                new JObject(
-                                    new JProperty("type", "roof"),
-                                    new JProperty("attr", new JArray(
-                                        new JObject(
-                                            new JProperty("roofType", "pointy")
                                             )
                                         ))
                                     )

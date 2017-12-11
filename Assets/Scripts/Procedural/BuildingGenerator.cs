@@ -534,7 +534,7 @@ public class BuildingGenerator : Generator {
 
     private Hashtable FindDefaults(string tree) {
         Hashtable defaults = new Hashtable();
-        string path = "Assets/Dictionaries/buildings/" + typeOfBuilding + "/" + tree;
+        string path = "Assets/Dictionaries/lots/buildings/" + typeOfBuilding + "/" + tree;
         DirectoryInfo dir = new DirectoryInfo(path);
         FileInfo[] info = dir.GetFiles("defaults.txt");
 

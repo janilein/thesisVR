@@ -1,3 +1,0 @@
-color:brown
-floors:2
-roofType:pointy

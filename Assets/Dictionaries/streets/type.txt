@@ -1,0 +1,4 @@
+intersection
+roundabout
+straight
+turn

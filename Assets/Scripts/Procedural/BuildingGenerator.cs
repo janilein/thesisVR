@@ -14,6 +14,22 @@ public class BuildingGenerator : Generator {
     }
 
     public override void GenerateWorldObject(WorldObject obj) {
+        //Obj is the 'lot' root obj
+        int lotNumber;
+        if (obj.directAttributes.ContainsKey("lotID")) {
+            string lotString = (string)obj.directAttributes["lotID"];
+            Int32.TryParse(lotString, out lotNumber);
+        } else {
+            System.Random random = new System.Random();
+            lotNumber = random.Next(1000, 1000000);
+        }
+
+        //Create the 'lot' parent
+        GameObject lot = new GameObject("lotID:" + lotNumber);
+
+        //Now go to the children
+        obj = obj.GetChildren()[0].GetChildren()[0];
+
         //Spawning appartment or house or ...? (For defaults)
         typeOfBuilding = obj.GetObjectValue();
         Debug.Log("Type of building: " + typeOfBuilding);
@@ -40,15 +56,10 @@ public class BuildingGenerator : Generator {
 
         bool generateRoof = false;
 
-        //Find 'buildings' parent and create a new 'building' second parent in it
-        GameObject buildings = GameObject.Find("Buildings");
-        if(buildings == null) {
-            buildings = new GameObject("Buildings");
-        }
         //Make a house parent in it
         GameObject house = Resources.Load("ProceduralBlocks/House") as GameObject;
         GameObject parent = GameObject.Instantiate(house, new Vector3(0, 0, 0), Quaternion.identity);
-        parent.transform.parent = buildings.transform;
+        parent.transform.parent = lot.transform;
         Transform parentTransform = parent.transform;
 
         //Count fully & partially defined floors
@@ -102,7 +113,8 @@ public class BuildingGenerator : Generator {
         } else {
             //Generate default roof, ah ja he
             float height = ((Vector2)bounds["yBounds"]).y; //Max height reached
-            GenerateDefaultRoof(parentTransform, height, specifiedDefaults);
+            Hashtable roofBounds = GenerateDefaultRoof(parentTransform, height, specifiedDefaults);
+            UpdateBounds(roofBounds);
         }
 
         //Update the parent (house) box collider using the bounds
@@ -198,11 +210,22 @@ public class BuildingGenerator : Generator {
             return null;
         }
 
-        //Height of a block
+        //Height of a block        
+        Mesh mesh = block.GetComponent<MeshFilter>().sharedMesh;
+        Vector3 meshSize = mesh.bounds.size;
+        float width, length, height;
         Vector3 scale = block.transform.localScale;
-        float height = scale.y;
-        float width = scale.x;
-        float length = scale.z;
+        width = scale.x * meshSize.x;
+        length = scale.z * meshSize.z;
+        height = scale.y * meshSize.y;
+
+        //Vector3 scale = block.transform.localScale;
+        //float height = scale.y;
+        //float width = scale.x;
+        //float length = scale.z;
+        Debug.Log("Width: " + width);
+        Debug.Log("Height: " + height);
+        Debug.Log("Length: " + length);
 
         float xPos = 0;
         float yPos = height/2 + level*height;
@@ -334,10 +357,19 @@ public class BuildingGenerator : Generator {
             GameObject flatRoof = Resources.Load("ProceduralBlocks/FlatRoof") as GameObject;
 
             //Height of a block
+
+            Mesh mesh = flatRoof.GetComponent<MeshFilter>().sharedMesh;
+            Vector3 meshSize = mesh.bounds.size;
+            float roofWidth, roofLength, roofHeight;
             Vector3 scale = flatRoof.transform.localScale;
-            float roofHeight = scale.y;
-            float roofWidth = scale.x;
-            float roofLength = scale.z;
+            roofWidth = scale.x * meshSize.x;
+            roofLength = scale.z * meshSize.z;
+            roofHeight = scale.y * meshSize.y;
+
+            //Vector3 scale = flatRoof.transform.localScale;
+            //float roofHeight = scale.y;
+            //float roofWidth = scale.x;
+            //float roofLength = scale.z;
 
             //Instantiate the roof
             GameObject roof = UnityEngine.Object.Instantiate(flatRoof, new Vector3(xPos, yPos + roofHeight / 2, zPos), Quaternion.identity, parent);
@@ -358,8 +390,7 @@ public class BuildingGenerator : Generator {
             bounds["zBounds"] = new Vector2(zPos - roofLength / 2, zPos + roofLength / 2);
             return bounds;
 
-        }
-        else if (type.Equals("pointy")) {
+        }        else if (type.Equals("pointy")) {
             //Generate this roof using mesh generation #cool
 
             return GenerateMeshRoof(obj, parent, height);
@@ -503,7 +534,7 @@ public class BuildingGenerator : Generator {
         Hashtable newBounds = new Hashtable();
         newBounds["xBounds"] = bounds["xBounds"];
         newBounds["zBounds"] = bounds["zBounds"];
-        newBounds["yBounds"] = new Vector2(height, height + totalHeight);
+        newBounds["yBounds"] = new Vector2(height, (height + totalHeight));
         return newBounds;
     }
 

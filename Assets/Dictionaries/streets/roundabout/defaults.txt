@@ -1,1 +1,2 @@
-lots:0
+lotsLeft:0
+lotsRight:0

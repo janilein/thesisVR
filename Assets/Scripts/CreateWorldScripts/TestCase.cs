@@ -41,58 +41,75 @@ public class TestCase : MonoBehaviour {
                                             new JProperty("kleur", "groen"),
                                             new JProperty("grootte", "klein")))))))))));
         */
-        //building case
-        //JObject rss = new JObject(
-        //    new JObject(
-        //            new JProperty("type", "lots"),
-        //            new JProperty("attr", new JArray(
-        //    new JObject(
-        //            new JProperty("type", "buildings"),
-        //            new JProperty("attr", new JArray(
-        //                new JObject(
-        //                    new JProperty("type", "house"),
-        //                    new JProperty("attr", new JArray(
-        //                        new JObject(
-        //                            new JProperty("floors", "4"),
-        //                            new JProperty("color", "blue")
-        //                            ),
-        //                        new JObject(
-        //                            new JProperty("type", "floor"),
-        //                            new JProperty("attr", new JArray(
-        //                                new JObject(
-        //                                    new JProperty("level", "1")//,
-        //                                                               //new JProperty("color", "green")
-        //                                    )
-        //                            )
-        //                            )
-        //                        ),
-        //                        new JObject(
-        //                            new JProperty("type", "floor"),
-        //                            new JProperty("attr", new JArray(
-        //                                new JObject(
-        //                                    new JProperty("level", "2"),
-        //                                    new JProperty("color", "yellow")
-        //                                    )
-        //                                ))
-        //                            )
-        //                        )
-        //                    )
-        //                ))
-        //                )
 
-        //                ))))
-        //);
+        //building case
+
+        /*
+        
+        JObject rss = new JObject(
+            new JObject(
+                    new JProperty("type", "lots"),
+                    new JProperty("attr", new JArray(
+                        new JObject(
+                            new JProperty("lotID", "1")
+                            ),
+                        new JObject(
+                                new JProperty("type", "buildings"),
+                                new JProperty("attr", new JArray(
+                                    new JObject(
+                                        new JProperty("type", "house"),
+                                        new JProperty("attr", new JArray(
+                                            new JObject(
+                                                new JProperty("floors", "4"),
+                                                new JProperty("color", "blue")
+                                                ),
+                                            new JObject(
+                                                new JProperty("type", "floor"),
+                                                new JProperty("attr", new JArray(
+                                                    new JObject(
+                                                        new JProperty("level", "1")//,
+                                                                                   //new JProperty("color", "green")
+                                                        )
+                                                )
+                                                )
+                                            ),
+                                            new JObject(
+                                                new JProperty("type", "floor"),
+                                                new JProperty("attr", new JArray(
+                                                    new JObject(
+                                                        new JProperty("level", "2"),
+                                                        new JProperty("color", "yellow")
+                                                        )
+                                                    ))
+                                                )
+                                            )
+                                        )
+                                    ))
+                                    )
+
+                        ))))
+        );
+
+        */
+
+
+
 
         JObject rss = new JObject(
             new JObject(
                     new JProperty("type", "streets"),
                     new JProperty("attr", new JArray(
                         new JObject(
+                            new JProperty("streetID", "1")),
+                        new JObject(
                             new JProperty("type", "straight"),
                             new JProperty("attr", new JArray(
                                 new JObject(
-                                    new JProperty("lots", "4")
+                                    new JProperty("lotsLeft", "4"),
+                                    new JProperty("lotsRight", "2")
                                     ))))))));
+
+        
 
         Debug.Log(rss.ToString());
         bool successParse = true;

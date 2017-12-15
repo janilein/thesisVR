@@ -13,7 +13,7 @@ public class BuildingGenerator : Generator {
         bounds = new Hashtable();
     }
 
-    public override void GenerateWorldObject(WorldObject obj) {
+    public override void GenerateWorldObject(WorldObject obj, Vector3 currentDirection) {
         //Obj is the 'lot' root obj
         int lotNumber;
         if (obj.directAttributes.ContainsKey("lotID")) {
@@ -416,7 +416,6 @@ public class BuildingGenerator : Generator {
 
         //Is the X axis the shortest?
         bool xShortest = xDiff > zDiff ? true : false;
-        xShortest = true;
 
         Vector3 highestPointA, highestPointB;
         Vector3 basePointA, basePointB, basePointC, basePointD ;

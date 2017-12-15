@@ -171,7 +171,4 @@ public class LotResizer : MonoBehaviour {
         plane.transform.localScale = new Vector3(lotWidth / planeSize.z, 1f, lotLength / planeSize.x);
         this.plane = plane;
     }
-
-
-
 }

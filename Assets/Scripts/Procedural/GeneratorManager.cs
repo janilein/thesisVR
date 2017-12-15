@@ -4,14 +4,24 @@ using UnityEngine;
 
 public class GeneratorManager {
 
-	public void GenerateWorldObject(WorldObject obj) {
+    private BuildingGenerator buildingGen;
+    private StreetGenerator streetGen;
+    private Vector3 currentDirection;
 
+    public GeneratorManager() {
+        buildingGen = new BuildingGenerator();
+        streetGen = new StreetGenerator();
+
+        currentDirection = new Vector3(1, 0, 0);
+    }
+
+	public void GenerateWorldObject(WorldObject obj) {
         if (obj.GetObjectValue().Equals("lots")) {
             WorldObject child = obj.GetChildren()[0];
             if (child.GetObjectValue().Equals("buildings")) {
                 Debug.Log("parent is buildings");
-                BuildingGenerator generator = new BuildingGenerator();
-                generator.GenerateWorldObject(obj); //Obj, niet child.getChildren()[0], want generator moet aan het 'lot' kunnen
+                //BuildingGenerator generator = new BuildingGenerator(); //gaan veel van deze maken, misschien in een singleton steken die we gaan oproepen?
+                buildingGen.GenerateWorldObject(obj, currentDirection); //Obj, niet child.getChildren()[0], want generator moet aan het 'lot' kunnen
             } else if (child.GetObjectValue().Equals("gardens")) {
                 Debug.Log("parent is garden");
                 //BuildingGenerator generator = new BuildingGenerator();
@@ -20,13 +30,55 @@ public class GeneratorManager {
                 Debug.Log("ne marche pas");
             }
         } else if (obj.GetObjectValue().Equals("streets")) {
-            WorldObject child = obj.GetChildren()[0];
+            //WorldObject child = obj.GetChildren()[0];
             Debug.Log("parent is streets");
-            StreetGenerator generator = new StreetGenerator();
-            generator.GenerateWorldObject(obj);
+            //StreetGenerator generator = new StreetGenerator(); //gaan veel van deze maken, misschien in een singleton steken die we gaan oproepen?
+            streetGen.GenerateWorldObject(obj, currentDirection);
+        } else if (obj.GetObjectValue().Equals("orientation")) {
+            ChangeDirection((string)obj.directAttributes["direction"]);
+            Debug.Log("currentDir x: " + currentDirection.x);
+            Debug.Log("currentDir z: " + currentDirection.z);
         } else {
             Debug.Log("ne marche pas");
         }
         return;
+    }
+
+    private void ChangeDirection(string direction) {
+        switch (direction) {
+            case "left":
+                if (currentDirection.x == 1) {
+                    currentDirection.x = 0;
+                    currentDirection.z = 1;
+                } else if (currentDirection.x == -1) {
+                    currentDirection.x = 0;
+                    currentDirection.z = -1;
+                } else if (currentDirection.z == 1) {
+                    currentDirection.x = -1;
+                    currentDirection.z = 0;
+                } else if (currentDirection.z == -1) {
+                    currentDirection.x = 1;
+                    currentDirection.z = 0;
+                }
+                break;
+            case "right":
+                if (currentDirection.x == 1) {
+                    currentDirection.x = 0;
+                    currentDirection.z = -1;
+                } else if (currentDirection.x == -1) {
+                    currentDirection.x = 0;
+                    currentDirection.z = 1;
+                } else if (currentDirection.z == 1) {
+                    currentDirection.x = 1;
+                    currentDirection.z = 0;
+                } else if (currentDirection.z == -1) {
+                    currentDirection.x = -1;
+                    currentDirection.z = 0;
+                }
+                break;
+            case "straigth":
+                //don't do anything
+                break;
+        }
     }
 }

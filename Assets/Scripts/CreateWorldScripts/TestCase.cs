@@ -102,14 +102,22 @@ public class TestCase : MonoBehaviour {
                         new JObject(
                             new JProperty("streetID", "1")),
                         new JObject(
-                            new JProperty("type", "straight"),
+                            new JProperty("type", "turn"),
                             new JProperty("attr", new JArray(
                                 new JObject(
-                                    new JProperty("lotsLeft", "4"),
-                                    new JProperty("lotsRight", "2")
+                                    new JProperty("lotsLeft", "6"),
+                                    new JProperty("orientation", "rightStraight")
                                     ))))))));
 
-        
+        //JObject rss = new JObject(
+        //    new JObject(
+        //            new JProperty("type", "orientation"),
+        //            new JProperty("attr", new JArray(
+        //                new JObject(
+        //                    new JProperty("direction", "left"))
+        //                ))));
+
+
 
         Debug.Log(rss.ToString());
         bool successParse = true;

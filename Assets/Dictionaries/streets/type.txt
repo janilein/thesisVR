@@ -1,4 +1,5 @@
-intersection
+intersection-t
+intersection-x
 roundabout
 straight
 turn

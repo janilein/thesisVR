@@ -64,5 +64,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0113d7681d4973469df6d9c1f22e179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  smallestValue: 0
   leftNeighbor: {fileID: 0}
   rightNeighbor: {fileID: 0}
+  lotWidth: 9.1
+  lotLength: 0
+  currentLength: 0
+  currentWidth: 0

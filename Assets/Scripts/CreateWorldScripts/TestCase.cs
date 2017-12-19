@@ -93,7 +93,7 @@ public class TestCase : MonoBehaviour {
         */
 
 
-
+        
 
         JObject rss = new JObject(
             new JObject(
@@ -102,10 +102,28 @@ public class TestCase : MonoBehaviour {
                         new JObject(
                             new JProperty("streetID", "1")),
                         new JObject(
-                            new JProperty("type", "turn"),
+                            new JProperty("type", "straight"),
                             new JProperty("attr", new JArray(
                                 new JObject(
-                                    new JProperty("lotsLeft", "6"),
+                                    new JProperty("length", "small"),
+                                    new JProperty("lotsLeft", "2"),
+                                    new JProperty("lotsRight", "6"),
+                                    new JProperty("orientation", "rightStraight")
+                                    ))))))));
+
+        JObject rss2 = new JObject(
+            new JObject(
+                    new JProperty("type", "streets"),
+                    new JProperty("attr", new JArray(
+                        new JObject(
+                            new JProperty("streetID", "1")),
+                        new JObject(
+                            new JProperty("type", "straight"),
+                            new JProperty("attr", new JArray(
+                                new JObject(
+                                    new JProperty("length", "long"),
+                                    new JProperty("lotsLeft", "2"),
+                                    new JProperty("lotsRight", "6"),
                                     new JProperty("orientation", "rightStraight")
                                     ))))))));
 
@@ -122,6 +140,7 @@ public class TestCase : MonoBehaviour {
         Debug.Log(rss.ToString());
         bool successParse = true;
         o = (Hashtable)JSON.JsonDecode(rss.ToString(), ref successParse);
+        Hashtable o2 = (Hashtable)JSON.JsonDecode(rss2.ToString(), ref successParse);
 
         HashtableParser hashParser = new HashtableParser();
         hashParser.PrintHashTable(o);     //Convert the hashtable to WorldObjects
@@ -139,5 +158,17 @@ public class TestCase : MonoBehaviour {
         Debug.Log("Starting to generate");
         GeneratorManager manager = new GeneratorManager();
         manager.GenerateWorldObject(root);
+        manager.GenerateWorldObject(root);
+        manager.GenerateWorldObject(root);
+        manager.GenerateWorldObject(root);
+
+        HashtableParser hashParser2 = new HashtableParser();
+        hashParser.PrintHashTable(o2);     //Convert the hashtable to WorldObjects
+        //string path = hashParser.SearchBestFit();
+        WorldObject root2 = hashParser.getRootObject();
+        manager.GenerateWorldObject(root2);
+        manager.GenerateWorldObject(root2);
     }
+
+
 }

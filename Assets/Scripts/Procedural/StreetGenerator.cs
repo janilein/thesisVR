@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class StreetGenerator : Generator {
 
-    Vector3 spawnPosition;
-    
-   
+    private Vector3 spawnPosition;
+    private GenericStreet previousStreetScript;
+    private Transform previousStreet;
+
     public StreetGenerator() {
-        
+
     }
 
-    public override void GenerateWorldObject(WorldObject obj, Vector3 currentDirection, ref Vector3 currentPosition) {
+    public override void GenerateWorldObject(WorldObject obj, Vector3 currentDirection, ref Vector3 currentPosition, string pointDirection) {
 
         //For now
         spawnPosition = new Vector3(0, 0.2f, 0);
@@ -35,13 +36,13 @@ public class StreetGenerator : Generator {
         parent.position = spawnPosition;
         switch (type) {
             case "straight":
-                GenerateStraightStreet(obj, parent, currentDirection, ref currentPosition);
+                GenerateStraightStreet(obj, parent, currentDirection, ref currentPosition, pointDirection);
                 break;
             case "intersection-t":
                 GenerateIntersectionT(obj, parent, currentDirection);
                 break;
             case "intersection-x":
-                GenerateIntersectionX(obj, parent, currentDirection);
+                GenerateIntersectionX(obj, parent, currentDirection, ref currentPosition, pointDirection);
                 break;
             case "roundabout":
                 GenerateRoundabout(obj, parent, currentDirection);
@@ -50,9 +51,10 @@ public class StreetGenerator : Generator {
                 GenerateTurn(obj, parent, currentDirection);
                 break;
         }
+        previousStreet = parent.transform;
     }
 
-    private void GenerateStraightStreet(WorldObject obj, Transform parent, Vector3 currentDirection, ref Vector3 currentPosition) {
+    private void GenerateStraightStreet(WorldObject obj, Transform parent, Vector3 currentDirection, ref Vector3 currentPosition, string pointDirection) {
         Debug.Log("Generating straight street");
 
         //Okay uhm boom
@@ -92,7 +94,7 @@ public class StreetGenerator : Generator {
 
             //Get the starting point (left bottom corner of the street)
             Vector3 spawnPointLot = new Vector3(streetWidth / 2, 0f, streetLength / 2);
-            spawnPointLot += new Vector3(lotWidth/2, 0f, lotLength/2);
+            spawnPointLot += new Vector3(lotWidth / 2, 0f, lotLength / 2);
             SpawnLot(lotsLeft, spawnPointLot, lotWidth, lotLength, parent);
         }
 
@@ -110,30 +112,104 @@ public class StreetGenerator : Generator {
 
         //Spawn the street itself
         GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
-        CheckOrientationStraight(currentDirection, parent);
-        Debug.Log("Street width: " + streetWidth);
-        Debug.Log("Street length: " + streetLength);
-        Debug.Log("Street height: " + streetHeight);
+        //Rotate to match our "walking" direction along x or z axis
+        CheckOrientationStreet(currentDirection, parent);
+
+        //Quaternion rotation = CheckOrientationStraight(currentDirection, parent);
+        //Debug.Log("Street width: " + streetWidth);
+        //Debug.Log("Street length: " + streetLength);
+        //Debug.Log("Street height: " + streetHeight);
 
         //Update current position & stuff
         GenericStreet script = street.GetComponent<GenericStreet>();
         if (!script) {
             Debug.Log("Script null");
         }
-        if (currentPosition == Vector3.zero) {  //1st street
-            //Up point
-            Debug.Log("Top point: " + script.GetTopPoint());
-            Vector3 top = script.GetTopPoint();
-            currentPosition = Quaternion.Euler(0, 90, 0) * top;
 
-        } else {                                //Other streets
-            Vector3 bottomPoint = Quaternion.Euler(0, 90, 0) *  script.GetBottomPoint();     
-            Vector3 centerToSpawn = currentPosition - bottomPoint;  //Centerpoint + bottomPoint (want bottomPoint is negatief) moet gelijk zijn aan currentPoint
+        Debug.Log("Current position: " + currentPosition);
+        
+        if(currentPosition.x == float.PositiveInfinity) { //no street placed
+            currentPosition = Vector3.zero; /*rotation * top;*/
+        } else {
+            //Left, right, or top?
+            Vector3 point = GetCorrectPoint(pointDirection);
+            Debug.Log("Correct point: " + point);
+
+            //Onze transform is gerotate door onze walking direction (previous), point moet even veel gerotate worden
+            //Quaternion previousRotation = previousStreetScript.gameObject.transform.localRotation;
+            Vector3 previousRotation = previousStreet.localEulerAngles;
+            Debug.Log("Previous rotation: " + previousRotation);
+
+            Quaternion rotation = Quaternion.Euler(previousRotation);
+            Vector3 rotationEuler = rotation.eulerAngles;
+            Vector3 inverseEuler = new Vector3(rotationEuler.x * -1, rotationEuler.y * -1, rotationEuler.z * -1);
+            Quaternion inverseRotation = Quaternion.Euler(inverseEuler);
+            point = inverseRotation * point;
+            Debug.Log("Correct point after rotation: " + point);
+
+            //Neem nu top deel van de nieuwe straat
+            Vector3 topPoint = script.GetTopPoint();
+            Debug.Log("Top point: " + topPoint);
+
+            //Rotate het volgens walking direction
+            RotateVector(ref topPoint, currentDirection);
+            Debug.Log("Top point after rotation: " + topPoint);
+
+            //Bereken spawnpoint
+            Vector3 centerToSpawn = currentPosition + topPoint + point;
+
+            //Zet parent
             parent.position = centerToSpawn + spawnPosition;
-            currentPosition = centerToSpawn + Quaternion.Euler(0, 90, 0) * script.GetTopPoint();
+            currentPosition = centerToSpawn;
         }
+
+        previousStreetScript = script;
         Debug.Log("Current position set to: " + currentPosition);
     }
+
+    private void CheckOrientationStreet(Vector3 currentDirection, Transform parent) {
+        //By default, prefabs are orientated along positive Z axis
+        Vector3 rotationAxis = new Vector3(0, 1, 0);   //Rotation is always along y-axis
+
+        if (currentDirection.x == 1) {          //Positive X axis --> -90°
+            parent.transform.Rotate(rotationAxis, -90f);
+            Debug.Log("Rotated transform -90°");
+        } else if (currentDirection.x == -1) {  //Negative X axis --> 90°
+            parent.transform.Rotate(rotationAxis, 90f);
+            Debug.Log("Rotated transform 90°");
+        } else if (currentDirection.z == -1) {  //Negative Z axis --> 180°
+            parent.transform.Rotate(rotationAxis, 180f);
+            Debug.Log("Rotated transform 180°");
+        } else if (currentDirection.z == 1) {  //Positive Z axis --> 0°
+            parent.transform.Rotate(rotationAxis, 0f);
+            Debug.Log("Rotated transform 0°");
+        }
+    }
+
+    private void RotateVector(ref Vector3 point, Vector3 currentDirection) {
+        Quaternion rotation;
+
+        if (currentDirection.x == 1) {          //Positive X axis --> -90°
+            rotation = Quaternion.Euler(0, 90, 0);
+            Debug.Log("Rotated vector -90°");
+        } else if (currentDirection.x == -1) {  //Negative X axis --> 90°
+            rotation = Quaternion.Euler(0, -90, 0);
+            Debug.Log("Rotated transform 90°");
+        } else if (currentDirection.z == -1) {  //Negative Z axis --> 180°
+            rotation = Quaternion.Euler(0, 180, 0);
+            Debug.Log("Rotated transform 180°");
+        } else if (currentDirection.z == 1) {  //Positive Z axis --> 0°
+            rotation = Quaternion.Euler(0, 0, 0);
+            Debug.Log("Rotated transform 0°");
+        } else {
+            rotation = Quaternion.Euler(0, 0, 0);
+        }
+        point = rotation * point;
+    }
+
+    /*
+     * TODO, deze werkt nog niet. Straight en X wel al
+     */
 
     private void GenerateIntersectionT(WorldObject obj, Transform parent, Vector3 currentDirection) {
         Debug.Log("Generating Intersection-t");
@@ -173,13 +249,56 @@ public class StreetGenerator : Generator {
         CheckOrientationIntersectionT(orientation, currentDirection, parent);
     }
 
-    private void GenerateIntersectionX(WorldObject obj, Transform parent, Vector3 currentDirection) {
+    private void GenerateIntersectionX(WorldObject obj, Transform parent, Vector3 currentDirection, ref Vector3 currentPosition, string pointDirection) {
         Debug.Log("Generating Intersection-x");
 
         //Fetch the x intersection from resources
         GameObject street = Resources.Load("ProceduralBlocks/Streets/Intersection-x") as GameObject;
 
-        GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
+        GameObject spawnedStreet = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent) as GameObject;
+        //Quaternion rotation = CheckOrientationStraight(currentDirection, parent);
+        CheckOrientationStreet(currentDirection, parent);
+        GenericStreet script = spawnedStreet.GetComponent<GenericStreet>();
+
+        if (currentPosition.x == float.PositiveInfinity) { //no street placed
+            currentPosition = Vector3.zero; /*rotation * top;*/
+        } else {
+            //Left, right, or top?
+            Vector3 point = GetCorrectPoint(pointDirection);
+            Debug.Log("Correct point: " + point);
+
+            //Onze transform is gerotate door onze walking direction (previous), point moet even veel gerotate worden
+            //Quaternion previousRotation = previousStreetScript.gameObject.transform.localRotation;
+            Vector3 previousRotation = previousStreet.localEulerAngles;
+            Debug.Log("Previous rotation: " + previousRotation);
+
+            Quaternion rotation = Quaternion.Euler(previousRotation);
+            Vector3 rotationEuler = rotation.eulerAngles;
+            Vector3 inverseEuler = new Vector3(rotationEuler.x * -1, rotationEuler.y * -1, rotationEuler.z * -1);
+            Quaternion inverseRotation = Quaternion.Euler(inverseEuler);
+            point = inverseRotation * point;
+            Debug.Log("Correct point after rotation: " + point);
+
+            //Neem nu top deel van de nieuwe straat
+            Vector3 topPoint = script.GetTopPoint();
+            Debug.Log("Top point: " + topPoint);
+
+            //Rotate het volgens walking direction
+            RotateVector(ref topPoint, currentDirection);
+            Debug.Log("Top point after rotation: " + topPoint);
+
+            //Bereken spawnpoint
+            Vector3 centerToSpawn = currentPosition + topPoint + point;
+
+            //Zet parent
+            parent.position = centerToSpawn + spawnPosition;
+            currentPosition = centerToSpawn;
+        }
+
+
+        previousStreetScript = script;
+        Debug.Log("Current position set to: " + currentPosition);
+
     }
 
     private void GenerateRoundabout(WorldObject obj, Transform parent, Vector3 currentDirection) {
@@ -298,9 +417,9 @@ public class StreetGenerator : Generator {
 
         //In the lot resizers, set the necessary neighbors
         if (nbLots > 1) {
-            for(int i = 0; i < nbLots; i++) {
+            for (int i = 0; i < nbLots; i++) {
                 GameObject currentLot = spawnedLots[i];
-                if(InBounds(i - 1, nbLots)) {
+                if (InBounds(i - 1, nbLots)) {
                     GameObject neighborLot = spawnedLots[i - 1];
                     SetNeighboringLots(currentLot, neighborLot);
                 }
@@ -323,28 +442,35 @@ public class StreetGenerator : Generator {
         lotRight.GetComponent<LotResizer>().SetLeftNeighbor(lotLeft);
     }
 
-    private void CheckOrientationStraight(Vector3 currentDirection, Transform parent) {
+    private Quaternion CheckOrientationStraight(Vector3 currentDirection, Transform parent) {
+        Quaternion rotation = Quaternion.identity;
         Vector3 rot = parent.rotation.eulerAngles;
         if (currentDirection.x == 1) {
             rot = new Vector3(rot.x, rot.y - 90, rot.z);
             parent.rotation = Quaternion.Euler(rot);
+            rotation = Quaternion.Euler(0, -90, 0);
         } else if (currentDirection.x == -1) {
             rot = new Vector3(rot.x, rot.y + 90, rot.z);
             parent.rotation = Quaternion.Euler(rot);
+            rotation = Quaternion.Euler(0, 90, 0);
         } else if (currentDirection.z == 1) {
             rot = new Vector3(rot.x, rot.y + 180, rot.z);
             parent.rotation = Quaternion.Euler(rot);
-        } //nothing changes when z = -1
+            rotation = Quaternion.Euler(0, 180, 0);
+        } else if(currentDirection.z == -1) {
+            rotation = Quaternion.Euler(0, 0, 0);
+        }
+        return rotation;
     }
 
     private void CheckOrientationIntersectionT(string orientation, Vector3 currentDirection, Transform parent) {
         Vector3 rot = parent.rotation.eulerAngles;
         switch (orientation) {
             case "leftStraight":
-                if(currentDirection.x == 1) {
+                if (currentDirection.x == 1) {
                     rot = new Vector3(rot.x, rot.y + 90, rot.z);
                     parent.rotation = Quaternion.Euler(rot);
-                } else if(currentDirection.x == -1) {
+                } else if (currentDirection.x == -1) {
                     rot = new Vector3(rot.x, rot.y - 90, rot.z);
                     parent.rotation = Quaternion.Euler(rot);
                 } else if (currentDirection.z == -1) {
@@ -377,5 +503,25 @@ public class StreetGenerator : Generator {
                 } // nothing changes when x = 1
                 break;
         }
+    }
+
+    private Vector3 GetCorrectPoint(string pointDirection) {
+        Vector3 point = Vector3.zero;
+        Debug.Log("Switch direction: " + pointDirection);
+        switch (pointDirection) {
+            case "top":
+                point = previousStreetScript.GetTopPoint();
+                break;
+            case "left":
+                point = previousStreetScript.GetLeftPoint();
+                break;
+            case "right":
+                point = -previousStreetScript.GetLeftPoint();
+                break;
+            case "bottom":
+                point = -previousStreetScript.GetTopPoint();
+                break;
+        }
+        return point;
     }
 }

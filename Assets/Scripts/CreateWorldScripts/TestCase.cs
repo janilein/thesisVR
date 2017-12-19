@@ -7,7 +7,6 @@ using UnityEngine;
 public class TestCase : MonoBehaviour {
 
     public void Test() {
-        Hashtable o;
         /*
         JObject rss =
                 new JObject(
@@ -60,15 +59,14 @@ public class TestCase : MonoBehaviour {
                                         new JProperty("type", "house"),
                                         new JProperty("attr", new JArray(
                                             new JObject(
-                                                new JProperty("floors", "4"),
-                                                new JProperty("color", "blue")
+                                                //new JProperty("floors", "5")
                                                 ),
                                             new JObject(
                                                 new JProperty("type", "floor"),
                                                 new JProperty("attr", new JArray(
                                                     new JObject(
-                                                        new JProperty("level", "1")//,
-                                                                                   //new JProperty("color", "green")
+                                                        new JProperty("level", "1"),
+                                                        new JProperty("color", "red")
                                                         )
                                                 )
                                                 )
@@ -90,10 +88,8 @@ public class TestCase : MonoBehaviour {
                         ))))
         );
 
-        */
 
-
-        
+    */
 
         JObject rss = new JObject(
             new JObject(
@@ -111,6 +107,18 @@ public class TestCase : MonoBehaviour {
                                     new JProperty("orientation", "rightStraight")
                                     ))))))));
 
+        bool successParse = true;
+        Hashtable o = (Hashtable)JSON.JsonDecode(rss.ToString(), ref successParse);
+        HashtableParser hashParser = new HashtableParser();
+        hashParser.PrintHashTable(o);     //Convert the hashtable to WorldObjects
+        //hashParser.LinkWorldObjects();  //Link the WorldObjects (set correct children)
+        hashParser.PrintWorldObjects();
+        //string path = hashParser.SearchBestFit();
+        WorldObject root = hashParser.getRootObject();
+        Debug.Log("Starting to generate");
+        GeneratorManager manager = new GeneratorManager();
+        //manager.GenerateWorldObject(root);
+
         JObject rss2 = new JObject(
             new JObject(
                     new JProperty("type", "streets"),
@@ -127,47 +135,120 @@ public class TestCase : MonoBehaviour {
                                     new JProperty("orientation", "rightStraight")
                                     ))))))));
 
-        //JObject rss = new JObject(
-        //    new JObject(
-        //            new JProperty("type", "orientation"),
-        //            new JProperty("attr", new JArray(
-        //                new JObject(
-        //                    new JProperty("direction", "left"))
-        //                ))));
-
-
-
-        Debug.Log(rss.ToString());
-        bool successParse = true;
-        o = (Hashtable)JSON.JsonDecode(rss.ToString(), ref successParse);
         Hashtable o2 = (Hashtable)JSON.JsonDecode(rss2.ToString(), ref successParse);
-
-        HashtableParser hashParser = new HashtableParser();
-        hashParser.PrintHashTable(o);     //Convert the hashtable to WorldObjects
-        //hashParser.LinkWorldObjects();  //Link the WorldObjects (set correct children)
-        hashParser.PrintWorldObjects();
-        //string path = hashParser.SearchBestFit();
-        WorldObject root = hashParser.getRootObject();
-        //root.GenerateWorldObject();
-        //string path = root.SearchCompatibleGameObject();
-        //if (path != null) {
-        //    //Debug.Log("Spawn path: " + path);
-        //    GameObject instance = Instantiate(Resources.Load(path, typeof(GameObject)), new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-        //}
-        //hashParser.PrintWorldObjects(); //Print all WorldObjects to proofread
-        Debug.Log("Starting to generate");
-        GeneratorManager manager = new GeneratorManager();
-        manager.GenerateWorldObject(root);
-        manager.GenerateWorldObject(root);
-        manager.GenerateWorldObject(root);
-        manager.GenerateWorldObject(root);
-
-        HashtableParser hashParser2 = new HashtableParser();
         hashParser.PrintHashTable(o2);     //Convert the hashtable to WorldObjects
-        //string path = hashParser.SearchBestFit();
         WorldObject root2 = hashParser.getRootObject();
+
+        JObject rss3 = new JObject(
+            new JObject(
+                    new JProperty("type", "orientation"),
+                    new JProperty("attr", new JArray(
+                        new JObject(
+                            new JProperty("direction", "left"))
+                        ))));
+
+        Hashtable o3 = (Hashtable)JSON.JsonDecode(rss3.ToString(), ref successParse);
+        hashParser.PrintHashTable(o3);     //Convert the hashtable to WorldObjects
+        WorldObject root3 = hashParser.getRootObject();
+
+        JObject rss4 = new JObject(
+            new JObject(
+                    new JProperty("type", "streets"),
+                    new JProperty("attr", new JArray(
+                        new JObject(
+                            new JProperty("streetID", "1")),
+                        new JObject(
+                            new JProperty("type", "intersection-x"),
+                            new JProperty("attr", new JArray(
+                                new JObject(
+                                    new JProperty("length", "long"),
+                                    new JProperty("lotsLeft", "2"),
+                                    new JProperty("lotsRight", "6"),
+                                    new JProperty("orientation", "rightStraight")
+                                    ))))))));
+
+        JObject rss5 = new JObject(
+            new JObject(
+                    new JProperty("type", "orientation"),
+                    new JProperty("attr", new JArray(
+                        new JObject(
+                            new JProperty("direction", "right"))
+                        ))));
+
+        Hashtable o5 = (Hashtable)JSON.JsonDecode(rss5.ToString(), ref successParse);
+        hashParser.PrintHashTable(o5);     //Convert the hashtable to WorldObjects
+        WorldObject root5 = hashParser.getRootObject();
+
+        Hashtable o4 = (Hashtable)JSON.JsonDecode(rss4.ToString(), ref successParse);
+        hashParser.PrintHashTable(o4);     //Convert the hashtable to WorldObjects
+        WorldObject root4 = hashParser.getRootObject();
+
+        //4 small streets
+        manager.GenerateWorldObject(root);
+        manager.GenerateWorldObject(root);
+        manager.GenerateWorldObject(root);
+        manager.GenerateWorldObject(root);
+
+        //Intersection
+        manager.GenerateWorldObject(root4);
+
+        //Take a left
+        manager.GenerateWorldObject(root3);
+
+        //2 long streets
         manager.GenerateWorldObject(root2);
         manager.GenerateWorldObject(root2);
+
+        //Intersection
+        manager.GenerateWorldObject(root4);
+
+        //Take another left
+        manager.GenerateWorldObject(root3);
+
+        //Another 2 small streets
+        manager.GenerateWorldObject(root);
+        manager.GenerateWorldObject(root);
+
+        //Intersection
+        manager.GenerateWorldObject(root4);
+
+        //Take another left
+        manager.GenerateWorldObject(root3);
+
+        //1 small street
+        manager.GenerateWorldObject(root);
+        manager.GenerateWorldObject(root);
+
+        //Intersection
+        manager.GenerateWorldObject(root4);
+
+        //Take a right
+        manager.GenerateWorldObject(root5);
+
+        //1 small street
+        manager.GenerateWorldObject(root);
+
+        //Intersection
+        manager.GenerateWorldObject(root4);
+
+        //Take a right
+        manager.GenerateWorldObject(root5);
+
+        //1 long street
+        manager.GenerateWorldObject(root2);
+
+        //Intersection
+        manager.GenerateWorldObject(root4);
+
+        //Take a left
+        manager.GenerateWorldObject(root3);
+
+        //1 small street
+        manager.GenerateWorldObject(root);
+
+        //Debug.Log(rss.ToString());
+        //hashParser.PrintWorldObjects(); //Print all WorldObjects to proofread
+
     }
 
 

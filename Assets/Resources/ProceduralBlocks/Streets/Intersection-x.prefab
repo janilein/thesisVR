@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 114351966061342242}
   - component: {fileID: 54832240699095788}
   - component: {fileID: 65077288648450106}
+  - component: {fileID: 114183789651301212}
   m_Layer: 8
   m_Name: Intersection-x
   m_TagString: Highlightable
@@ -67,7 +68,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1168817855755390}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 11.59, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4156922991966768}
@@ -140,8 +141,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 25.35, y: 30.00001, z: 0.3000001}
-  m_Center: {x: -2.325, y: 0.0000004768373, z: 0.15}
+  m_Size: {x: 30, y: 0.3, z: 30}
+  m_Center: {x: 0, y: 0.15, z: 0}
 --- !u!95 &95027720310596806
 Animator:
   serializedVersion: 3
@@ -159,6 +160,19 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114183789651301212
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1168817855755390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8d61d3566ef74f4f8a52db5bb84b043, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  centerPoint: {x: 0, y: 0, z: 0}
+  topPoint: {x: 0, y: 0, z: 15}
 --- !u!114 &114351966061342242
 MonoBehaviour:
   m_ObjectHideFlags: 1

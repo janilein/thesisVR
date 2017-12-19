@@ -358,6 +358,7 @@ public class BuildingGenerator : Generator {
 
             //Height of a block
 
+            /*
             Mesh mesh = flatRoof.GetComponent<MeshFilter>().sharedMesh;
             Vector3 meshSize = mesh.bounds.size;
             float roofWidth, roofLength, roofHeight;
@@ -365,11 +366,12 @@ public class BuildingGenerator : Generator {
             roofWidth = scale.x * meshSize.x;
             roofLength = scale.z * meshSize.z;
             roofHeight = scale.y * meshSize.y;
+            */
 
-            //Vector3 scale = flatRoof.transform.localScale;
-            //float roofHeight = scale.y;
-            //float roofWidth = scale.x;
-            //float roofLength = scale.z;
+            Vector3 scale = flatRoof.transform.localScale;
+            float roofHeight = scale.y;
+            float roofWidth = scale.x;
+            float roofLength = scale.z;
 
             //Instantiate the roof
             GameObject roof = UnityEngine.Object.Instantiate(flatRoof, new Vector3(xPos, yPos + roofHeight / 2, zPos), Quaternion.identity, parent);
@@ -553,7 +555,7 @@ public class BuildingGenerator : Generator {
                 material = Resources.Load("Materials/MaterialPurple") as Material;
                 break;
             case "red":
-                material = Resources.Load("Materils/MaterialRed") as Material;
+                material = Resources.Load("Materials/MaterialRed") as Material;
                 break;
             case "yellow":
                 material = Resources.Load("Materials/MaterialYellow") as Material;

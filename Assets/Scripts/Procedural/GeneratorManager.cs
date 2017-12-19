@@ -8,13 +8,15 @@ public class GeneratorManager {
     private StreetGenerator streetGen;
     private Vector3 currentDirection;
     private Vector3 currentPosition;
+    private string pointDirection;
 
     public GeneratorManager() {
         buildingGen = new BuildingGenerator();
         streetGen = new StreetGenerator();
 
-        currentDirection = new Vector3(1, 0, 0);
-        currentPosition = Vector3.zero;
+        currentDirection = new Vector3(0, 0, 1);
+        currentPosition = Vector3.positiveInfinity;
+        pointDirection = "top";
     }
 
 	public void GenerateWorldObject(WorldObject obj) {
@@ -35,11 +37,12 @@ public class GeneratorManager {
             //WorldObject child = obj.GetChildren()[0];
             Debug.Log("parent is streets");
             //StreetGenerator generator = new StreetGenerator(); //gaan veel van deze maken, misschien in een singleton steken die we gaan oproepen?
-            streetGen.GenerateWorldObject(obj, currentDirection, ref currentPosition);
+            streetGen.GenerateWorldObject(obj, currentDirection, ref currentPosition, pointDirection);
+            pointDirection = "top";
         } else if (obj.GetObjectValue().Equals("orientation")) {
             ChangeDirection((string)obj.directAttributes["direction"]);
-            Debug.Log("currentDir x: " + currentDirection.x);
-            Debug.Log("currentDir z: " + currentDirection.z);
+            //Debug.Log("currentDir x: " + currentDirection.x);
+            //Debug.Log("currentDir z: " + currentDirection.z);
         } else {
             Debug.Log("ne marche pas");
         }
@@ -52,31 +55,41 @@ public class GeneratorManager {
                 if (currentDirection.x == 1) {
                     currentDirection.x = 0;
                     currentDirection.z = 1;
+                    //pointDirection = "left";
                 } else if (currentDirection.x == -1) {
                     currentDirection.x = 0;
                     currentDirection.z = -1;
+                    //pointDirection = "right";
                 } else if (currentDirection.z == 1) {
                     currentDirection.x = -1;
                     currentDirection.z = 0;
+                    //pointDirection = "bottom";
                 } else if (currentDirection.z == -1) {
                     currentDirection.x = 1;
                     currentDirection.z = 0;
+                    //pointDirection = "top";
                 }
+                pointDirection = "left";
                 break;
             case "right":
                 if (currentDirection.x == 1) {
                     currentDirection.x = 0;
                     currentDirection.z = -1;
+                    //pointDirection = "right";
                 } else if (currentDirection.x == -1) {
                     currentDirection.x = 0;
                     currentDirection.z = 1;
+                    //pointDirection = "left";
                 } else if (currentDirection.z == 1) {
                     currentDirection.x = 1;
                     currentDirection.z = 0;
+                    //pointDirection = "top";
                 } else if (currentDirection.z == -1) {
                     currentDirection.x = -1;
                     currentDirection.z = 0;
+                    //pointDirection = "bottom";
                 }
+                pointDirection = "right";
                 break;
             case "straigth":
                 //don't do anything

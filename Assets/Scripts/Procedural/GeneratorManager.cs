@@ -7,12 +7,14 @@ public class GeneratorManager {
     private BuildingGenerator buildingGen;
     private StreetGenerator streetGen;
     private Vector3 currentDirection;
+    private Vector3 currentPosition;
 
     public GeneratorManager() {
         buildingGen = new BuildingGenerator();
         streetGen = new StreetGenerator();
 
         currentDirection = new Vector3(1, 0, 0);
+        currentPosition = Vector3.zero;
     }
 
 	public void GenerateWorldObject(WorldObject obj) {
@@ -33,7 +35,7 @@ public class GeneratorManager {
             //WorldObject child = obj.GetChildren()[0];
             Debug.Log("parent is streets");
             //StreetGenerator generator = new StreetGenerator(); //gaan veel van deze maken, misschien in een singleton steken die we gaan oproepen?
-            streetGen.GenerateWorldObject(obj, currentDirection);
+            streetGen.GenerateWorldObject(obj, currentDirection, ref currentPosition);
         } else if (obj.GetObjectValue().Equals("orientation")) {
             ChangeDirection((string)obj.directAttributes["direction"]);
             Debug.Log("currentDir x: " + currentDirection.x);

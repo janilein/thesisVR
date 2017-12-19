@@ -6,11 +6,16 @@ using UnityEngine;
 public class StreetGenerator : Generator {
 
     Vector3 spawnPosition;
+    
+   
+    public StreetGenerator() {
+        
+    }
 
-    public override void GenerateWorldObject(WorldObject obj, Vector3 currentDirection) {
+    public override void GenerateWorldObject(WorldObject obj, Vector3 currentDirection, ref Vector3 currentPosition) {
 
         //For now
-        spawnPosition = new Vector3(0, 10f, 0);
+        spawnPosition = new Vector3(0, 0.2f, 0);
 
         //Obj is the 'lot' root obj
         int streetNumber;
@@ -30,7 +35,7 @@ public class StreetGenerator : Generator {
         parent.position = spawnPosition;
         switch (type) {
             case "straight":
-                GenerateStraightStreet(obj, parent, currentDirection);
+                GenerateStraightStreet(obj, parent, currentDirection, ref currentPosition);
                 break;
             case "intersection-t":
                 GenerateIntersectionT(obj, parent, currentDirection);
@@ -47,7 +52,7 @@ public class StreetGenerator : Generator {
         }
     }
 
-    private void GenerateStraightStreet(WorldObject obj, Transform parent, Vector3 currentDirection) {
+    private void GenerateStraightStreet(WorldObject obj, Transform parent, Vector3 currentDirection, ref Vector3 currentPosition) {
         Debug.Log("Generating straight street");
 
         //Okay uhm boom
@@ -59,22 +64,24 @@ public class StreetGenerator : Generator {
         Int32.TryParse(right, out lotsRight);
 
         //Fetch the straight street from resources
-        GameObject street = Resources.Load("ProceduralBlocks/Streets/Straight") as GameObject;
+        string length = (string)obj.directAttributes["length"];
+        length = length.Substring(0, 1).ToUpper() + length.Substring(1, length.Length - 1);
+        GameObject street = Resources.Load("ProceduralBlocks/Streets/Straight" + length) as GameObject;
 
         //Width, length & height of street
         Mesh mesh = street.GetComponentInChildren<MeshFilter>().sharedMesh;
         Vector3 meshSize = mesh.bounds.size;
         float streetWidth, streetLength, streetHeight;
         Vector3 scale = street.transform.lossyScale;
-        Debug.Log("Scale: " + scale);
-        Debug.Log("Meshsize: " + meshSize);
+        //Debug.Log("Scale: " + scale);
+        //Debug.Log("Meshsize: " + meshSize);
         streetWidth = scale.x * meshSize.x;
         streetLength = scale.z * meshSize.y;    //Swapping these is not by accident (street is turned 90 degrees)
         streetHeight = scale.y * meshSize.z;
 
-        Debug.Log("Streetwidth: " + streetWidth);
-        Debug.Log("Streetlength: " + streetLength);
-        Debug.Log("Streetheight: " + streetHeight);
+        //Debug.Log("Streetwidth: " + streetWidth);
+        //Debug.Log("Streetlength: " + streetLength);
+        //Debug.Log("Streetheight: " + streetHeight);
 
         //Create lots equally spaced along both sides of the straight street nigga
         //First left side
@@ -108,6 +115,24 @@ public class StreetGenerator : Generator {
         Debug.Log("Street length: " + streetLength);
         Debug.Log("Street height: " + streetHeight);
 
+        //Update current position & stuff
+        GenericStreet script = street.GetComponent<GenericStreet>();
+        if (!script) {
+            Debug.Log("Script null");
+        }
+        if (currentPosition == Vector3.zero) {  //1st street
+            //Up point
+            Debug.Log("Top point: " + script.GetTopPoint());
+            Vector3 top = script.GetTopPoint();
+            currentPosition = Quaternion.Euler(0, 90, 0) * top;
+
+        } else {                                //Other streets
+            Vector3 bottomPoint = Quaternion.Euler(0, 90, 0) *  script.GetBottomPoint();     
+            Vector3 centerToSpawn = currentPosition - bottomPoint;  //Centerpoint + bottomPoint (want bottomPoint is negatief) moet gelijk zijn aan currentPoint
+            parent.position = centerToSpawn + spawnPosition;
+            currentPosition = centerToSpawn + Quaternion.Euler(0, 90, 0) * script.GetTopPoint();
+        }
+        Debug.Log("Current position set to: " + currentPosition);
     }
 
     private void GenerateIntersectionT(WorldObject obj, Transform parent, Vector3 currentDirection) {
@@ -292,8 +317,8 @@ public class StreetGenerator : Generator {
     }
 
     private static void SetNeighboringLots(GameObject lotLeft, GameObject lotRight) {
-        Debug.Log("lotLeft: " + lotLeft.transform);
-        Debug.Log("lotRight: " + lotRight.transform);
+        //Debug.Log("lotLeft: " + lotLeft.transform);
+        //Debug.Log("lotRight: " + lotRight.transform);
         lotLeft.GetComponent<LotResizer>().SetRightNeighbor(lotRight);
         lotRight.GetComponent<LotResizer>().SetLeftNeighbor(lotLeft);
     }

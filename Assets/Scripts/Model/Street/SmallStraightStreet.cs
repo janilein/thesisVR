@@ -9,4 +9,9 @@ public class SmallStraightStreet : GenericStreet {
     public override Vector3 GetTopPoint() {
         return topPoint;
     }
+
+    public override Vector3 GetBottomPoint()
+    {
+        return -topPoint;
+    }
 }

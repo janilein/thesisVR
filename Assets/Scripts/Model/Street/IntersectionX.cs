@@ -11,9 +11,17 @@ public class IntersectionX : GenericStreet {
         return topPoint;
     }
 
+    public override Vector3 GetBottomPoint()
+    {
+        return -topPoint;
+    }
+
     public override Vector3 GetLeftPoint() {
         return leftPoint;
     }
 
-
+    public override Vector3 GetRightPoint()
+    {
+        return -leftPoint;
+    }
 }

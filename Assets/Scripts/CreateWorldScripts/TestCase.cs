@@ -175,6 +175,22 @@ public class TestCase : MonoBehaviour {
                             new JProperty("direction", "right"))
                         ))));
 
+        JObject rss6 = new JObject(
+         new JObject(
+                 new JProperty("type", "streets"),
+                 new JProperty("attr", new JArray(
+                     new JObject(
+                         new JProperty("streetID", "1")),
+                     new JObject(
+                         new JProperty("type", "intersection-t"),
+                         new JProperty("attr", new JArray(
+                             new JObject(
+                                 new JProperty("length", "long"),
+                                 new JProperty("lotsLeft", "2"),
+                                 new JProperty("lotsRight", "6"),
+                                 new JProperty("orientation", "leftRight")
+                                 ))))))));
+
         Hashtable o5 = (Hashtable)JSON.JsonDecode(rss5.ToString(), ref successParse);
         hashParser.PrintHashTable(o5);     //Convert the hashtable to WorldObjects
         WorldObject root5 = hashParser.getRootObject();
@@ -183,56 +199,21 @@ public class TestCase : MonoBehaviour {
         hashParser.PrintHashTable(o4);     //Convert the hashtable to WorldObjects
         WorldObject root4 = hashParser.getRootObject();
 
+        Hashtable o6 = (Hashtable)JSON.JsonDecode(rss6.ToString(), ref successParse);
+        hashParser.PrintHashTable(o6);     //Convert the hashtable to WorldObjects
+        WorldObject root6 = hashParser.getRootObject();
+
         //4 small streets
         manager.GenerateWorldObject(root);
         manager.GenerateWorldObject(root);
         manager.GenerateWorldObject(root);
         manager.GenerateWorldObject(root);
 
-        //Intersection
+        //t-intersection
         manager.GenerateWorldObject(root4);
 
         //Take a left
         manager.GenerateWorldObject(root3);
-
-        //2 long streets
-        manager.GenerateWorldObject(root2);
-        manager.GenerateWorldObject(root2);
-
-        //Intersection
-        manager.GenerateWorldObject(root4);
-
-        //Take another left
-        manager.GenerateWorldObject(root3);
-
-        //Another 2 small streets
-        manager.GenerateWorldObject(root);
-        manager.GenerateWorldObject(root);
-
-        //Intersection
-        manager.GenerateWorldObject(root4);
-
-        //Take another left
-        manager.GenerateWorldObject(root3);
-
-        //1 small street
-        manager.GenerateWorldObject(root);
-        manager.GenerateWorldObject(root);
-
-        //Intersection
-        manager.GenerateWorldObject(root4);
-
-        //Take a right
-        manager.GenerateWorldObject(root5);
-
-        //1 small street
-        manager.GenerateWorldObject(root);
-
-        //Intersection
-        manager.GenerateWorldObject(root4);
-
-        //Take a right
-        manager.GenerateWorldObject(root5);
 
         //1 long street
         manager.GenerateWorldObject(root2);
@@ -243,8 +224,74 @@ public class TestCase : MonoBehaviour {
         //Take a left
         manager.GenerateWorldObject(root3);
 
-        //1 small street
-        manager.GenerateWorldObject(root);
+        //2 long streets
+        manager.GenerateWorldObject(root2);
+        //manager.GenerateWorldObject(root2);
+
+        ////Intersection
+        //manager.GenerateWorldObject(root4);
+
+        ////Take another left
+        //manager.GenerateWorldObject(root3);
+
+        ////Another 2 small streets
+        //manager.GenerateWorldObject(root);
+        //manager.GenerateWorldObject(root);
+
+        ////Intersection
+        //manager.GenerateWorldObject(root4);
+
+        ////Take another left
+        //manager.GenerateWorldObject(root3);
+
+        ////1 small street
+        //manager.GenerateWorldObject(root);
+        //manager.GenerateWorldObject(root);
+
+        ////Intersection
+        //manager.GenerateWorldObject(root4);
+
+        ////Take a right
+        //manager.GenerateWorldObject(root5);
+
+        ////1 small street
+        //manager.GenerateWorldObject(root);
+
+        ////Intersection
+        //manager.GenerateWorldObject(root4);
+
+        ////Take a right
+        //manager.GenerateWorldObject(root5);
+
+        ////1 long street
+        //manager.GenerateWorldObject(root2);
+
+        ////Intersection
+        //manager.GenerateWorldObject(root4);
+
+        ////Take a left
+        //manager.GenerateWorldObject(root3);
+
+        ////1 small street
+        //manager.GenerateWorldObject(root);
+
+        ////t-intersection
+        //manager.GenerateWorldObject(root6);
+
+        ////Take a left
+        //manager.GenerateWorldObject(root3);
+
+        ////1 long street
+        //manager.GenerateWorldObject(root2);
+
+        ////t-intersection
+        //manager.GenerateWorldObject(root6);
+
+        ////Take a left
+        //manager.GenerateWorldObject(root3);
+
+        ////Intersection
+        //manager.GenerateWorldObject(root4);
 
         //Debug.Log(rss.ToString());
         //hashParser.PrintWorldObjects(); //Print all WorldObjects to proofread

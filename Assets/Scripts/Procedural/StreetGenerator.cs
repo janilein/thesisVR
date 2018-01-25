@@ -39,7 +39,7 @@ public class StreetGenerator : Generator {
                 GenerateStraightStreet(obj, parent, currentDirection, ref currentPosition, pointDirection);
                 break;
             case "intersection-t":
-                GenerateIntersectionT(obj, parent, currentDirection);
+                GenerateIntersectionT(obj, parent, currentDirection, ref currentPosition, pointDirection);
                 break;
             case "intersection-x":
                 GenerateIntersectionX(obj, parent, currentDirection, ref currentPosition, pointDirection);
@@ -211,7 +211,7 @@ public class StreetGenerator : Generator {
      * TODO, deze werkt nog niet. Straight en X wel al
      */
 
-    private void GenerateIntersectionT(WorldObject obj, Transform parent, Vector3 currentDirection) {
+    private void GenerateIntersectionT(WorldObject obj, Transform parent, Vector3 currentDirection, ref Vector3 currentPosition, string pointDirection) {
         Debug.Log("Generating Intersection-t");
         string straight = (string)obj.directAttributes["lotsStraight"];
         int lotsStraight;
@@ -245,8 +245,57 @@ public class StreetGenerator : Generator {
             SpawnLot(lotsStraight, spawnPointLot, lotWidth, lotLength, parent);
         }
 
+        //Update current position & stuff
+        GenericStreet script = street.GetComponent<GenericStreet>();
+        if (!script)
+        {
+            Debug.Log("Script null");
+        }
+
         GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
-        CheckOrientationIntersectionT(orientation, currentDirection, parent);
+        CheckOrientationIntersectionT(orientation, currentDirection, parent, script);
+
+        if (currentPosition.x == float.PositiveInfinity)
+        { //no street placed
+            currentPosition = Vector3.zero; /*rotation * top;*/
+        }
+        else
+        {
+            //Left, right, or top?
+            Vector3 point = GetCorrectPoint(pointDirection);
+            Debug.Log("Correct point: " + point);
+
+            //Onze transform is gerotate door onze walking direction (previous), point moet even veel gerotate worden
+            //Quaternion previousRotation = previousStreetScript.gameObject.transform.localRotation;
+            Vector3 previousRotation = previousStreet.localEulerAngles;
+            Debug.Log("Previous rotation: " + previousRotation);
+
+            Quaternion rotation = Quaternion.Euler(previousRotation);
+            Vector3 rotationEuler = rotation.eulerAngles;
+            Vector3 inverseEuler = new Vector3(rotationEuler.x * -1, rotationEuler.y * -1, rotationEuler.z * -1);
+            Quaternion inverseRotation = Quaternion.Euler(inverseEuler);
+            point = inverseRotation * point;
+            Debug.Log("Correct point after rotation: " + point);
+
+            //Neem nu top deel van de nieuwe straat
+            Vector3 topPoint = script.GetTopPoint();
+            Debug.Log("Top point: " + topPoint);
+
+            //Rotate het volgens walking direction
+            RotateVector(ref topPoint, currentDirection);
+            Debug.Log("Top point after rotation: " + topPoint);
+
+            //Bereken spawnpoint
+            Vector3 centerToSpawn = currentPosition + topPoint + point;
+
+            //Zet parent
+            parent.position = centerToSpawn + spawnPosition;
+            currentPosition = centerToSpawn;
+        }
+
+
+        previousStreetScript = script;
+        Debug.Log("Current position set to: " + currentPosition);
     }
 
     private void GenerateIntersectionX(WorldObject obj, Transform parent, Vector3 currentDirection, ref Vector3 currentPosition, string pointDirection) {
@@ -463,7 +512,7 @@ public class StreetGenerator : Generator {
         return rotation;
     }
 
-    private void CheckOrientationIntersectionT(string orientation, Vector3 currentDirection, Transform parent) {
+    private void CheckOrientationIntersectionT(string orientation, Vector3 currentDirection, Transform parent, GenericStreet script) {
         Vector3 rot = parent.rotation.eulerAngles;
         switch (orientation) {
             case "leftStraight":
@@ -516,10 +565,10 @@ public class StreetGenerator : Generator {
                 point = previousStreetScript.GetLeftPoint();
                 break;
             case "right":
-                point = -previousStreetScript.GetLeftPoint();
+                point = previousStreetScript.GetRightPoint();
                 break;
             case "bottom":
-                point = -previousStreetScript.GetTopPoint();
+                point = previousStreetScript.GetBottomPoint();
                 break;
         }
         return point;

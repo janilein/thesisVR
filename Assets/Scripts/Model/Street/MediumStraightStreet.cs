@@ -5,6 +5,12 @@ using UnityEngine;
 public class MediumStraightStreet : GenericStreet {
 
     public Vector3 topPoint = new Vector3(0, 0, 30f);
+    public string type = "straightstreet";
+
+    public override string GetTypePoint()
+    {
+        return type;
+    }
 
     public override Vector3 GetTopPoint() {
         return topPoint;

@@ -210,10 +210,62 @@ public class TestCase : MonoBehaviour {
         manager.GenerateWorldObject(root);
 
         //t-intersection
-        manager.GenerateWorldObject(root4);
+        manager.GenerateWorldObject(root6);
 
         //Take a left
         manager.GenerateWorldObject(root3);
+
+        //1 long street
+        manager.GenerateWorldObject(root2);
+
+        //Intersection
+        manager.GenerateWorldObject(root6);
+
+        //Take a left
+        manager.GenerateWorldObject(root3);
+
+        //2 long streets
+        manager.GenerateWorldObject(root2);
+        manager.GenerateWorldObject(root2);
+        manager.GenerateWorldObject(root2);
+        manager.GenerateWorldObject(root2);
+
+        //Intersection
+        manager.GenerateWorldObject(root4);
+
+        //Take another left
+        manager.GenerateWorldObject(root3);
+
+        //Another 2 small streets
+        manager.GenerateWorldObject(root);
+        manager.GenerateWorldObject(root);
+        manager.GenerateWorldObject(root2);
+        manager.GenerateWorldObject(root2);
+
+        //Intersection
+        manager.GenerateWorldObject(root4);
+
+        //Take another left
+        manager.GenerateWorldObject(root3);
+
+        //1 small street
+        manager.GenerateWorldObject(root);
+        manager.GenerateWorldObject(root);
+
+        //Intersection
+        manager.GenerateWorldObject(root4);
+
+        //Take a right
+        manager.GenerateWorldObject(root5);
+
+        //1 small street
+        manager.GenerateWorldObject(root);
+
+        //Intersection
+        manager.GenerateWorldObject(root4);
+
+        //Take a right
+        manager.GenerateWorldObject(root5);
 
         //1 long street
         manager.GenerateWorldObject(root2);
@@ -224,74 +276,26 @@ public class TestCase : MonoBehaviour {
         //Take a left
         manager.GenerateWorldObject(root3);
 
-        //2 long streets
+        //1 small street
+        manager.GenerateWorldObject(root);
+
+        //t-intersection
+        manager.GenerateWorldObject(root6);
+
+        //Take a left
+        manager.GenerateWorldObject(root3);
+
+        //1 long street
         manager.GenerateWorldObject(root2);
-        //manager.GenerateWorldObject(root2);
 
-        ////Intersection
-        //manager.GenerateWorldObject(root4);
+        //t-intersection
+        manager.GenerateWorldObject(root6);
 
-        ////Take another left
-        //manager.GenerateWorldObject(root3);
+        //Take a left
+        manager.GenerateWorldObject(root3);
 
-        ////Another 2 small streets
-        //manager.GenerateWorldObject(root);
-        //manager.GenerateWorldObject(root);
-
-        ////Intersection
-        //manager.GenerateWorldObject(root4);
-
-        ////Take another left
-        //manager.GenerateWorldObject(root3);
-
-        ////1 small street
-        //manager.GenerateWorldObject(root);
-        //manager.GenerateWorldObject(root);
-
-        ////Intersection
-        //manager.GenerateWorldObject(root4);
-
-        ////Take a right
-        //manager.GenerateWorldObject(root5);
-
-        ////1 small street
-        //manager.GenerateWorldObject(root);
-
-        ////Intersection
-        //manager.GenerateWorldObject(root4);
-
-        ////Take a right
-        //manager.GenerateWorldObject(root5);
-
-        ////1 long street
-        //manager.GenerateWorldObject(root2);
-
-        ////Intersection
-        //manager.GenerateWorldObject(root4);
-
-        ////Take a left
-        //manager.GenerateWorldObject(root3);
-
-        ////1 small street
-        //manager.GenerateWorldObject(root);
-
-        ////t-intersection
-        //manager.GenerateWorldObject(root6);
-
-        ////Take a left
-        //manager.GenerateWorldObject(root3);
-
-        ////1 long street
-        //manager.GenerateWorldObject(root2);
-
-        ////t-intersection
-        //manager.GenerateWorldObject(root6);
-
-        ////Take a left
-        //manager.GenerateWorldObject(root3);
-
-        ////Intersection
-        //manager.GenerateWorldObject(root4);
+        //Intersection
+        manager.GenerateWorldObject(root4);
 
         //Debug.Log(rss.ToString());
         //hashParser.PrintWorldObjects(); //Print all WorldObjects to proofread

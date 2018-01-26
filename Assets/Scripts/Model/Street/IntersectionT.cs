@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class IntersectionT : GenericStreet
 {
-
     public Vector3 topPoint = new Vector3(0, 0, 15f);
     public Vector3 leftPoint = new Vector3(-15f, 0, 0);
     public Vector3 rightPoint = new Vector3(4.5f, 0, 0);
     public Vector3 bottomPoint = new Vector3(0, 0, -15f);
+    public string type = "intersectionT";
+
+    public override string GetTypePoint()
+    {
+        return type;
+    }
 
     public override Vector3 GetTopPoint()
     {
@@ -30,19 +35,23 @@ public class IntersectionT : GenericStreet
         return rightPoint;
     }
 
-    //public override void SetTopPoint(Vector3 point) {
-    //    topPoint = point;
-    //}
+    public override void SetTopPoint(Vector3 point)
+    {
+        topPoint = point;
+    }
 
-    //public override void SetBottomPoint(Vector3 point) {
-    //    bottomPoint = point;
-    //}
+    public override void SetBottomPoint(Vector3 point)
+    {
+        bottomPoint = point;
+    }
 
-    //public override void SetLeftPoint(Vector3 point) {
-    //    leftPoint = point;
-    //}
+    public override void SetLeftPoint(Vector3 point)
+    {
+        leftPoint = point;
+    }
 
-    //public override void SetRightPoint(Vector3 point) {
-    //    rightPoint = point;
-    //}
+    public override void SetRightPoint(Vector3 point)
+    {
+        rightPoint = point;
+    }
 }

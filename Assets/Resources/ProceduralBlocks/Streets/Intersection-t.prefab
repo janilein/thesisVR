@@ -185,7 +185,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerPoint: {x: 0, y: 0, z: 0}
-  topPoint: {x: 0, y: 0, z: 15}
-  leftPoint: {x: -15, y: 0, z: 0}
-  rightPoint: {x: 4.5, y: 0, z: 0}
-  bottomPoint: {x: 0, y: 0, z: -15}
+  topPoint: {x: -4.5, y: 0, z: 0}
+  leftPoint: {x: 0, y: 0, z: -15}
+  rightPoint: {x: 0, y: 0, z: 15}
+  bottomPoint: {x: 15, y: 0, z: 0}
+  type: intersectionT

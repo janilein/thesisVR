@@ -8,6 +8,8 @@ public class StreetGenerator : Generator {
     private Vector3 spawnPosition;
     private GenericStreet previousStreetScript;
     private Transform previousStreet;
+    //toegevoegd voot T, maar werkt niet
+    private string previousOrientation;
 
     public StreetGenerator() {
 
@@ -132,20 +134,32 @@ public class StreetGenerator : Generator {
             currentPosition = Vector3.zero; /*rotation * top;*/
         } else {
             //Left, right, or top?
-            Vector3 point = GetCorrectPoint(pointDirection);
-            Debug.Log("Correct point: " + point);
+            string type = previousStreetScript.GetTypePoint();
+            Debug.Log("######type: " + type);
+            Vector3 point;
+            if (type.Equals("intersectionT")) {
+                Debug.Log("hierzoooo");
+                checkPoints(previousOrientation, previousStreetScript, currentDirection);
+                point = previousStreetScript.GetTopPoint();
+            } else
+            {
+                point = GetCorrectPoint(pointDirection);
+                Debug.Log("Correct point: " + point);
 
-            //Onze transform is gerotate door onze walking direction (previous), point moet even veel gerotate worden
-            //Quaternion previousRotation = previousStreetScript.gameObject.transform.localRotation;
-            Vector3 previousRotation = previousStreet.localEulerAngles;
-            Debug.Log("Previous rotation: " + previousRotation);
+                //Onze transform is gerotate door onze walking direction (previous), point moet even veel gerotate worden
+                //Quaternion previousRotation = previousStreetScript.gameObject.transform.localRotation;
+                Vector3 previousRotation = previousStreet.localEulerAngles;
+                Debug.Log("Previous rotation: " + previousRotation);
 
-            Quaternion rotation = Quaternion.Euler(previousRotation);
-            Vector3 rotationEuler = rotation.eulerAngles;
-            Vector3 inverseEuler = new Vector3(rotationEuler.x * -1, rotationEuler.y * -1, rotationEuler.z * -1);
-            Quaternion inverseRotation = Quaternion.Euler(inverseEuler);
-            point = inverseRotation * point;
-            Debug.Log("Correct point after rotation: " + point);
+                Quaternion rotation = Quaternion.Euler(previousRotation);
+                Vector3 rotationEuler = rotation.eulerAngles;
+                Vector3 inverseEuler = new Vector3(rotationEuler.x * -1, rotationEuler.y * -1, rotationEuler.z * -1);
+                Quaternion inverseRotation = Quaternion.Euler(inverseEuler);
+                point = inverseRotation * point;
+                Debug.Log("Correct point after rotation: " + point);
+            }
+            //tot hier
+            
 
             //Neem nu top deel van de nieuwe straat
             Vector3 topPoint = script.GetTopPoint();
@@ -164,7 +178,88 @@ public class StreetGenerator : Generator {
         }
 
         previousStreetScript = script;
+        previousOrientation = null;
         Debug.Log("Current position set to: " + currentPosition);
+    }
+
+    //toegevoegd voor T, maar werkt nog niet
+    private void checkPoints(string orientation, GenericStreet script, Vector3 currentDirection) {
+        switch (orientation) {
+            //case "leftStraight":
+            //    script.SetLeftPoint(new Vector3(-15f, 0, 0));
+            //    script.SetRightPoint(new Vector3(4.5f, 0, 0));
+            //    script.SetTopPoint(new Vector3(0, 0, 15f));
+            //    script.SetBottomPoint(new Vector3(0, 0, -15f));
+            //    break;
+            //case "rightStraight":    
+            //    script.SetLeftPoint(new Vector3(-4.5f, 0, 0));
+            //    script.SetRightPoint(new Vector3(15f, 0, 0));
+            //    script.SetTopPoint(new Vector3(0, 0, 15f));
+            //    script.SetBottomPoint(new Vector3(0, 0, -15f));
+            //    break;
+            //case "leftRight":
+            //    Debug.Log("hierzo");
+            //    script.SetLeftPoint(new Vector3(0, 0, -15f));
+            //    script.SetRightPoint(new Vector3(0, 0, 4.5f));
+            //    script.SetTopPoint(new Vector3(-15f, 0, 0));
+            //    script.SetBottomPoint(new Vector3(15f, 0, 0));
+            //    break;
+
+            case "leftStraight":
+                if (currentDirection.x == 1) {
+                    script.SetLeftPoint(new Vector3(0, 0, 15f));
+                    script.SetRightPoint(new Vector3(0, 0, -4.5f));
+                    script.SetTopPoint(new Vector3(15f, 0, 0));
+                    script.SetBottomPoint(new Vector3(-15f, 0, 0));
+                } else if (currentDirection.x == -1) {
+                    script.SetLeftPoint(new Vector3(0, 0, -15f));
+                    script.SetRightPoint(new Vector3(0, 0, 4.5f));
+                    script.SetTopPoint(new Vector3(-15f, 0, 0));
+                    script.SetBottomPoint(new Vector3(15f, 0, 0));
+                } else if (currentDirection.z == -1) {
+                    script.SetLeftPoint(new Vector3(15f, 0, 0));
+                    script.SetRightPoint(new Vector3(-4.5f, 0, 0));
+                    script.SetTopPoint(new Vector3(0, 0, -15f));
+                    script.SetBottomPoint(new Vector3(0, 0, 15f));
+                } //nothing changes when z = 1
+                break;
+            case "rightStraight":
+                if (currentDirection.x == 1) {
+                    script.SetLeftPoint(new Vector3(0, 0, 4.5f));
+                    script.SetRightPoint(new Vector3(0, 0, -15f));
+                    script.SetTopPoint(new Vector3(15f, 0, 0));
+                    script.SetBottomPoint(new Vector3(-15f, 0, 0));
+                } else if (currentDirection.x == -1) {
+                    script.SetLeftPoint(new Vector3(0, 0, -4.5f));
+                    script.SetRightPoint(new Vector3(0, 0, 15f));
+                    script.SetTopPoint(new Vector3(-15f, 0, 0));
+                    script.SetBottomPoint(new Vector3(15f, 0, 0));
+                } else if (currentDirection.z == 1) {
+                    script.SetLeftPoint(new Vector3(-4.5f, 0, 0));
+                    script.SetRightPoint(new Vector3(15f, 0, 0));
+                    script.SetTopPoint(new Vector3(0, 0, 15f));
+                    script.SetBottomPoint(new Vector3(0, 0, -15f));
+                } //nothing changes when z = -1
+                break;
+            case "leftRight":
+                if (currentDirection.x == -1) {
+                    script.SetLeftPoint(new Vector3(0, 0, -15f));
+                    script.SetRightPoint(new Vector3(0, 0, 15f));
+                    script.SetTopPoint(new Vector3(-4.5f, 0, 0));
+                    script.SetBottomPoint(new Vector3(15f, 0, 0));
+                } else if (currentDirection.z == 1) {
+                    script.SetLeftPoint(new Vector3(-15f, 0, 0));
+                    script.SetRightPoint(new Vector3(15f, 0, 0));
+                    script.SetTopPoint(new Vector3(0, 0, 4.5f));
+                    script.SetBottomPoint(new Vector3(0, 0, -15f));
+                } else if (currentDirection.z == -1) {
+                    script.SetLeftPoint(new Vector3(15f, 0, 0));
+                    script.SetRightPoint(new Vector3(-15f, 0, 0));
+                    script.SetTopPoint(new Vector3(0, 0, -4.5f));
+                    script.SetBottomPoint(new Vector3(0, 0, 15f));
+                } // nothing changes when x = 1
+                break;
+        }
     }
 
     private void CheckOrientationStreet(Vector3 currentDirection, Transform parent) {
@@ -207,10 +302,6 @@ public class StreetGenerator : Generator {
         point = rotation * point;
     }
 
-    /*
-     * TODO, deze werkt nog niet. Straight en X wel al
-     */
-
     private void GenerateIntersectionT(WorldObject obj, Transform parent, Vector3 currentDirection, ref Vector3 currentPosition, string pointDirection) {
         Debug.Log("Generating Intersection-t");
         string straight = (string)obj.directAttributes["lotsStraight"];
@@ -251,7 +342,11 @@ public class StreetGenerator : Generator {
         {
             Debug.Log("Script null");
         }
-
+        //reset the points everytime
+        script.SetTopPoint(new Vector3(0, 0, 15f));
+        script.SetLeftPoint(new Vector3(-15f, 0, 0));
+        script.SetRightPoint(new Vector3(4.5f, 0, 0));
+        script.SetBottomPoint(new Vector3(0, 0, -15f));
         GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
         CheckOrientationIntersectionT(orientation, currentDirection, parent, script);
 
@@ -262,20 +357,32 @@ public class StreetGenerator : Generator {
         else
         {
             //Left, right, or top?
-            Vector3 point = GetCorrectPoint(pointDirection);
-            Debug.Log("Correct point: " + point);
+            string type = previousStreetScript.GetTypePoint();
+            Debug.Log("######type: " + type);
+            Vector3 point;
+            if (type.Equals("intersectionT"))
+            {
+                Debug.Log("hierzoooo");
+                checkPoints(previousOrientation, previousStreetScript, currentDirection);
+                point = previousStreetScript.GetTopPoint();
+            }
+            else
+            {
+                point = GetCorrectPoint(pointDirection);
+                Debug.Log("Correct point: " + point);
 
-            //Onze transform is gerotate door onze walking direction (previous), point moet even veel gerotate worden
-            //Quaternion previousRotation = previousStreetScript.gameObject.transform.localRotation;
-            Vector3 previousRotation = previousStreet.localEulerAngles;
-            Debug.Log("Previous rotation: " + previousRotation);
+                //Onze transform is gerotate door onze walking direction (previous), point moet even veel gerotate worden
+                //Quaternion previousRotation = previousStreetScript.gameObject.transform.localRotation;
+                Vector3 previousRotation = previousStreet.localEulerAngles;
+                Debug.Log("Previous rotation: " + previousRotation);
 
-            Quaternion rotation = Quaternion.Euler(previousRotation);
-            Vector3 rotationEuler = rotation.eulerAngles;
-            Vector3 inverseEuler = new Vector3(rotationEuler.x * -1, rotationEuler.y * -1, rotationEuler.z * -1);
-            Quaternion inverseRotation = Quaternion.Euler(inverseEuler);
-            point = inverseRotation * point;
-            Debug.Log("Correct point after rotation: " + point);
+                Quaternion rotation = Quaternion.Euler(previousRotation);
+                Vector3 rotationEuler = rotation.eulerAngles;
+                Vector3 inverseEuler = new Vector3(rotationEuler.x * -1, rotationEuler.y * -1, rotationEuler.z * -1);
+                Quaternion inverseRotation = Quaternion.Euler(inverseEuler);
+                point = inverseRotation * point;
+                Debug.Log("Correct point after rotation: " + point);
+            }
 
             //Neem nu top deel van de nieuwe straat
             Vector3 topPoint = script.GetTopPoint();
@@ -295,6 +402,7 @@ public class StreetGenerator : Generator {
 
 
         previousStreetScript = script;
+        previousOrientation = orientation;
         Debug.Log("Current position set to: " + currentPosition);
     }
 
@@ -313,20 +421,32 @@ public class StreetGenerator : Generator {
             currentPosition = Vector3.zero; /*rotation * top;*/
         } else {
             //Left, right, or top?
-            Vector3 point = GetCorrectPoint(pointDirection);
-            Debug.Log("Correct point: " + point);
+            string type = previousStreetScript.GetTypePoint();
+            Debug.Log("######type: " + type);
+            Vector3 point;
+            if (type.Equals("intersectionT"))
+            {
+                Debug.Log("hierzoooo");
+                checkPoints(previousOrientation, previousStreetScript, currentDirection);
+                point = previousStreetScript.GetTopPoint();
+            }
+            else
+            {
+                point = GetCorrectPoint(pointDirection);
+                Debug.Log("Correct point: " + point);
 
-            //Onze transform is gerotate door onze walking direction (previous), point moet even veel gerotate worden
-            //Quaternion previousRotation = previousStreetScript.gameObject.transform.localRotation;
-            Vector3 previousRotation = previousStreet.localEulerAngles;
-            Debug.Log("Previous rotation: " + previousRotation);
+                //Onze transform is gerotate door onze walking direction (previous), point moet even veel gerotate worden
+                //Quaternion previousRotation = previousStreetScript.gameObject.transform.localRotation;
+                Vector3 previousRotation = previousStreet.localEulerAngles;
+                Debug.Log("Previous rotation: " + previousRotation);
 
-            Quaternion rotation = Quaternion.Euler(previousRotation);
-            Vector3 rotationEuler = rotation.eulerAngles;
-            Vector3 inverseEuler = new Vector3(rotationEuler.x * -1, rotationEuler.y * -1, rotationEuler.z * -1);
-            Quaternion inverseRotation = Quaternion.Euler(inverseEuler);
-            point = inverseRotation * point;
-            Debug.Log("Correct point after rotation: " + point);
+                Quaternion rotation = Quaternion.Euler(previousRotation);
+                Vector3 rotationEuler = rotation.eulerAngles;
+                Vector3 inverseEuler = new Vector3(rotationEuler.x * -1, rotationEuler.y * -1, rotationEuler.z * -1);
+                Quaternion inverseRotation = Quaternion.Euler(inverseEuler);
+                point = inverseRotation * point;
+                Debug.Log("Correct point after rotation: " + point);
+            }
 
             //Neem nu top deel van de nieuwe straat
             Vector3 topPoint = script.GetTopPoint();
@@ -346,13 +466,22 @@ public class StreetGenerator : Generator {
 
 
         previousStreetScript = script;
+        previousOrientation = null;
         Debug.Log("Current position set to: " + currentPosition);
 
     }
 
+    /*
+    * TODO, deze werkt nog niet. Straight, X  en T wel al
+    */
+
     private void GenerateRoundabout(WorldObject obj, Transform parent, Vector3 currentDirection) {
         Debug.Log("Generating Roundabout");
     }
+
+    /*
+    * TODO, deze werkt nog niet. Straight, X  en T wel al
+    */
 
     private void GenerateTurn(WorldObject obj, Transform parent, Vector3 currentDirection) {
         Debug.Log("Generating Turn");
@@ -526,6 +655,7 @@ public class StreetGenerator : Generator {
                     rot = new Vector3(rot.x, rot.y + 180, rot.z);
                     parent.rotation = Quaternion.Euler(rot);
                 } //nothing changes when z = 1
+                //top,bottom,left and right stays the same
                 break;
             case "rightStraight":
                 if (currentDirection.x == 1) {

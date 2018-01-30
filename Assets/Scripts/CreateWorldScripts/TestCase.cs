@@ -7,44 +7,42 @@ using UnityEngine;
 public class TestCase : MonoBehaviour {
 
     public void Test() {
-        /*
-        JObject rss =
-                new JObject(
-                    new JProperty("type", "buildings"),
-                    new JProperty("attr", new JArray(
-                        new JObject(
-                            new JProperty("type", "appartement"),
-                            new JProperty("attr", new JArray(
-                                new JObject(
-                                    new JProperty("verdiepingen", "2"),
-                                    new JProperty("kleur", "blauw")),
-                                new JObject(
-                                    new JProperty("other", "floor"),
-                                    new JProperty("attr", new JArray(
-                                        new JObject(
-                                            new JProperty("kleur", "blauw"))))),
-                                new JObject(
-                                    new JProperty("other", "floor"),
-                                    new JProperty("attr", new JArray(
-                                        new JObject(
-                                            new JProperty("kleur", "geel"))))),
-                                new JObject(
-                                    new JProperty("other", "dak"),
-                                    new JProperty("attr", new JArray(
-                                        new JObject(
-                                          new JProperty("kleur", "groen"))))),
-                                new JObject(
-                                    new JProperty("other", "dak"),
-                                    new JProperty("attr", new JArray(
-                                        new JObject(
-                                            new JProperty("kleur", "groen"),
-                                            new JProperty("grootte", "klein")))))))))));
-        */
+
+        //JObject rss =
+        //        new JObject(
+        //            new JProperty("type", "buildings"),
+        //            new JProperty("attr", new JArray(
+        //                new JObject(
+        //                    new JProperty("type", "appartement"),
+        //                    new JProperty("attr", new JArray(
+        //                        new JObject(
+        //                            new JProperty("verdiepingen", "2"),
+        //                            new JProperty("kleur", "blauw")),
+        //                        new JObject(
+        //                            new JProperty("other", "floor"),
+        //                            new JProperty("attr", new JArray(
+        //                                new JObject(
+        //                                    new JProperty("kleur", "blauw"))))),
+        //                        new JObject(
+        //                            new JProperty("other", "floor"),
+        //                            new JProperty("attr", new JArray(
+        //                                new JObject(
+        //                                    new JProperty("kleur", "geel"))))),
+        //                        new JObject(
+        //                            new JProperty("other", "dak"),
+        //                            new JProperty("attr", new JArray(
+        //                                new JObject(
+        //                                  new JProperty("kleur", "groen"))))),
+        //                        new JObject(
+        //                            new JProperty("other", "dak"),
+        //                            new JProperty("attr", new JArray(
+        //                                new JObject(
+        //                                    new JProperty("kleur", "groen"),
+        //                                    new JProperty("grootte", "klein")))))))))));
+
 
         //building case
 
-        /*
-        
         JObject rss = new JObject(
             new JObject(
                     new JProperty("type", "lots"),
@@ -56,7 +54,7 @@ public class TestCase : MonoBehaviour {
                                 new JProperty("type", "buildings"),
                                 new JProperty("attr", new JArray(
                                     new JObject(
-                                        new JProperty("type", "house"),
+                                        new JProperty("type", "apartment"),
                                         new JProperty("attr", new JArray(
                                             new JObject(
                                                 //new JProperty("floors", "5")
@@ -89,35 +87,34 @@ public class TestCase : MonoBehaviour {
         );
 
 
-    */
 
-        JObject rss = new JObject(
-            new JObject(
-                    new JProperty("type", "streets"),
-                    new JProperty("attr", new JArray(
-                        new JObject(
-                            new JProperty("streetID", "1")),
-                        new JObject(
-                            new JProperty("type", "straight"),
-                            new JProperty("attr", new JArray(
-                                new JObject(
-                                    new JProperty("length", "small"),
-                                    new JProperty("lotsLeft", "2"),
-                                    new JProperty("lotsRight", "6"),
-                                    new JProperty("orientation", "rightStraight")
-                                    ))))))));
+        //JObject rss = new JObject(
+        //    new JObject(
+        //            new JProperty("type", "streets"),
+        //            new JProperty("attr", new JArray(
+        //                new JObject(
+        //                    new JProperty("streetID", "1")),
+        //                new JObject(
+        //                    new JProperty("type", "straight"),
+        //                    new JProperty("attr", new JArray(
+        //                        new JObject(
+        //                            new JProperty("length", "small"),
+        //                            new JProperty("lotsLeft", "2"),
+        //                            new JProperty("lotsRight", "6"),
+        //                            new JProperty("orientation", "rightStraight")
+        //                            ))))))));
 
         bool successParse = true;
         Hashtable o = (Hashtable)JSON.JsonDecode(rss.ToString(), ref successParse);
         HashtableParser hashParser = new HashtableParser();
         hashParser.PrintHashTable(o);     //Convert the hashtable to WorldObjects
         //hashParser.LinkWorldObjects();  //Link the WorldObjects (set correct children)
-        hashParser.PrintWorldObjects();
-        //string path = hashParser.SearchBestFit();
+        //hashParser.PrintWorldObjects();
+        ////string path = hashParser.SearchBestFit();
         WorldObject root = hashParser.getRootObject();
-        Debug.Log("Starting to generate");
+        //Debug.Log("Starting to generate");
         GeneratorManager manager = new GeneratorManager();
-        //manager.GenerateWorldObject(root);
+        manager.GenerateWorldObject(root);
 
         JObject rss2 = new JObject(
             new JObject(
@@ -203,99 +200,99 @@ public class TestCase : MonoBehaviour {
         hashParser.PrintHashTable(o6);     //Convert the hashtable to WorldObjects
         WorldObject root6 = hashParser.getRootObject();
 
-        //4 small streets
-        manager.GenerateWorldObject(root);
-        manager.GenerateWorldObject(root);
-        manager.GenerateWorldObject(root);
-        manager.GenerateWorldObject(root);
+        ////4 small streets
+        //manager.GenerateWorldObject(root);
+        //manager.GenerateWorldObject(root);
+        //manager.GenerateWorldObject(root);
+        //manager.GenerateWorldObject(root);
 
-        //t-intersection
-        manager.GenerateWorldObject(root6);
+        ////t-intersection
+        //manager.GenerateWorldObject(root6);
 
-        //Take a left
-        manager.GenerateWorldObject(root3);
+        ////Take a left
+        //manager.GenerateWorldObject(root3);
 
-        //1 long street
-        manager.GenerateWorldObject(root2);
+        ////1 long street
+        //manager.GenerateWorldObject(root2);
 
-        //Intersection
-        manager.GenerateWorldObject(root6);
+        ////Intersection
+        //manager.GenerateWorldObject(root6);
 
-        //Take a left
-        manager.GenerateWorldObject(root3);
+        ////Take a left
+        //manager.GenerateWorldObject(root3);
 
-        //2 long streets
-        manager.GenerateWorldObject(root2);
-        manager.GenerateWorldObject(root2);
-        manager.GenerateWorldObject(root2);
-        manager.GenerateWorldObject(root2);
+        ////2 long streets
+        //manager.GenerateWorldObject(root2);
+        //manager.GenerateWorldObject(root2);
+        //manager.GenerateWorldObject(root2);
+        //manager.GenerateWorldObject(root2);
 
-        //Intersection
-        manager.GenerateWorldObject(root4);
+        ////Intersection
+        //manager.GenerateWorldObject(root4);
 
-        //Take another left
-        manager.GenerateWorldObject(root3);
+        ////Take another left
+        //manager.GenerateWorldObject(root3);
 
-        //Another 2 small streets
-        manager.GenerateWorldObject(root);
-        manager.GenerateWorldObject(root);
-        manager.GenerateWorldObject(root2);
-        manager.GenerateWorldObject(root2);
+        ////Another 2 small streets
+        //manager.GenerateWorldObject(root);
+        //manager.GenerateWorldObject(root);
+        //manager.GenerateWorldObject(root2);
+        //manager.GenerateWorldObject(root2);
 
-        //Intersection
-        manager.GenerateWorldObject(root4);
+        ////Intersection
+        //manager.GenerateWorldObject(root4);
 
-        //Take another left
-        manager.GenerateWorldObject(root3);
+        ////Take another left
+        //manager.GenerateWorldObject(root3);
 
-        //1 small street
-        manager.GenerateWorldObject(root);
-        manager.GenerateWorldObject(root);
+        ////1 small street
+        //manager.GenerateWorldObject(root);
+        //manager.GenerateWorldObject(root);
 
-        //Intersection
-        manager.GenerateWorldObject(root4);
+        ////Intersection
+        //manager.GenerateWorldObject(root4);
 
-        //Take a right
-        manager.GenerateWorldObject(root5);
+        ////Take a right
+        //manager.GenerateWorldObject(root5);
 
-        //1 small street
-        manager.GenerateWorldObject(root);
+        ////1 small street
+        //manager.GenerateWorldObject(root);
 
-        //Intersection
-        manager.GenerateWorldObject(root4);
+        ////Intersection
+        //manager.GenerateWorldObject(root4);
 
-        //Take a right
-        manager.GenerateWorldObject(root5);
+        ////Take a right
+        //manager.GenerateWorldObject(root5);
 
-        //1 long street
-        manager.GenerateWorldObject(root2);
+        ////1 long street
+        //manager.GenerateWorldObject(root2);
 
-        //Intersection
-        manager.GenerateWorldObject(root4);
+        ////Intersection
+        //manager.GenerateWorldObject(root4);
 
-        //Take a left
-        manager.GenerateWorldObject(root3);
+        ////Take a left
+        //manager.GenerateWorldObject(root3);
 
-        //1 small street
-        manager.GenerateWorldObject(root);
+        ////1 small street
+        //manager.GenerateWorldObject(root);
 
-        //t-intersection
-        manager.GenerateWorldObject(root6);
+        ////t-intersection
+        //manager.GenerateWorldObject(root6);
 
-        //Take a left
-        manager.GenerateWorldObject(root3);
+        ////Take a left
+        //manager.GenerateWorldObject(root3);
 
-        //1 long street
-        manager.GenerateWorldObject(root2);
+        ////1 long street
+        //manager.GenerateWorldObject(root2);
 
-        //t-intersection
-        manager.GenerateWorldObject(root6);
+        ////t-intersection
+        //manager.GenerateWorldObject(root6);
 
-        //Take a left
-        manager.GenerateWorldObject(root3);
+        ////Take a left
+        //manager.GenerateWorldObject(root3);
 
-        //Intersection
-        manager.GenerateWorldObject(root4);
+        ////Intersection
+        //manager.GenerateWorldObject(root4);
 
         //Debug.Log(rss.ToString());
         //hashParser.PrintWorldObjects(); //Print all WorldObjects to proofread

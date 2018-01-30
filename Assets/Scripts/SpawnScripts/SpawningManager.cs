@@ -18,6 +18,7 @@
         protected Object[] activeObjects;
 
         protected string activePart;
+        protected string activeParent;
         protected string[] resourceFolders;
         protected bool generatedFileInfo = false;
 
@@ -42,6 +43,7 @@
 
         protected void SetActivePart(string newActivePart) {
             activePart = "SpawnResources/" + newActivePart;
+            activeParent = newActivePart;
             LoadAllObjects();
         }
 
@@ -59,14 +61,14 @@
 
         protected void SpawnObject(int index) {
             //GameObject objectToInstantiate = Resources.Load(activePart + "/" + name, typeof(GameObject)) as GameObject;
-            GameObject parent = GameObject.Find(activePart);
+            GameObject parent = GameObject.Find(activeParent);
             if (!parent) {
                 Debug.Log("Parent was null");
-                new GameObject(activePart);
+                new GameObject(activeParent);
             } else {
                 Debug.Log("Parent was not null");
             }
-            GameObject instance = Instantiate(activeObjects[index], cameraRig.transform.position + cameraRig.transform.forward * 10, Quaternion.identity, GameObject.Find(activePart).transform) as GameObject;
+            GameObject instance = Instantiate(activeObjects[index], cameraRig.transform.position + cameraRig.transform.forward * 10, Quaternion.identity, GameObject.Find(activeParent).transform) as GameObject;
 
             InitializeShaders shaderScript = GameObject.Find("ObjectManager").gameObject.GetComponent<InitializeShaders>();
             shaderScript.UpdateShaders();

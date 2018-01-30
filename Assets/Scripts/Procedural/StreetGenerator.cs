@@ -139,8 +139,8 @@ public class StreetGenerator : Generator {
             Vector3 point;
             if (type.Equals("intersectionT")) {
                 Debug.Log("hierzoooo");
-                checkPoints(previousOrientation, previousStreetScript, currentDirection);
-                point = previousStreetScript.GetTopPoint();
+                //checkPoints(previousOrientation, previousStreetScript, currentDirection);
+                point = previousStreetScript.GetBottomPoint();
             } else
             {
                 point = GetCorrectPoint(pointDirection);

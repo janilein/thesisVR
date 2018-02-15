@@ -10,6 +10,7 @@ using UnityEngine;
 
 
 public class Speech : MonoBehaviour {
+    private KeywordParser keywordParser;
 
     private const string URL = "http://api.meaningcloud.com/topics-2.0";
     public string APIKeyMeaningCloud;
@@ -28,6 +29,7 @@ public class Speech : MonoBehaviour {
     string output = "audio.raw";
 
     public Speech() {
+        keywordParser = new KeywordParser();
     }
 
     // Use this for initialization
@@ -196,7 +198,7 @@ public class Speech : MonoBehaviour {
     public void MakeRequest() {
 
         //for testing
-        googleOutputText = "I turn left.";
+        googleOutputText = "In my street there are 5 houses.";
 
         if (googleOutputText != null || googleOutputText.Length != 0) {
             var req = (HttpWebRequest)WebRequest.Create("http://api.meaningcloud.com/topics-2.0");
@@ -216,6 +218,9 @@ public class Speech : MonoBehaviour {
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream())) {
                     meaningCloudOutput = streamReader.ReadToEnd();
                     Debug.Log(meaningCloudOutput);
+                    bool successParse = true;
+                    Hashtable o = (Hashtable)JSON.JsonDecode(meaningCloudOutput, ref successParse);
+                    keywordParser.ConvertHashtable(o);
                 }
             } catch (System.Net.WebException exc) {
                 using (var stream = exc.Response.GetResponseStream())

@@ -28,7 +28,7 @@ public class HashtableParser {
         //Debug.Log(info.Length);
         foreach (FileInfo f in info) {
             if (!f.Name.Equals("defaults.txt")){
-                table[f.FullName] = f.Name.Substring(0, f.Name.Length - 4); ;
+                table[f.FullName] = f.Name.Substring(0, f.Name.Length - 4);
             }
         }
         return table;

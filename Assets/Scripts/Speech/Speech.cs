@@ -28,12 +28,9 @@ public class Speech : MonoBehaviour {
     WaveFileReader reader;
     string output = "audio.raw";
 
-    public Speech() {
-        keywordParser = new KeywordParser();
-    }
-
     // Use this for initialization
     void Start () {
+        keywordParser = new KeywordParser();
         waveOut = new WaveOut();
         waveIn = new WaveIn();
 
@@ -198,7 +195,7 @@ public class Speech : MonoBehaviour {
     public void MakeRequest() {
 
         //for testing
-        googleOutputText = "In my street there are 5 houses.";
+        googleOutputText = "There are 5 houses and 3 apartments";
 
         if (googleOutputText != null || googleOutputText.Length != 0) {
             var req = (HttpWebRequest)WebRequest.Create("http://api.meaningcloud.com/topics-2.0");

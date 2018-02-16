@@ -1,0 +1,7 @@
+HouseType
+Color
+RoofType
+Floor
+BuildingDescription
+StreetType
+Direction

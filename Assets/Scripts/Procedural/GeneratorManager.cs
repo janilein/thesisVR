@@ -50,6 +50,7 @@ public class GeneratorManager {
     }
 
     private void ChangeDirection(string direction) {
+        Debug.Log("direction switch");
         switch (direction) {
             case "left":
                 if (currentDirection.x == 1) {

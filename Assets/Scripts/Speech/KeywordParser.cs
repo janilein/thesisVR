@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 
 public class KeywordParser {
+    private TextToJSON jsonConverter;
 
     private List<KeyValuePair<string, int>> quantityList;       //Key : unit, Value : amount
     private List<KeyValuePair<string, string>> entityList;      //Key : semenity (ontologytype), Value : form
@@ -25,6 +26,7 @@ public class KeywordParser {
         ontologyTypes = new List<string>();
         GetOntologyTypes();
         //PrintOntologyTypes();
+        jsonConverter = new TextToJSON();
     }
 
     private void GetOntologyTypes() {
@@ -96,6 +98,15 @@ public class KeywordParser {
                 CheckQuantityExpressionList((ArrayList)entry.Value);
             }
         }
+        ConvertToJSON();
+    }
+
+    private void ConvertToJSON()
+    {
+        if (conceptList[0].Key.Equals("Direction") && quantityList.Count == 0) //no quantities + 1 direction concept for a direction change
+        {
+            jsonConverter.CreateDirectionJSON(conceptList[0]);
+        }
     }
 
     private void CheckQuantityExpressionList(ArrayList list) {
@@ -122,7 +133,7 @@ public class KeywordParser {
                 }
 
                 //Add it as a new KeyValuePair to the quantityList
-                if (!unit.Equals("") && !(quantity == 0)) {
+                if (!unit.Equals("") && !(quantity == 0)) { 
                     Debug.Log("Added to quantity list: Unit = " + unit + " Amount = " + quantity);
                     quantityList.Add(new KeyValuePair<string, int>(unit, quantity));
                     unit = "";

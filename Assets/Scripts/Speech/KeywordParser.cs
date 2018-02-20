@@ -103,10 +103,48 @@ public class KeywordParser {
 
     private void ConvertToJSON()
     {
-        if (conceptList[0].Key.Equals("Direction") && quantityList.Count == 0) //no quantities + 1 direction concept for a direction change
+        KeyValuePair<string, string> pair = default(KeyValuePair<string, string>);
+
+        //Eerste mogelijkheid: geen quantities, 1 direction (voor verandering van direction ofzo)
+        pair = GetKeyValuePairFromConceptList("Direction");
+        if (!pair.Equals(default(KeyValuePair<string, string>)) && quantityList.Count == 0) //no quantities + 1 direction concept for a direction change
         {
-            jsonConverter.CreateDirectionJSON(conceptList[0]);
+            Debug.Log("Found direction pair");
+            jsonConverter.CreateDirectionJSON(pair);
+            return;
         }
+
+        //Tweede mogelijkheid: een straat beschrijving
+        pair = GetKeyValuePairFromConceptList("StreetType");
+        if (!pair.Equals(default(KeyValuePair<string, string>)) && quantityList.Count == 0) {
+            Debug.Log("Found StreetType pair");
+
+            //List to add pairs to: StreetType and possibly length
+            List<KeyValuePair<string, string>> pairs = new List<KeyValuePair<string, string>>();
+            pairs.Add(pair);
+
+            //Check for optional length specification
+            KeyValuePair<string, string> lengthPair = GetKeyValuePairFromConceptList("length");
+            if(!lengthPair.Equals(default(KeyValuePair<string, string>)))
+            {
+                //Length pair found
+                pairs.Add(lengthPair);
+            }
+            jsonConverter.CreateStreetJSON(pairs);
+            return;
+        }
+    }
+
+    private KeyValuePair<string, string> GetKeyValuePairFromConceptList(string key)
+    {
+        key = key.ToLower();
+        foreach (KeyValuePair<string, string> pair in conceptList) {
+            if (pair.Key.ToLower().Equals(key))
+            {
+                return pair;
+            }
+        }
+        return default(KeyValuePair<string, string>);
     }
 
     private void CheckQuantityExpressionList(ArrayList list) {

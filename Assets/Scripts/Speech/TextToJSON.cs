@@ -67,14 +67,6 @@ public class TextToJSON {
         //                            new JProperty("length", "large")
         //                            ))))))));
 
-        JObject rss = new JObject(
-            new JObject(
-                    new JProperty("type", "streets"),
-                    new JProperty("attr", new JArray(
-                        new JObject(
-                            new JProperty("streetID", "1")),
-                        obj
-                        ))));
 
         //Check if we have a length attribute
         if (list.Count > 1)
@@ -88,7 +80,14 @@ public class TextToJSON {
             }
         }
 
-        
+        JObject rss = new JObject(
+            new JObject(
+                    new JProperty("type", "streets"),
+                    new JProperty("attr", new JArray(
+                        new JObject(
+                            new JProperty("streetID", "1")),
+                        obj
+                        ))));
 
         Debug.Log(rss.ToString());
         bool successParse = true;

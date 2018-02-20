@@ -5,3 +5,4 @@ Floor
 BuildingDescription
 StreetType
 Direction
+length

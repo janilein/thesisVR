@@ -1,0 +1,1 @@
+{"status":{"code":"0","msg":"OK","credits":"1","remaining_credits":"19899"},"entity_list":[],"concept_list":[{"form":"straight street","id":"5a85773746732","dictionary":"ThesisVR","sementity":{"class":"class","type":"Top>StreetType"},"variant_list":[{"form":"straight street","inip":"14","endp":"28"}],"relevance":"100"}],"quantity_expression_list":[]}

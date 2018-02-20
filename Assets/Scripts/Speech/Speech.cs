@@ -17,7 +17,7 @@ public class Speech : MonoBehaviour {
     private const string lang = "en";
     private const string tt = "ecn"; //named entities, concepts and quantities
     private const string ud = "ThesisVR";
-    private string googleOutputText = "";
+    public string googleOutputText = "";
 
     private BufferedWaveProvider bwp;
     public string apiKeyGoogle;
@@ -28,9 +28,11 @@ public class Speech : MonoBehaviour {
     WaveFileReader reader;
     string output = "audio.raw";
 
+    KeywordParser keywordParser;
+
     // Use this for initialization
     void Start () {
-        //keywordParser = new KeywordParser();
+        keywordParser = new KeywordParser();
         waveOut = new WaveOut();
         waveIn = new WaveIn();
 
@@ -195,7 +197,8 @@ public class Speech : MonoBehaviour {
     public void MakeRequest() {
 
         //for testing
-        googleOutputText = "I went left.";
+        //googleOutputText = "I went left.";
+        //googleOutputText = "I was walking on a long street.";
 
         if (googleOutputText != null || googleOutputText.Length != 0) {
             var req = (HttpWebRequest)WebRequest.Create("http://api.meaningcloud.com/topics-2.0");
@@ -214,10 +217,10 @@ public class Speech : MonoBehaviour {
                 var httpResponse = (HttpWebResponse)req.GetResponse();
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream())) {
                     meaningCloudOutput = streamReader.ReadToEnd();
+                    SaveToTxt(meaningCloudOutput);
                     Debug.Log(meaningCloudOutput);
                     bool successParse = true;
                     Hashtable o = (Hashtable)JSON.JsonDecode(meaningCloudOutput, ref successParse);
-                    KeywordParser keywordParser = new KeywordParser(); //better to make a new one each time, each sentence will be evaluated directly
                     keywordParser.ConvertHashtable(o);
                 }
             } catch (System.Net.WebException exc) {
@@ -234,6 +237,36 @@ public class Speech : MonoBehaviour {
             Debug.Log("Nothing to send to MeaningCloud");
         }
 
+    }
+
+    private void SaveToTxt(string line) {
+        if (File.Exists("Assets/Scripts/Speech/meaningCloudOutput.txt"))
+            File.Delete("Assets/Scripts/Speech/meaningCloudOutput.txt");
+        System.IO.File.WriteAllText("Assets/Scripts/Speech/meaningCloudOutput.txt", line);
+    }
+
+    public void SkipMeaningCloud()
+    {
+        DirectoryInfo dir = new DirectoryInfo("Assets");
+        try
+        {
+            FileInfo[] info = dir.GetFiles("meaningCloudOutput.txt");
+            FileInfo f = info[0];
+            string path = f.FullName;
+
+            //Only read strings that have actual content
+            string[] stringArray = System.IO.File.ReadAllLines(path);
+            string inputText = stringArray[0];
+            Debug.Log("inputText: " + inputText);
+
+            bool successParse = true;
+            Hashtable o = (Hashtable)JSON.JsonDecode(inputText, ref successParse);
+            keywordParser.ConvertHashtable(o);
+
+        } catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
     }
 
     private string GetTranscript(Hashtable googleOutput) {

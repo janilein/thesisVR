@@ -15,14 +15,14 @@ public class TextToJSON {
         hashParser = new HashtableParser();
     }
 
-    public void CreateDirectionJSON(KeyValuePair<string, string> keyValuePair)
+    public void CreateDirectionJSON(Concept keyValuePair)
     {
         JObject rss = new JObject(
             new JObject(
                     new JProperty("type", "orientation"),
                     new JProperty("attr", new JArray(
                         new JObject(
-                            new JProperty(keyValuePair.Key.ToLower(), keyValuePair.Value))))));
+                            new JProperty(keyValuePair.type.ToLower(), keyValuePair.form))))));
         Debug.Log(rss.ToString());
         bool successParse = true;
         Hashtable o = (Hashtable)JSON.JsonDecode(rss.ToString(), ref successParse);
@@ -31,11 +31,34 @@ public class TextToJSON {
         manager.GenerateWorldObject(root);
     }
 
-    public void CreateStreetJSON(List<KeyValuePair<string, string>> list)
+    public void CreateStreetJSON(List<Concept> concepts, List<Quantity> quantities)
     {
         //Check the type of street
-        string streetType = list[0].Value.ToLower();
+        Concept streetConcept = null;
+        foreach(Concept concept in concepts)
+        {
+            if (concept.type.ToLower().Equals("streettype"))
+            {
+                streetConcept = concept;
+                break;
+            }
+        }
+        string streetType = streetConcept.form;
+        concepts.Remove(streetConcept);
+
+        string length = null;
+        foreach (Concept concept in concepts)
+        {
+            if (concept.type.ToLower().Equals("length"))
+            {
+                length = concept.form;
+                concepts.Remove(concept);
+                break;
+            }
+        }
+
         string type = null;
+        Debug.Log("StreetType: " + streetType);
         switch(streetType){
             case "straight street":
                 type = "straight";
@@ -54,30 +77,17 @@ public class TextToJSON {
         JObject obj = new JObject();
         obj.Add(new JProperty("type", type));
 
-        //JObject rss = new JObject(
-        //    new JObject(
-        //            new JProperty("type", "streets"),
-        //            new JProperty("attr", new JArray(
-        //                new JObject(
-        //                    new JProperty("streetID", "1")),
-        //                new JObject(
-        //                    new JProperty("type", type),
-        //                    new JProperty("attr", new JArray(
-        //                        new JObject(
-        //                            new JProperty("length", "large")
-        //                            ))))))));
-
-
         //Check if we have a length attribute
-        if (list.Count > 1)
+        if (length != null)
         {
-            KeyValuePair<string, string> length = list[1];
-            Debug.Log("Key: " + length.Key + " Value: " + length.Value);
+           obj.Add(new JProperty("attr", new JArray(new JObject(new JProperty("length",length)))));
+        }
 
-            if (length.Key.ToLower().Equals("length"))
-            {
-                obj.Add(new JProperty("attr", new JArray(new JObject(new JProperty("length", length.Value.ToLower())))));
-            }
+        Debug.Log("$$$$$$$$$$$$$$$$$$" + concepts.Count);
+        foreach (Concept concept in concepts)
+        {
+            //JProperty property = FindBestQuantityMatch(concept, ref quantities);
+            Debug.Log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + concept.form);
         }
 
         JObject rss = new JObject(
@@ -95,5 +105,18 @@ public class TextToJSON {
         hashParser.PrintHashTable(o);     //Convert the hashtable to WorldObjects
         WorldObject root = hashParser.getRootObject();
         manager.GenerateWorldObject(root);
+    }
+
+    private JProperty FindBestQuantityMatch(Concept concept, ref List<Quantity> quantities)
+    {
+        foreach(Quantity quantity in quantities)
+        {
+            if(quantity.inip - concept.endp == 1)
+            {
+
+            }
+        }
+
+        return null;
     }
 }

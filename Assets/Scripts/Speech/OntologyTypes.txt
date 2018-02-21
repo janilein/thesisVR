@@ -6,3 +6,4 @@ BuildingDescription
 StreetType
 Direction
 length
+StreetSide

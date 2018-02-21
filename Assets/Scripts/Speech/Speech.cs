@@ -247,7 +247,7 @@ public class Speech : MonoBehaviour {
 
     public void SkipMeaningCloud()
     {
-        DirectoryInfo dir = new DirectoryInfo("Assets");
+        DirectoryInfo dir = new DirectoryInfo("Assets/Scripts/Speech");
         try
         {
             FileInfo[] info = dir.GetFiles("meaningCloudOutput.txt");
@@ -263,7 +263,8 @@ public class Speech : MonoBehaviour {
             Hashtable o = (Hashtable)JSON.JsonDecode(inputText, ref successParse);
             keywordParser.ConvertHashtable(o);
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Debug.Log(e.Message);
         }

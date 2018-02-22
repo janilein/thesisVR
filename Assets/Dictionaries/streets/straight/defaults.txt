@@ -1,4 +1,3 @@
 lotsLeft:3
 lotsRight:3
 length:medium
-orientation:rightStraight

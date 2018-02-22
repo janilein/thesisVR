@@ -95,8 +95,8 @@ public class StreetGenerator : Generator {
             float lotWidth = 20f;
 
             //Get the starting point (left bottom corner of the street)
-            Vector3 spawnPointLot = new Vector3(streetWidth / 2, 0f, streetLength / 2);
-            spawnPointLot += new Vector3(lotWidth / 2, 0f, lotLength / 2);
+            Vector3 spawnPointLot = new Vector3(-streetWidth / 2, 0f, streetLength / 2);
+            spawnPointLot += new Vector3(-lotWidth / 2, 0f, lotLength / 2);
             SpawnLot(lotsLeft, spawnPointLot, lotWidth, lotLength, parent);
         }
 
@@ -107,8 +107,8 @@ public class StreetGenerator : Generator {
             float lotWidth = 20f;
 
             //Get the starting point (right bottom corner of the street)
-            Vector3 spawnPointLot = new Vector3(-streetWidth / 2, 0f, streetLength / 2);
-            spawnPointLot += new Vector3(-lotWidth / 2, 0f, lotLength / 2);
+            Vector3 spawnPointLot = new Vector3(streetWidth / 2, 0f, streetLength / 2);
+            spawnPointLot += new Vector3(lotWidth / 2, 0f, lotLength / 2);
             SpawnLot(lotsRight, spawnPointLot, lotWidth, lotLength, parent);
         }
 
@@ -518,8 +518,8 @@ public class StreetGenerator : Generator {
             float lotWidth = 20f;
 
             //Get the starting point (left bottom corner of the street)
-            Vector3 spawnPointLot = new Vector3(streetWidth / 2, 0f, streetLength / 2);
-            spawnPointLot += new Vector3(lotWidth / 2, 0f, lotLength / 2);
+            Vector3 spawnPointLot = new Vector3(-streetWidth / 2, 0f, streetLength / 2);
+            spawnPointLot += new Vector3(-lotWidth / 2, 0f, lotLength / 2);
             SpawnLot(lotsLeft, spawnPointLot, lotWidth, lotLength, parent);
         }
 
@@ -530,8 +530,8 @@ public class StreetGenerator : Generator {
             float lotWidth = 20f;
 
             //Get the starting point (right bottom corner of the street)
-            Vector3 spawnPointLot = new Vector3(-streetWidth / 2, 0f, streetLength / 2);
-            spawnPointLot += new Vector3(-lotWidth / 2, 0f, lotLength / 2);
+            Vector3 spawnPointLot = new Vector3(streetWidth / 2, 0f, streetLength / 2);
+            spawnPointLot += new Vector3(lotWidth / 2, 0f, lotLength / 2);
             SpawnLot(lotsRight, spawnPointLot, lotWidth, lotLength, parent);
         }
 

@@ -8,18 +8,18 @@ public class KeywordParser {
     private TextToJSON jsonConverter;
 
     private List<Quantity> quantityList;
-    private List<KeyValuePair<string, string>> entityList;      //Key : semenity (ontologytype), Value : form
+    //private List<KeyValuePair<string, string>> entityList;      //Key : semenity (ontologytype), Value : form
     private List<KeyValuePair<string, string>> otherEntitiesList;      //Key : semenity (ontologytype), Value : form
-    private List<Concept> conceptList;
+    private List<Entity> entityList;
     private List<KeyValuePair<string, string>> otherConceptsList;     //Key : semenity (ontologytype), Value : form 
 
     public KeywordParser() {
         Debug.Log("Created a keyword parser");
         quantityList = new List<Quantity>();
-        entityList = new List<KeyValuePair<string, string>>();
+        //entityList = new List<KeyValuePair<string, string>>();
         otherEntitiesList = new List<KeyValuePair<string, string>>();
-        conceptList = new List<Concept>();
-        otherConceptsList = new List<KeyValuePair<string, string>>();
+        entityList = new List<Entity>();
+        //otherConceptsList = new List<KeyValuePair<string, string>>();
 
         //PrintOntologyTypes();
         jsonConverter = new TextToJSON();
@@ -27,39 +27,42 @@ public class KeywordParser {
 
     public void ConvertHashtable(Hashtable o) {
         quantityList.Clear();
-        entityList.Clear();
+        //entityList.Clear();
         otherEntitiesList.Clear();
-        conceptList.Clear();
-        otherConceptsList.Clear();
+        entityList.Clear();
+        //otherConceptsList.Clear();
 
         foreach (DictionaryEntry entry in o) {
             if (entry.Key.Equals("entity_list")) {
                 CheckEntityList((ArrayList)entry.Value);
-            } else if (entry.Key.Equals("concept_list")) {
-                CheckConceptList((ArrayList)entry.Value);
-            } else if (entry.Key.Equals("quantity_expression_list")) {
+            }
+            else if (entry.Key.Equals("quantity_expression_list"))
+            {
                 CheckQuantityExpressionList((ArrayList)entry.Value);
             }
+            //else if (entry.Key.Equals("concept_list")) {
+            //    CheckConceptList((ArrayList)entry.Value);
+            //} 
         }
         ConvertToJSON();
     }
 
     private void ConvertToJSON()
     {
-        Concept concept = null;
+        Entity entity = null;
 
         //Eerste mogelijkheid: geen quantities, 1 direction (voor verandering van direction ofzo)
-        concept = GetKeyValuePairFromConceptList("Direction");
-        if (concept != null && quantityList.Count == 0) //no quantities + 1 direction concept for a direction change
+        entity = GetEntityFromEntityList("Direction");
+        if (entity != null && quantityList.Count == 0) //no quantities + 1 direction concept for a direction change
         {
             Debug.Log("Found direction pair");
-            jsonConverter.CreateDirectionJSON(concept);
+            jsonConverter.CreateDirectionJSON(entity);
             return;
         }
 
         //Tweede mogelijkheid: een straat beschrijving
-        concept = GetKeyValuePairFromConceptList("StreetType");
-        if (concept != null)
+        entity = GetEntityFromEntityList("StreetType");
+        if (entity != null)
         {
             Debug.Log("Found StreetType pair");
 
@@ -74,18 +77,26 @@ public class KeywordParser {
             //    //Length pair found
             //    concepts.Add(lengthPair);
             //}
-            jsonConverter.CreateStreetJSON(conceptList, quantityList);
+            jsonConverter.CreateStreetJSON(entityList, quantityList);
+            return;
+        }
+
+        entity = GetEntityFromEntityList("HouseType");
+        if (entity != null)
+        {
+            Debug.Log("Found HouseType pair");
+            jsonConverter.CreateHouseJSON(entityList, quantityList);
             return;
         }
     }
 
-    private Concept GetKeyValuePairFromConceptList(string key)
+    private Entity GetEntityFromEntityList(string key)
     {
         key = key.ToLower();
-        foreach (Concept concept in conceptList) {
-            if (concept.type.ToLower().Equals(key))
+        foreach (Entity entity in entityList) {
+            if (entity.type.ToLower().Equals(key))
             {
-                return concept;
+                return entity;
             }
         }
         return null;
@@ -140,11 +151,84 @@ public class KeywordParser {
         Debug.Log("--------------------------");
     }
 
-    private void CheckConceptList(ArrayList list) {
-        Debug.Log("-------- Concepts --------");
-        if (list.Count == 0) {
+    //private void CheckConceptList(ArrayList list) {
+    //    Debug.Log("-------- Concepts --------");
+    //    if (list.Count == 0) {
+    //        Debug.Log("This list is empty");
+    //    } else {
+    //        string form = "";
+    //        string ontologyType = "";
+    //        int inip = 0;
+    //        int endp = 0;
+    //        List<int> inips = new List<int>();
+    //        List<int> endps = new List<int>();
+    //        bool fromDictionary = false;
+    //        foreach (Hashtable table in list) {
+    //            foreach (DictionaryEntry entry in table) {
+    //                //Debug.Log("Key: " + entry.Key + " Value: " + entry.Value.ToString());
+    //                if (entry.Key.Equals("form")) {
+    //                    //Debug.Log((string)entry.Value);
+    //                    form = (string) entry.Value;
+    //                }
+    //                 else if (entry.Key.Equals("sementity")) {
+    //                    ontologyType = GetTypeOfKeyword((Hashtable)entry.Value);
+    //                    //Debug.Log(ontologyType);
+    //                }
+    //                else if (entry.Key.Equals("dictionary"))
+    //                {
+    //                    fromDictionary = true;
+    //                }
+    //                else if (entry.Key.Equals("variant_list"))
+    //                {
+    //                    foreach(Hashtable variant in (ArrayList)entry.Value)
+    //                    {
+    //                        foreach(DictionaryEntry variantEntry in variant)
+    //                        {
+    //                            if (variantEntry.Key.Equals("inip"))
+    //                            {
+    //                                Int32.TryParse((string) variantEntry.Value, out inip);
+    //                                inips.Add(inip);
+    //                            }
+    //                            else if (variantEntry.Key.Equals("endp"))
+    //                            {
+    //                                Int32.TryParse((string)variantEntry.Value, out endp);
+    //                                endps.Add(endp);
+    //                            }
+    //                        }
+    //                    }
+    //                }
+    //            }
+
+    //            //Check if this semenity is in our ontologyTypes
+    //            if (fromDictionary) {
+    //                //Add it to the normal list
+    //                for(int i = 0; i < inips.Count; i++)
+    //                {
+    //                    Concept concept = new Concept(form, ontologyType, inips[i], endps[i]);
+    //                    conceptList.Add(concept);
+    //                    //Debug.Log("Added type : " + ontologyType + " form: " + form + " to concept list" + "inip:" + inips[i] + "endp:" + endps[i]);
+    //                } 
+    //                fromDictionary = false;
+    //            } else {
+    //                //Add it to the other list
+    //                otherConceptsList.Add(new KeyValuePair<string, string>(ontologyType, form));
+    //                //Debug.Log("Added type : " + ontologyType + " form: " + form + " to other concepts list");
+    //            }
+    //            inips.Clear();
+    //            endps.Clear();
+    //        }
+    //    }
+    //    Debug.Log("--------------------------");
+    //}
+
+    private void CheckEntityList(ArrayList list) {
+        Debug.Log("-------- Entities --------");
+        if (list.Count == 0)
+        {
             Debug.Log("This list is empty");
-        } else {
+        }
+        else
+        {
             string form = "";
             string ontologyType = "";
             int inip = 0;
@@ -152,14 +236,18 @@ public class KeywordParser {
             List<int> inips = new List<int>();
             List<int> endps = new List<int>();
             bool fromDictionary = false;
-            foreach (Hashtable table in list) {
-                foreach (DictionaryEntry entry in table) {
+            foreach (Hashtable table in list)
+            {
+                foreach (DictionaryEntry entry in table)
+                {
                     //Debug.Log("Key: " + entry.Key + " Value: " + entry.Value.ToString());
-                    if (entry.Key.Equals("form")) {
+                    if (entry.Key.Equals("form"))
+                    {
                         //Debug.Log((string)entry.Value);
-                        form = (string) entry.Value;
+                        form = (string)entry.Value;
                     }
-                     else if (entry.Key.Equals("sementity")) {
+                    else if (entry.Key.Equals("sementity"))
+                    {
                         ontologyType = GetTypeOfKeyword((Hashtable)entry.Value);
                         //Debug.Log(ontologyType);
                     }
@@ -169,13 +257,13 @@ public class KeywordParser {
                     }
                     else if (entry.Key.Equals("variant_list"))
                     {
-                        foreach(Hashtable variant in (ArrayList)entry.Value)
+                        foreach (Hashtable variant in (ArrayList)entry.Value)
                         {
-                            foreach(DictionaryEntry variantEntry in variant)
+                            foreach (DictionaryEntry variantEntry in variant)
                             {
                                 if (variantEntry.Key.Equals("inip"))
                                 {
-                                    Int32.TryParse((string) variantEntry.Value, out inip);
+                                    Int32.TryParse((string)variantEntry.Value, out inip);
                                     inips.Add(inip);
                                 }
                                 else if (variantEntry.Key.Equals("endp"))
@@ -189,65 +277,25 @@ public class KeywordParser {
                 }
 
                 //Check if this semenity is in our ontologyTypes
-                if (fromDictionary) {
+                if (fromDictionary)
+                {
                     //Add it to the normal list
-                    for(int i = 0; i < inips.Count; i++)
+                    for (int i = 0; i < inips.Count; i++)
                     {
-                        Concept concept = new Concept(form, ontologyType, inip, endp);
-                        conceptList.Add(concept);
-                        Debug.Log("Added type : " + ontologyType + " form: " + form + " to concept list");
-                    } 
+                        Entity entity = new Entity(form, ontologyType, inips[i], endps[i]);
+                        entityList.Add(entity);
+                        //Debug.Log("Added type : " + ontologyType + " form: " + form + " to concept list" + "inip:" + inips[i] + "endp:" + endps[i]);
+                    }
                     fromDictionary = false;
-
-
-
-                } else {
-                    //Add it to the other list
-                    otherConceptsList.Add(new KeyValuePair<string, string>(ontologyType, form));
-                    Debug.Log("Added type : " + ontologyType + " form: " + form + " to other concepts list");
                 }
-            }
-        }
-        Debug.Log("--------------------------");
-    }
-
-    private void CheckEntityList(ArrayList list) {
-        Debug.Log("-------- Entities --------");
-        if (list.Count == 0) {
-            Debug.Log("This list is empty");
-        } else {
-            string form = "";
-            string ontologyType = "";
-            bool fromDictionary = false;
-            foreach (Hashtable table in list) {
-                foreach (DictionaryEntry entry in table) {
-                    //Debug.Log("Key: " + entry.Key + " Value: " + entry.Value.ToString());
-                    if (entry.Key.Equals("form")) {
-                        //Debug.Log((string)entry.Value);
-                        form = (string)entry.Value;
-                    }
-                    else if (entry.Key.Equals("sementity")) {
-                        ontologyType = GetTypeOfKeyword((Hashtable)entry.Value);
-                        //Debug.Log(ontologyType);
-                    }
-                    else if (entry.Key.Equals("dictionary"))
-                    {
-                        fromDictionary = true;
-                    }
-                }
-
-                //Check if this semenity is in our ontologyTypes
-                if (fromDictionary) {
-                    //Add it to the normal list
-                    entityList.Add(new KeyValuePair<string, string>(ontologyType, form));
-                    Debug.Log("Added type : " + ontologyType + " form: " + form + " to entity list");
-                    fromDictionary = false;
-                } else {
+                else
+                {
                     //Add it to the other list
                     otherEntitiesList.Add(new KeyValuePair<string, string>(ontologyType, form));
-                    Debug.Log("Added type : " + ontologyType + " form: " + form + " to other entities list");
+                    //Debug.Log("Added type : " + ontologyType + " form: " + form + " to other concepts list");
                 }
-
+                inips.Clear();
+                endps.Clear();
             }
         }
         Debug.Log("--------------------------");

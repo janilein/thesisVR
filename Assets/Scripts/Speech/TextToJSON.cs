@@ -15,7 +15,7 @@ public class TextToJSON {
         hashParser = new HashtableParser();
     }
 
-    public void CreateDirectionJSON(Concept keyValuePair)
+    public void CreateDirectionJSON(Entity keyValuePair)
     {
         JObject rss = new JObject(
             new JObject(
@@ -31,29 +31,54 @@ public class TextToJSON {
         manager.GenerateWorldObject(root);
     }
 
-    public void CreateStreetJSON(List<Concept> concepts, List<Quantity> quantities)
+    public void CreateStreetJSON(List<Entity> entities, List<Quantity> quantities)
     {
         //Check the type of street
-        Concept streetConcept = null;
-        foreach(Concept concept in concepts)
+        Entity streetEntity = null;
+        foreach(Entity entity in entities)
         {
-            if (concept.type.ToLower().Equals("streettype"))
+            if (entity.type.ToLower().Equals("streettype"))
             {
-                streetConcept = concept;
+                streetEntity = entity;
                 break;
             }
         }
-        string streetType = streetConcept.form;
-        concepts.Remove(streetConcept);
+        string streetType = streetEntity.form;
+        entities.Remove(streetEntity);
 
         string length = null;
-        foreach (Concept concept in concepts)
+        foreach (Entity entity in entities)
         {
-            if (concept.type.ToLower().Equals("length"))
+            if (entity.type.ToLower().Equals("length"))
             {
-                length = concept.form;
-                concepts.Remove(concept);
+                length = entity.form;
+                entities.Remove(entity);
                 break;
+            }
+        }
+
+        string orientation = null;
+        foreach (Entity entity in entities)
+        {
+            if (entity.type.Equals("TDirection"))
+            {
+                if(entity.form.ToLower().Equals("left and right"))
+                {
+                    orientation = "leftRight";
+                    entities.Remove(entity);
+                    break;
+                } else if(entity.form.ToLower().Equals("right and straight"))
+                {
+                    orientation = "rightStraight";
+                    entities.Remove(entity);
+                    break;
+                } else if(entity.form.ToLower().Equals("left and straight"))
+                {
+                    orientation = "leftStraight";
+                    entities.Remove(entity);
+                    break;
+                }
+                
             }
         }
 
@@ -77,18 +102,57 @@ public class TextToJSON {
         JObject obj = new JObject();
         obj.Add(new JProperty("type", type));
 
+        JObject obj2 = new JObject();
         //Check if we have a length attribute
         if (length != null)
         {
-           obj.Add(new JProperty("attr", new JArray(new JObject(new JProperty("length",length)))));
+            obj2.Add(new JProperty("length", length));
+        }
+        if(orientation != null)
+        {
+            obj2.Add(new JProperty("orientation", orientation));
         }
 
-        Debug.Log("$$$$$$$$$$$$$$$$$$" + concepts.Count);
-        foreach (Concept concept in concepts)
+        List<KeyValuePair<Entity, int>> linkedEntities = new List<KeyValuePair<Entity, int>>();
+        foreach (Entity entity in entities)
         {
-            //JProperty property = FindBestQuantityMatch(concept, ref quantities);
-            Debug.Log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + concept.form);
+            if (entity.form.Equals("lot"))
+            {
+                foreach(Quantity quan in quantities)
+                {
+                    if(entity.endp == quan.endp)
+                    {
+                        linkedEntities.Add(new KeyValuePair<Entity, int>(entity, quan.amount));
+                    }
+                }
+            }
         }
+        foreach (Entity entity in entities)
+        {
+            if (entity.form.ToLower().Contains("left"))
+            {
+                foreach (KeyValuePair<Entity, int> pair in linkedEntities)
+                {
+                    if (entity.inip - pair.Key.endp == 2)
+                    {
+                        Debug.Log("Adding lots left -------------------------");
+                        obj2.Add(new JProperty("lotsLeft", pair.Value.ToString()));
+                    }
+                }
+            } else if (entity.form.ToLower().Contains("right"))
+            {
+                foreach (KeyValuePair<Entity, int> pair in linkedEntities)
+                {
+                    if (entity.inip - pair.Key.endp == 2)
+                    {
+                        Debug.Log("Adding lots right -------------------------");
+                        obj2.Add(new JProperty("lotsRight", pair.Value.ToString()));
+                    }
+                }
+            }
+        }
+
+        obj.Add(new JProperty("attr", new JArray(obj2)));
 
         JObject rss = new JObject(
             new JObject(
@@ -107,16 +171,49 @@ public class TextToJSON {
         manager.GenerateWorldObject(root);
     }
 
-    private JProperty FindBestQuantityMatch(Concept concept, ref List<Quantity> quantities)
+    internal void CreateHouseJSON(List<Entity> entityList, List<Quantity> quantityList)
     {
-        foreach(Quantity quantity in quantities)
-        {
-            if(quantity.inip - concept.endp == 1)
-            {
+        //JObject rss = new JObject(
+        //    new JObject(
+        //            new JProperty("type", "lots"),
+        //            new JProperty("attr", new JArray(
+        //                new JObject(
+        //                    new JProperty("lotID", "1")
+        //                    ),
+        //                new JObject(
+        //                        new JProperty("type", "buildings"),
+        //                        new JProperty("attr", new JArray(
+        //                            new JObject(
+        //                                new JProperty("type", "house"),
+        //                                new JProperty("attr", new JArray(
+        //                                    new JObject(
+        //                                        //new JProperty("floors", "5")
+        //                                        ),
+        //                                    new JObject(
+        //                                        new JProperty("type", "floor"),
+        //                                        new JProperty("attr", new JArray(
+        //                                            new JObject(
+        //                                                new JProperty("level", "1"),
+        //                                                new JProperty("color", "red")
+        //                                                )
+        //                                        )
+        //                                        )
+        //                                    ),
+        //                                    new JObject(
+        //                                        new JProperty("type", "floor"),
+        //                                        new JProperty("attr", new JArray(
+        //                                            new JObject(
+        //                                                new JProperty("level", "2"),
+        //                                                new JProperty("color", "yellow")
+        //                                                )
+        //                                            ))
+        //                                        )
+        //                                    )
+        //                                )
+        //                            ))
+        //                            )
 
-            }
-        }
-
-        return null;
+        //                ))))
+        //);
     }
 }

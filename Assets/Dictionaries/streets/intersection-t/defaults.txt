@@ -1,1 +1,2 @@
 lotsStraight:0
+orientation:leftRight

@@ -43,6 +43,49 @@ public class TestCase : MonoBehaviour {
 
         //building case
 
+        //JObject rss = new JObject(
+        //    new JObject(
+        //            new JProperty("type", "lots"),
+        //            new JProperty("attr", new JArray(
+        //                new JObject(
+        //                    new JProperty("lotID", "1")
+        //                    ),
+        //                new JObject(
+        //                        new JProperty("type", "buildings"),
+        //                        new JProperty("attr", new JArray(
+        //                            new JObject(
+        //                                new JProperty("type", "house"),
+        //                                new JProperty("attr", new JArray(
+        //                                    new JObject(
+        //                                        //new JProperty("floors", "5")
+        //                                        ),
+        //                                    new JObject(
+        //                                        new JProperty("type", "floor"),
+        //                                        new JProperty("attr", new JArray(
+        //                                            new JObject(
+        //                                                new JProperty("level", "1"),
+        //                                                new JProperty("color", "red")
+        //                                                )
+        //                                        )
+        //                                        )
+        //                                    ),
+        //                                    new JObject(
+        //                                        new JProperty("type", "floor"),
+        //                                        new JProperty("attr", new JArray(
+        //                                            new JObject(
+        //                                                new JProperty("level", "2"),
+        //                                                new JProperty("color", "yellow")
+        //                                                )
+        //                                            ))
+        //                                        )
+        //                                    )
+        //                                )
+        //                            ))
+        //                            )
+
+        //                ))))
+        //);
+
         JObject rss = new JObject(
             new JObject(
                     new JProperty("type", "lots"),
@@ -54,30 +97,21 @@ public class TestCase : MonoBehaviour {
                                 new JProperty("type", "buildings"),
                                 new JProperty("attr", new JArray(
                                     new JObject(
-                                        new JProperty("type", "house"),
+                                        new JProperty("type", "apartment"),
                                         new JProperty("attr", new JArray(
                                             new JObject(
-                                                //new JProperty("floors", "5")
+                                                new JProperty("floors", "5")
                                                 ),
                                             new JObject(
-                                                new JProperty("type", "floor"),
+                                                new JProperty("type", "roof"),
                                                 new JProperty("attr", new JArray(
                                                     new JObject(
-                                                        new JProperty("level", "1"),
-                                                        new JProperty("color", "red")
-                                                        )
-                                                )
-                                                )
-                                            ),
-                                            new JObject(
-                                                new JProperty("type", "floor"),
-                                                new JProperty("attr", new JArray(
-                                                    new JObject(
-                                                        new JProperty("level", "2"),
-                                                        new JProperty("color", "yellow")
+                                                        new JProperty("color", "yellow"),
+                                                        new JProperty("roofType", "pointy")
                                                         )
                                                     ))
                                                 )
+                                            
                                             )
                                         )
                                     ))
@@ -116,89 +150,89 @@ public class TestCase : MonoBehaviour {
         GeneratorManager manager = new GeneratorManager();
         manager.GenerateWorldObject(root);
 
-        JObject rss2 = new JObject(
-            new JObject(
-                    new JProperty("type", "streets"),
-                    new JProperty("attr", new JArray(
-                        new JObject(
-                            new JProperty("streetID", "1")),
-                        new JObject(
-                            new JProperty("type", "straight"),
-                            new JProperty("attr", new JArray(
-                                new JObject(
-                                    new JProperty("length", "long"),
-                                    new JProperty("lotsLeft", "2"),
-                                    new JProperty("lotsRight", "6"),
-                                    new JProperty("orientation", "rightStraight")
-                                    ))))))));
+        //JObject rss2 = new JObject(
+        //    new JObject(
+        //            new JProperty("type", "streets"),
+        //            new JProperty("attr", new JArray(
+        //                new JObject(
+        //                    new JProperty("streetID", "1")),
+        //                new JObject(
+        //                    new JProperty("type", "straight"),
+        //                    new JProperty("attr", new JArray(
+        //                        new JObject(
+        //                            new JProperty("length", "long"),
+        //                            new JProperty("lotsLeft", "2"),
+        //                            new JProperty("lotsRight", "6"),
+        //                            new JProperty("orientation", "rightStraight")
+        //                            ))))))));
 
-        Hashtable o2 = (Hashtable)JSON.JsonDecode(rss2.ToString(), ref successParse);
-        hashParser.PrintHashTable(o2);     //Convert the hashtable to WorldObjects
-        WorldObject root2 = hashParser.getRootObject();
+        //Hashtable o2 = (Hashtable)JSON.JsonDecode(rss2.ToString(), ref successParse);
+        //hashParser.PrintHashTable(o2);     //Convert the hashtable to WorldObjects
+        //WorldObject root2 = hashParser.getRootObject();
 
-        JObject rss3 = new JObject(
-            new JObject(
-                    new JProperty("type", "orientation"),
-                    new JProperty("attr", new JArray(
-                        new JObject(
-                            new JProperty("direction", "left"))
-                        ))));
+        //JObject rss3 = new JObject(
+        //    new JObject(
+        //            new JProperty("type", "orientation"),
+        //            new JProperty("attr", new JArray(
+        //                new JObject(
+        //                    new JProperty("direction", "left"))
+        //                ))));
 
-        Hashtable o3 = (Hashtable)JSON.JsonDecode(rss3.ToString(), ref successParse);
-        hashParser.PrintHashTable(o3);     //Convert the hashtable to WorldObjects
-        WorldObject root3 = hashParser.getRootObject();
+        //Hashtable o3 = (Hashtable)JSON.JsonDecode(rss3.ToString(), ref successParse);
+        //hashParser.PrintHashTable(o3);     //Convert the hashtable to WorldObjects
+        //WorldObject root3 = hashParser.getRootObject();
 
-        JObject rss4 = new JObject(
-            new JObject(
-                    new JProperty("type", "streets"),
-                    new JProperty("attr", new JArray(
-                        new JObject(
-                            new JProperty("streetID", "1")),
-                        new JObject(
-                            new JProperty("type", "intersection-x"),
-                            new JProperty("attr", new JArray(
-                                new JObject(
-                                    new JProperty("length", "long"),
-                                    new JProperty("lotsLeft", "2"),
-                                    new JProperty("lotsRight", "6"),
-                                    new JProperty("orientation", "rightStraight")
-                                    ))))))));
+        //JObject rss4 = new JObject(
+        //    new JObject(
+        //            new JProperty("type", "streets"),
+        //            new JProperty("attr", new JArray(
+        //                new JObject(
+        //                    new JProperty("streetID", "1")),
+        //                new JObject(
+        //                    new JProperty("type", "intersection-x"),
+        //                    new JProperty("attr", new JArray(
+        //                        new JObject(
+        //                            new JProperty("length", "long"),
+        //                            new JProperty("lotsLeft", "2"),
+        //                            new JProperty("lotsRight", "6"),
+        //                            new JProperty("orientation", "rightStraight")
+        //                            ))))))));
 
-        JObject rss5 = new JObject(
-            new JObject(
-                    new JProperty("type", "orientation"),
-                    new JProperty("attr", new JArray(
-                        new JObject(
-                            new JProperty("direction", "right"))
-                        ))));
+        //JObject rss5 = new JObject(
+        //    new JObject(
+        //            new JProperty("type", "orientation"),
+        //            new JProperty("attr", new JArray(
+        //                new JObject(
+        //                    new JProperty("direction", "right"))
+        //                ))));
 
-        JObject rss6 = new JObject(
-         new JObject(
-                 new JProperty("type", "streets"),
-                 new JProperty("attr", new JArray(
-                     new JObject(
-                         new JProperty("streetID", "1")),
-                     new JObject(
-                         new JProperty("type", "intersection-t"),
-                         new JProperty("attr", new JArray(
-                             new JObject(
-                                 new JProperty("length", "long"),
-                                 new JProperty("lotsLeft", "2"),
-                                 new JProperty("lotsRight", "6"),
-                                 new JProperty("orientation", "leftRight")
-                                 ))))))));
+        //JObject rss6 = new JObject(
+        // new JObject(
+        //         new JProperty("type", "streets"),
+        //         new JProperty("attr", new JArray(
+        //             new JObject(
+        //                 new JProperty("streetID", "1")),
+        //             new JObject(
+        //                 new JProperty("type", "intersection-t"),
+        //                 new JProperty("attr", new JArray(
+        //                     new JObject(
+        //                         new JProperty("length", "long"),
+        //                         new JProperty("lotsLeft", "2"),
+        //                         new JProperty("lotsRight", "6"),
+        //                         new JProperty("orientation", "leftRight")
+        //                         ))))))));
 
-        Hashtable o5 = (Hashtable)JSON.JsonDecode(rss5.ToString(), ref successParse);
-        hashParser.PrintHashTable(o5);     //Convert the hashtable to WorldObjects
-        WorldObject root5 = hashParser.getRootObject();
+        //Hashtable o5 = (Hashtable)JSON.JsonDecode(rss5.ToString(), ref successParse);
+        //hashParser.PrintHashTable(o5);     //Convert the hashtable to WorldObjects
+        //WorldObject root5 = hashParser.getRootObject();
 
-        Hashtable o4 = (Hashtable)JSON.JsonDecode(rss4.ToString(), ref successParse);
-        hashParser.PrintHashTable(o4);     //Convert the hashtable to WorldObjects
-        WorldObject root4 = hashParser.getRootObject();
+        //Hashtable o4 = (Hashtable)JSON.JsonDecode(rss4.ToString(), ref successParse);
+        //hashParser.PrintHashTable(o4);     //Convert the hashtable to WorldObjects
+        //WorldObject root4 = hashParser.getRootObject();
 
-        Hashtable o6 = (Hashtable)JSON.JsonDecode(rss6.ToString(), ref successParse);
-        hashParser.PrintHashTable(o6);     //Convert the hashtable to WorldObjects
-        WorldObject root6 = hashParser.getRootObject();
+        //Hashtable o6 = (Hashtable)JSON.JsonDecode(rss6.ToString(), ref successParse);
+        //hashParser.PrintHashTable(o6);     //Convert the hashtable to WorldObjects
+        //WorldObject root6 = hashParser.getRootObject();
 
         //4 small streets
         //manager.GenerateWorldObject(root);

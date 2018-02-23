@@ -82,7 +82,7 @@ public class KeywordParser {
         }
 
         entity = GetEntityFromEntityList("HouseType");
-        if (entity != null)
+        if (entity != null || Speech.specifyDescription)                          //Voorlopig gewoon kijken of specify aanstaat en er van uit gaan dat het dan over een huis gaat
         {
             Debug.Log("Found HouseType pair");
             jsonConverter.CreateHouseJSON(entityList, quantityList);
@@ -284,7 +284,7 @@ public class KeywordParser {
                     {
                         Entity entity = new Entity(form, ontologyType, inips[i], endps[i]);
                         entityList.Add(entity);
-                        //Debug.Log("Added type : " + ontologyType + " form: " + form + " to concept list" + "inip:" + inips[i] + "endp:" + endps[i]);
+                        Debug.Log("Added type : " + ontologyType + " form: " + form + " to concept list" + "inip:" + inips[i] + "endp:" + endps[i]);
                     }
                     fromDictionary = false;
                 }
@@ -292,13 +292,18 @@ public class KeywordParser {
                 {
                     //Add it to the other list
                     otherEntitiesList.Add(new KeyValuePair<string, string>(ontologyType, form));
-                    //Debug.Log("Added type : " + ontologyType + " form: " + form + " to other concepts list");
+                    Debug.Log("Added type : " + ontologyType + " form: " + form + " to other concepts list");
                 }
                 inips.Clear();
                 endps.Clear();
             }
         }
         Debug.Log("--------------------------");
+    }
+
+    internal void disabledSpecifyDescription()
+    {
+        jsonConverter.disabledSpecifyDescription();
     }
 
     private string GetTypeOfKeyword(Hashtable value) {

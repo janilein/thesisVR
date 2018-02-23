@@ -1,6 +1,7 @@
-rood
-groen
-blauw
-bruin
-geel
-paars
+red
+green
+blue
+brown
+yellow
+purple
+red

@@ -223,9 +223,9 @@ public class BuildingGenerator : Generator {
         //float height = scale.y;
         //float width = scale.x;
         //float length = scale.z;
-        Debug.Log("Width: " + width);
-        Debug.Log("Height: " + height);
-        Debug.Log("Length: " + length);
+        //Debug.Log("Width: " + width);
+        //Debug.Log("Height: " + height);
+        //Debug.Log("Length: " + length);
 
         float xPos = 0;
         float yPos = height/2 + level*height;
@@ -236,8 +236,8 @@ public class BuildingGenerator : Generator {
 
         //Set the color of the floor
         string color = (string) obj.directAttributes["color"];
-        Debug.Log("Color to set: " + color);
-        Debug.Log("Level: " + (string)obj.directAttributes["level"]);
+        //Debug.Log("Color to set: " + color);
+        //Debug.Log("Level: " + (string)obj.directAttributes["level"]);
         Material material = GetMaterial(color);
         if (material != null) {
             MeshRenderer renderer = instantiatedBlock.GetComponent<MeshRenderer>();
@@ -250,7 +250,7 @@ public class BuildingGenerator : Generator {
         bounds["xBounds"] = new Vector2(xPos - width/2, xPos + width/2);
         bounds["yBounds"] = new Vector2(yPos - height/2, yPos + height/2);
         bounds["zBounds"] = new Vector2(zPos - length/2, zPos + length/2);
-        Debug.Log("Spawned floor");
+        //Debug.Log("Spawned floor");
 
         return bounds;
     }
@@ -581,7 +581,7 @@ public class BuildingGenerator : Generator {
                 } else {
                     string key = s.Substring(0, index);
                     string value = s.Substring(index + 1, s.Length - index - 1);
-                    Debug.Log("Adding Key: " + key + " Value: " + value);
+                    //Debug.Log("Adding Key: " + key + " Value: " + value);
                     defaults.Add(key, value);
                 }
             }

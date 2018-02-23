@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class Speech : MonoBehaviour {
     //private KeywordParser keywordParser;
@@ -29,6 +29,9 @@ public class Speech : MonoBehaviour {
     string output = "audio.raw";
 
     KeywordParser keywordParser;
+
+    //Used to specify descriptions. E.g. first a house, then specify floor colours
+    public static bool specifyDescription = false;
 
     // Use this for initialization
     void Start () {
@@ -219,9 +222,7 @@ public class Speech : MonoBehaviour {
                     meaningCloudOutput = streamReader.ReadToEnd();
                     SaveToTxt(meaningCloudOutput);
                     Debug.Log(meaningCloudOutput);
-                    bool successParse = true;
-                    Hashtable o = (Hashtable)JSON.JsonDecode(meaningCloudOutput, ref successParse);
-                    keywordParser.ConvertHashtable(o);
+                    UseKeywordParser(meaningCloudOutput);
                 }
             } catch (System.Net.WebException exc) {
                 using (var stream = exc.Response.GetResponseStream())
@@ -259,15 +260,39 @@ public class Speech : MonoBehaviour {
             string inputText = stringArray[0];
             Debug.Log("inputText: " + inputText);
 
-            bool successParse = true;
-            Hashtable o = (Hashtable)JSON.JsonDecode(inputText, ref successParse);
-            keywordParser.ConvertHashtable(o);
+            UseKeywordParser(inputText);
 
         }
         catch (Exception e)
         {
             Debug.Log(e.Message);
         }
+    }
+
+    private void UseKeywordParser(string meaningCloudOutput)
+    {
+        bool successParse = true;
+        Hashtable o = (Hashtable)JSON.JsonDecode(meaningCloudOutput, ref successParse);
+        keywordParser.ConvertHashtable(o);
+
+    }
+
+    public void ToggleSpecification()
+    {
+        GameObject scrollButton = GameObject.Find("GUI/Canvas/DefaultButtons/SpecifyButton").gameObject;
+        specifyDescription = scrollButton.GetComponent<Toggle>().isOn;
+
+        //If specifyDescription gets disabled, pass this to KeywordParser --> TextToJSON so it can spawn the fully described entity
+        if(specifyDescription == false)
+        {
+            keywordParser.disabledSpecifyDescription();
+        }
+    }
+
+    public static void SetSpecification(bool value)
+    {
+        GameObject scrollButton = GameObject.Find("GUI/Canvas/DefaultButtons/SpecifyButton").gameObject;
+        scrollButton.GetComponent<Toggle>().isOn = value;
     }
 
     private string GetTranscript(Hashtable googleOutput) {

@@ -125,6 +125,9 @@ public class BuildingGenerator : Generator {
         float ySize = yBounds.y - yBounds.x;
         Vector2 zBounds = (Vector2)bounds["zBounds"];
         float zSize = zBounds.y - zBounds.x;
+        //Debug.Log("xSize: " + xSize);
+        //Debug.Log("ySize: " + ySize);
+        //Debug.Log("ZSize: " + zSize);
         coll.size = new Vector3(xSize, ySize, zSize);
         coll.center = new Vector3(0, ySize / 2, 0);
 
@@ -148,6 +151,11 @@ public class BuildingGenerator : Generator {
 
             finalBounds = FindBoundValues((Vector2)bounds["zBounds"], (Vector2)newBounds["zBounds"]);
             bounds["zBounds"] = finalBounds;
+            //Debug.Log("Bounds: ");
+            //foreach(DictionaryEntry entry in bounds)
+            //{
+            //    Debug.Log(entry.Key + " : " + entry.Value.ToString());
+            //}
         }
     }
 
@@ -370,6 +378,7 @@ public class BuildingGenerator : Generator {
 
             Vector3 scale = flatRoof.transform.localScale;
             float roofHeight = scale.y;
+            //Debug.Log("Roofheight: " + roofHeight);
             float roofWidth = scale.x;
             float roofLength = scale.z;
 
@@ -388,8 +397,10 @@ public class BuildingGenerator : Generator {
 
             Hashtable bounds = new Hashtable();
             bounds["xBounds"] = new Vector2(xPos - roofWidth / 2, xPos + roofWidth / 2);
-            bounds["yBounds"] = new Vector2(yPos - roofHeight / 2, yPos + roofHeight / 2);
+            bounds["yBounds"] = new Vector2(yPos, yPos + roofHeight);
             bounds["zBounds"] = new Vector2(zPos - roofLength / 2, zPos + roofLength / 2);
+
+            //Debug.Log("Roof yBounds: " + bounds["yBounds"].ToString());
             return bounds;
 
         }        else if (type.Equals("pointy")) {

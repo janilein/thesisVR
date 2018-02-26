@@ -4,41 +4,53 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class KeywordParser {
+public class KeywordParser
+{
     private TextToJSON jsonConverter;
 
     private List<Quantity> quantityList;
+    private List<Relation> relationList;
     //private List<KeyValuePair<string, string>> entityList;      //Key : semenity (ontologytype), Value : form
     private List<KeyValuePair<string, string>> otherEntitiesList;      //Key : semenity (ontologytype), Value : form
     private List<Entity> entityList;
     private List<KeyValuePair<string, string>> otherConceptsList;     //Key : semenity (ontologytype), Value : form 
 
-    public KeywordParser() {
+    public KeywordParser()
+    {
         Debug.Log("Created a keyword parser");
         quantityList = new List<Quantity>();
         //entityList = new List<KeyValuePair<string, string>>();
         otherEntitiesList = new List<KeyValuePair<string, string>>();
         entityList = new List<Entity>();
         //otherConceptsList = new List<KeyValuePair<string, string>>();
+        relationList = new List<Relation>();
 
         //PrintOntologyTypes();
         jsonConverter = new TextToJSON();
     }
 
-    public void ConvertHashtable(Hashtable o) {
+    public void ConvertHashtable(Hashtable o)
+    {
         quantityList.Clear();
         //entityList.Clear();
         otherEntitiesList.Clear();
         entityList.Clear();
         //otherConceptsList.Clear();
+        relationList.Clear();
 
-        foreach (DictionaryEntry entry in o) {
-            if (entry.Key.Equals("entity_list")) {
+        foreach (DictionaryEntry entry in o)
+        {
+            if (entry.Key.Equals("entity_list"))
+            {
                 CheckEntityList((ArrayList)entry.Value);
             }
             else if (entry.Key.Equals("quantity_expression_list"))
             {
                 CheckQuantityExpressionList((ArrayList)entry.Value);
+            }
+            else if (entry.Key.Equals("relation_list"))
+            {
+                CheckRelationList((ArrayList)entry.Value);
             }
             //else if (entry.Key.Equals("concept_list")) {
             //    CheckConceptList((ArrayList)entry.Value);
@@ -85,7 +97,7 @@ public class KeywordParser {
         if (entity != null || Speech.specifyDescription)                          //Voorlopig gewoon kijken of specify aanstaat en er van uit gaan dat het dan over een huis gaat
         {
             Debug.Log("Found HouseType pair");
-            jsonConverter.CreateHouseJSON(entityList, quantityList);
+            jsonConverter.CreateHouseJSON(entityList, quantityList, relationList);
             return;
         }
     }
@@ -93,7 +105,8 @@ public class KeywordParser {
     private Entity GetEntityFromEntityList(string key)
     {
         key = key.ToLower();
-        foreach (Entity entity in entityList) {
+        foreach (Entity entity in entityList)
+        {
             if (entity.type.ToLower().Equals(key))
             {
                 return entity;
@@ -102,26 +115,96 @@ public class KeywordParser {
         return null;
     }
 
-    private void CheckQuantityExpressionList(ArrayList list) {
-        Debug.Log("-------- Quantities --------");
-        if (list.Count == 0) {
+    private void CheckRelationList(ArrayList list)
+    {
+        Debug.Log("-------- Relations --------");
+        if (list.Count == 0)
+        {
             Debug.Log("This list is empty");
-        } else {
+        }
+        else
+        {
+            string form = "";
+            int amount = 0;
+            foreach (Hashtable table in list)
+            {
+                foreach (DictionaryEntry entry in table)
+                {
+                    if (entry.Key.Equals("subject"))
+                    {
+                        //Find the 'subject' part
+                        Debug.Log("entry type: " + entry.Value.GetType());
+                        Hashtable relationTable = (Hashtable)entry.Value;
+                        foreach (DictionaryEntry relation in relationTable)
+                        {
+                            if (relation.Key.Equals("form"))
+                            {
+                                form = (string)relation.Value;
+                            }
+                            else if (relation.Key.Equals("lemma_list"))
+                            {
+                                //The lemma list, get the number from this bad boy
+                                ArrayList lemmaList = (ArrayList)relation.Value;
+                                //Should only have 1 entry
+                                if (lemmaList.Count > 0)
+                                {
+                                    Int32.TryParse((string)lemmaList[0], out amount);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //Add it as a new Relation to the relationList
+                if (!form.Equals("") && !(amount == 0))
+                {
+                    Debug.Log("Added to relation list: Unit = " + form + " Amount = " + amount);
+                    Relation relation = new Relation(form, amount);
+                    relationList.Add(relation);
+                    form = "";
+                    amount = 0;
+                }
+                else
+                {
+                    Debug.Log("No pair added to quantity list");
+                    Debug.Log("Unit: " + form + " Quantity: " + amount);
+                }
+            }
+        }
+        Debug.Log("--------------------------");
+    }
+
+    private void CheckQuantityExpressionList(ArrayList list)
+    {
+        Debug.Log("-------- Quantities --------");
+        if (list.Count == 0)
+        {
+            Debug.Log("This list is empty");
+        }
+        else
+        {
             string unit = "";
             int amount = 0;
             int inip = 0;
             int endp = 0;
-            foreach (Hashtable table in list) {
-                foreach (DictionaryEntry entry in table) {
-                    if (entry.Key.Equals("unit")) {
+            foreach (Hashtable table in list)
+            {
+                foreach (DictionaryEntry entry in table)
+                {
+                    if (entry.Key.Equals("unit"))
+                    {
                         //Debug.Log((string)entry.Value);
-                        unit = (string) entry.Value;
+                        unit = (string)entry.Value;
                     }
-                    else if (entry.Key.Equals("numeric_value")) {
+                    else if (entry.Key.Equals("numeric_value"))
+                    {
                         //Debug.Log((string)entry.Value);
-                        try {
+                        try
+                        {
                             Int32.TryParse((string)entry.Value, out amount);
-                        } catch {
+                        }
+                        catch
+                        {
                             Debug.Log("Could not convert quantity to an int");
                         }
                     }
@@ -136,13 +219,16 @@ public class KeywordParser {
                 }
 
                 //Add it as a new KeyValuePair to the quantityList
-                if (!unit.Equals("") && !(amount == 0)) { 
+                if (!unit.Equals("") && !(amount == 0))
+                {
                     Debug.Log("Added to quantity list: Unit = " + unit + " Amount = " + amount);
                     Quantity quantity = new Quantity(unit, amount, inip, endp);
                     quantityList.Add(quantity);
                     unit = "";
                     amount = 0;
-                 } else {
+                }
+                else
+                {
                     Debug.Log("No pair added to quantity list");
                     Debug.Log("Unit: " + unit + " Quantity: " + amount);
                 }
@@ -221,7 +307,8 @@ public class KeywordParser {
     //    Debug.Log("--------------------------");
     //}
 
-    private void CheckEntityList(ArrayList list) {
+    private void CheckEntityList(ArrayList list)
+    {
         Debug.Log("-------- Entities --------");
         if (list.Count == 0)
         {
@@ -306,9 +393,12 @@ public class KeywordParser {
         jsonConverter.disabledSpecifyDescription();
     }
 
-    private string GetTypeOfKeyword(Hashtable value) {
-        foreach (DictionaryEntry entry in value) {
-            if (entry.Key.Equals("type")) {
+    private string GetTypeOfKeyword(Hashtable value)
+    {
+        foreach (DictionaryEntry entry in value)
+        {
+            if (entry.Key.Equals("type"))
+            {
                 string type = (string)entry.Value;
                 type = type.Substring(4, type.Length - 4);
                 return type;

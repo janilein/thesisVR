@@ -15,7 +15,7 @@ public class Speech : MonoBehaviour {
     private const string URL = "http://api.meaningcloud.com/topics-2.0";
     public string APIKeyMeaningCloud;
     private const string lang = "en";
-    private const string tt = "ecn"; //named entities, concepts and quantities
+    private const string tt = "ecnr"; //named entities, concepts, quantities and relations
     private const string ud = "ThesisVR";
     public string googleOutputText = "";
 
@@ -265,7 +265,7 @@ public class Speech : MonoBehaviour {
         }
         catch (Exception e)
         {
-            Debug.Log(e.Message);
+            Debug.Log(e.ToString());
         }
     }
 

@@ -139,7 +139,7 @@ public class KeywordParser
                         {
                             if (relation.Key.Equals("form"))
                             {
-                                form = (string)relation.Value;
+                                form = ((string)relation.Value).ToLower();
                             }
                             else if (relation.Key.Equals("lemma_list"))
                             {
@@ -331,7 +331,7 @@ public class KeywordParser
                     if (entry.Key.Equals("form"))
                     {
                         //Debug.Log((string)entry.Value);
-                        form = (string)entry.Value;
+                        form = ((string)entry.Value).ToLower();
                     }
                     else if (entry.Key.Equals("sementity"))
                     {

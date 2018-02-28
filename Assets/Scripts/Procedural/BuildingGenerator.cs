@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 public class BuildingGenerator : Generator {
@@ -118,18 +119,25 @@ public class BuildingGenerator : Generator {
         }
 
         //Update the parent (house) box collider using the bounds
-        BoxCollider coll = house.GetComponent<BoxCollider>();
+        //BoxCollider coll = house.GetComponent<BoxCollider>();
         Vector2 xBounds = (Vector2)bounds["xBounds"];
         float xSize = xBounds.y - xBounds.x;
         Vector2 yBounds = (Vector2)bounds["yBounds"];
         float ySize = yBounds.y - yBounds.x;
         Vector2 zBounds = (Vector2)bounds["zBounds"];
         float zSize = zBounds.y - zBounds.x;
-        //Debug.Log("xSize: " + xSize);
-        //Debug.Log("ySize: " + ySize);
-        //Debug.Log("ZSize: " + zSize);
-        coll.size = new Vector3(xSize, ySize, zSize);
-        coll.center = new Vector3(0, ySize / 2, 0);
+        Debug.Log("xSize: " + xSize);
+        Debug.Log("ySize: " + ySize);
+        Debug.Log("ZSize: " + zSize);
+        parent.GetComponent<BoxCollider>().size = new Vector3(xSize, ySize, zSize);
+        parent.GetComponent<BoxCollider>().center = new Vector3(0, ySize / 2, 0);
+        //coll.size = new Vector3(xSize, ySize, zSize);
+        //coll.center = new Vector3(0, ySize / 2, 0);
+        BoxCollider coll = parent.GetComponent<BoxCollider>();
+        Debug.Log("xSize: " + coll.size.x);
+        Debug.Log("ySize: " + coll.size.y);
+        Debug.Log("ZSize: " + coll.size.z);
+        EditorGUIUtility.PingObject(coll);
 
         return;
 

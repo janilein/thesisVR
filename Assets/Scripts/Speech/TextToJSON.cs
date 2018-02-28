@@ -267,19 +267,30 @@ public class TextToJSON
 
             //Check what we are specifying
             Entity specificationEntity = null;
-            JObject specificationObject = null;
             foreach (Entity entity in entityList)
             {
-                if (entity.form.ToLower().Equals("roof"))
+                if (entity.form.ToLower().Equals("roof"))   //Specify roof?
                 {
                     specificationEntity = entity;
                     SpecifyRoof(ref specificationEntity, ref entityList);
                     break;
                 }
-                else if (entity.form.ToLower().Equals("floor"))
+                else if (entity.form.ToLower().Equals("floor")) //Specify floor?
                 {
                     specificationEntity = entity;
                     SpecifyFloor(ref specificationEntity, ref entityList, ref relationList);
+                    break;
+                }
+                else if (entity.form.ToLower().Equals("floors"))    //Respecify # floors?
+                {
+                    foreach(Quantity quantity in quantityList)
+                    {
+                        if (quantity.unit.ToLower().Equals("floors"))
+                        {
+                            SpecifyNumberOfFloors(quantity);
+                            break;
+                        }
+                    }
                     break;
                 }
             }
@@ -340,7 +351,7 @@ public class TextToJSON
 
     private void SpecifyRoof(ref Entity roofEntity, ref List<Entity> entityList)
     {
-        entityList.Remove(roofEntity);
+        //entityList.Remove(roofEntity);
 
         //Check for possible type of roof & color
         Entity colorEntity = null;
@@ -370,11 +381,11 @@ public class TextToJSON
         foreach (JObject jsonObject in array3)
         {
             JProperty first = (JProperty)jsonObject.First;
-            Debug.Log("First: " + first);
+            //Debug.Log("First: " + first);
             if (((string)first.Value).Equals("roof"))
             {
                 JProperty roofAttrs = (JProperty)first.Next;
-                Debug.Log("Roof attrs: " + roofAttrs);
+                //Debug.Log("Roof attrs: " + roofAttrs);
 
                 JArray roofAttrArray = (JArray)roofAttrs.Value;
                 roofAttr = (JObject)roofAttrArray.First;
@@ -427,9 +438,44 @@ public class TextToJSON
         return;
     }
 
+    private void SpecifyNumberOfFloors(Quantity quantity)
+    {
+        //entityList.Remove(floorEntity);
+        int nbFloors = quantity.amount;
+
+        JArray array3 = GetAttrArray();
+        bool addedFloors = false;
+
+        foreach (JObject jsonObject in array3)
+        {
+            JProperty first = (JProperty)jsonObject.First;
+            Debug.Log("First: " + first);
+            string key = (string)first.Name;
+            Debug.Log("Key: " + key);
+
+            if(key.Equals("floors"))
+            {
+                //Set the value to the new floor value
+                first.Value = nbFloors.ToString();
+                addedFloors = true;
+                Debug.Log("Changed amount of floors");
+                break;
+            }
+        }
+
+        //Check if we added new floor, if not, add new JObject to array3
+        if (!addedFloors)
+        {
+            JObject floorObject = new JObject();
+            floorObject.Add(new JProperty("floors", nbFloors.ToString()));
+            array3.Add(floorObject);
+            Debug.Log("Added new floorobject");
+        }
+    }
+
     private void SpecifyFloor(ref Entity floorEntity, ref List<Entity> entityList, ref List<Relation> relationList)
     {
-        entityList.Remove(floorEntity);
+        //entityList.Remove(floorEntity);
 
         //Check for floor color
         Entity colorEntity = null;
@@ -461,7 +507,7 @@ public class TextToJSON
             }
         }
 
-        Debug.Log("Level to string: " + level.ToString());
+       // Debug.Log("Level to string: " + level.ToString());
 
         //Do we already have a specification for this floor level?
         JArray array3 = GetAttrArray();
@@ -470,11 +516,11 @@ public class TextToJSON
         foreach (JObject jsonObject in array3)
         {
             JProperty first = (JProperty)jsonObject.First;
-            Debug.Log("First: " + first);
+            //Debug.Log("First: " + first);
             if (((string)first.Value).Equals("floor"))
             {
                 JProperty roofAttrs = (JProperty)first.Next;
-                Debug.Log("Floor attrs: " + roofAttrs);
+                //Debug.Log("Floor attrs: " + roofAttrs);
 
                 JArray roofAttrArray = (JArray)roofAttrs.Value;
                 JObject floorAttr = (JObject)roofAttrArray.First;
@@ -485,9 +531,9 @@ public class TextToJSON
                 while(levelAttr != null)
                 {
                     string value = (string)levelAttr.Value;
-                    Debug.Log("LevelAttr: " + levelAttr);
-                    Debug.Log("LevelAttr name: " + (string)levelAttr.Name);
-                    Debug.Log("LevelAttr value: " + value);
+                    //Debug.Log("LevelAttr: " + levelAttr);
+                    //Debug.Log("LevelAttr name: " + (string)levelAttr.Name);
+                    //Debug.Log("LevelAttr value: " + value);
                     if (value.Equals(level.ToString()))
                         break;
                     else
@@ -496,12 +542,12 @@ public class TextToJSON
 
                 if (levelAttr != null)
                 {
-                    Debug.Log("In if...");
-                    Debug.Log("Value: " + levelAttr.Value);
-                    Debug.Log("LEvel to string: " + level.ToString());
+                    //Debug.Log("In if...");
+                    //Debug.Log("Value: " + levelAttr.Value);
+                    //Debug.Log("LEvel to string: " + level.ToString());
                     if (((string)levelAttr.Value).Equals(level.ToString()))
                     {
-                        Debug.Log("Removing color...");
+                        //Debug.Log("Removing color...");
                         floorAttr.Remove("color");
                         floorAttr.Add("color", colorEntity.form);
                         addedFloor = true;
@@ -549,41 +595,58 @@ public class TextToJSON
         {
             //print ff de specified ding
             JProperty type1 = (JProperty)specifiedDescription.First;
-            Debug.Log("Type1: " + type1);
+            //Debug.Log("Type1: " + type1);
             JProperty attr1 = (JProperty)type1.Next;
-            Debug.Log("Attr1: " + attr1);
+            //Debug.Log("Attr1: " + attr1);
 
             JArray array1 = (JArray)attr1.Value;
-            Debug.Log("Array1: " + array1);
+            //Debug.Log("Array1: " + array1);
 
             JToken lotObject = array1.First;
-            Debug.Log("lotObject: " + lotObject);
+            //Debug.Log("lotObject: " + lotObject);
 
             JObject otherObject = (JObject)lotObject.Next;
-            Debug.Log("other object: " + otherObject);
+            //Debug.Log("other object: " + otherObject);
 
             JProperty typeBuilding = (JProperty)otherObject.First;
-            Debug.Log("typeBuilding: " + typeBuilding);
+            //Debug.Log("typeBuilding: " + typeBuilding);
 
             JProperty otherAttr = (JProperty)typeBuilding.Next;
-            Debug.Log("Otherattr: " + otherAttr);
+            //Debug.Log("Otherattr: " + otherAttr);
 
             JArray array2 = (JArray)otherAttr.Value;
-            Debug.Log("Array2: " + array2);
+            //Debug.Log("Array2: " + array2);
 
             JObject attrObject = (JObject)array2.First;
-            Debug.Log("attrObject: " + attrObject);
+            //Debug.Log("attrObject: " + attrObject);
 
             JProperty typeHouse = (JProperty)attrObject.First;
-            Debug.Log("Typehouse: " + typeHouse);
+            //Debug.Log("Typehouse: " + typeHouse);
 
             JProperty attr3 = (JProperty)typeHouse.Next;
-            Debug.Log("attr3: " + attr3);
+            //Debug.Log("attr3: " + attr3);
 
-            JArray array3 = (JArray)attr3.Value;
-            Debug.Log("Array3: " + array3);
-
+        if (attr3 == null)
+        {
+            //Debug.Log("attr3 is null");
+            JArray array3 = new JArray();
+            JProperty attrPropNew = new JProperty("attr", array3);
+            attrObject.Add(attrPropNew);
             return array3;
+        }
+        else
+        {
+            //Debug.Log("attr3 is not null");
+            JArray array3 = (JArray)attr3.Value;
+            //Debug.Log("Array3: " + array3);
+            if(array3 == null)
+            {
+                //Debug.Log("array3 is null");
+                array3 = new JArray();
+                attr3.Value = array3;
+            }
+            return array3;
+        }
         }
 
         internal void disabledSpecifyDescription()

@@ -10,24 +10,27 @@ public class BuildingGenerator : Generator {
     Hashtable bounds;
     string typeOfBuilding;
 
+    private static int lotID = 1;
+ 
     public BuildingGenerator() {
         bounds = new Hashtable();
     }
 
-    public override void GenerateWorldObject(WorldObject obj, Vector3 currentDirection) {
+    public override GameObject GenerateWorldObject(WorldObject obj, Vector3 currentDirection, string JSON = null) {
         //Obj is the 'lot' root obj
-        int lotNumber;
-        if (obj.directAttributes.ContainsKey("lotID")) {
-            string lotString = (string)obj.directAttributes["lotID"];
-            Int32.TryParse(lotString, out lotNumber);
-        } else {
-            System.Random random = new System.Random();
-            lotNumber = random.Next(1000, 1000000);
-        }
+        //int lotNumber;
+        //if (obj.directAttributes.ContainsKey("lotID")) {
+        //    string lotString = (string)obj.directAttributes["lotID"];
+        //    Int32.TryParse(lotString, out lotNumber);
+        //} else {
+        //    System.Random random = new System.Random();
+        //    lotNumber = random.Next(1000, 1000000);
+        //}
 
         //Create the 'lot' parent
-        GameObject lot = new GameObject("lotID:" + lotNumber);
-
+        GameObject lot = new GameObject("lotID:" + lotID++);
+        lot.AddComponent<JSONHolder>();
+        lot.GetComponent<JSONHolder>().JSON = JSON;
         //Now go to the children
         obj = obj.GetChildren()[0].GetChildren()[0];
 
@@ -47,7 +50,7 @@ public class BuildingGenerator : Generator {
             Int32.TryParse(stringFloors, out nbFloors);
         } catch(Exception e) {
             Debug.Log(e.Message);
-            return;
+            throw new Exception("No floors given");
         }
 
         List<int> floorNumbersToGenerate = new List<int>();
@@ -132,7 +135,7 @@ public class BuildingGenerator : Generator {
         parent.GetComponent<BoxCollider>().size = new Vector3(xSize, ySize, zSize);
         parent.GetComponent<BoxCollider>().center = new Vector3(0, ySize / 2, 0);
 
-        return;
+        return lot;
 
     }
 
@@ -599,5 +602,10 @@ public class BuildingGenerator : Generator {
             }
         }
         return defaults;
+    }
+
+    public void DecreaseLotCounter()
+    {
+        lotID -= 1;
     }
 }

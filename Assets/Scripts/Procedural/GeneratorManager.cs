@@ -10,6 +10,8 @@ public class GeneratorManager {
     private Vector3 currentPosition;
     private string pointDirection;
 
+    public GameObject previousObject = null;
+
     public GeneratorManager() {
         buildingGen = new BuildingGenerator();
         streetGen = new StreetGenerator();
@@ -19,13 +21,26 @@ public class GeneratorManager {
         pointDirection = "top";
     }
 
-	public void GenerateWorldObject(WorldObject obj) {
+	public void GenerateWorldObject(WorldObject obj, string JSON = null) {
         if (obj.GetObjectValue().Equals("lots")) {
             WorldObject child = obj.GetChildren()[0];
             if (child.GetObjectValue().Equals("buildings")) {
                 Debug.Log("parent is buildings");
                 //BuildingGenerator generator = new BuildingGenerator(); //gaan veel van deze maken, misschien in een singleton steken die we gaan oproepen?
-                buildingGen.GenerateWorldObject(obj, currentDirection); //Obj, niet child.getChildren()[0], want generator moet aan het 'lot' kunnen
+                if (Speech.specifyDescription)
+                {
+                    if(previousObject != null)
+                    {
+                        MonoBehaviour.Destroy(previousObject);
+                        previousObject = null;
+                        buildingGen.DecreaseLotCounter();
+                    }
+                } else
+                {
+                    previousObject = null;
+                }
+
+                previousObject = buildingGen.GenerateWorldObject(obj, currentDirection, JSON); //Obj, niet child.getChildren()[0], want generator moet aan het 'lot' kunnen
             } else if (child.GetObjectValue().Equals("gardens")) {
                 Debug.Log("parent is garden");
                 //BuildingGenerator generator = new BuildingGenerator();

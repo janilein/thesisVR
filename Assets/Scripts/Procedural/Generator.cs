@@ -4,6 +4,6 @@ using UnityEngine;
 
 public abstract class Generator {
 
-    public virtual void GenerateWorldObject(WorldObject obj, Vector3 currentDirection) { }
+    public virtual GameObject GenerateWorldObject(WorldObject obj, Vector3 currentDirection, string JSON = null) { return null; }
     public virtual void GenerateWorldObject(WorldObject obj, Vector3 currentDirection, ref Vector3 currentPosition, string pointDirection) { }
 }

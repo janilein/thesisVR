@@ -54,6 +54,14 @@ public class Speech : MonoBehaviour {
     }
 
     public void BtnRecordVoice_Click() {
+        if(waveIn == null)
+        {
+            waveOut = new WaveOut();
+            waveIn = new WaveIn();
+            waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(WaveIn_DataAvailable);
+            waveIn.WaveFormat = new NAudio.Wave.WaveFormat(16000, 1);
+        }
+
         if (NAudio.Wave.WaveIn.DeviceCount < 1) {
             Console.WriteLine("No microphone!");
             return;
@@ -72,7 +80,11 @@ public class Speech : MonoBehaviour {
         waveIn.StopRecording();
 
         if (File.Exists("audio.raw"))
+        {
+            
             File.Delete("audio.raw");
+        }
+
 
         writer = new WaveFileWriter(output, waveIn.WaveFormat);
 
@@ -91,20 +103,26 @@ public class Speech : MonoBehaviour {
         }
         waveIn.Dispose();
         waveIn = null;
+        writer.Dispose();
         writer.Close();
         writer = null;
 
-        reader = new WaveFileReader("audio.raw"); // (new MemoryStream(bytes));
-        waveOut.Init(reader);
-        waveOut.PlaybackStopped += new EventHandler<StoppedEventArgs>(WaveOut_PlaybackStopped);
-        waveOut.Play();
+        //reader = new WaveFileReader("audio.raw"); // (new MemoryStream(bytes));
+        //waveOut.Init(reader);
+        //waveOut.PlaybackStopped += new EventHandler<StoppedEventArgs>(WaveOut_PlaybackStopped);
+        //Debug.Log("§§§§§§§§§§§§§§§§§§§§§§§§§§event created");
+        //waveOut.Play();
+        //Debug.Log("§§§§§§§§§§§§§§§§§§§§§§§§§§reader started");
     }
 
-    private void WaveOut_PlaybackStopped(object sender, StoppedEventArgs e) {
-        waveOut.Stop();
-        reader.Close();
-        reader = null;
-    }
+    //private void WaveOut_PlaybackStopped(object sender, StoppedEventArgs e) {
+    //    waveOut.Stop();
+    //    waveOut = null;
+    //    reader.Dispose();
+    //    reader.Close();
+    //    reader = null;
+    //    Debug.Log("§§§§§§§§§§§§§§§§§§§§§§§§§§reader closed");
+    //}
 
     private bool MyRemoteCertificateValidationCallback(System.Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) {
         bool isOk = true;
@@ -279,8 +297,8 @@ public class Speech : MonoBehaviour {
 
     public void ToggleSpecification()
     {
-        GameObject scrollButton = GameObject.Find("GUI/Canvas/DefaultButtons/SpecifyButton").gameObject;
-        specifyDescription = scrollButton.GetComponent<Toggle>().isOn;
+        GameObject specifyButton = GameObject.Find("GUI/Canvas/DefaultButtons/SpecifyButton").gameObject;
+        specifyDescription = specifyButton.GetComponent<Toggle>().isOn;
 
         //If specifyDescription gets disabled, pass this to KeywordParser --> TextToJSON so it can spawn the fully described entity
         if(specifyDescription == false)
@@ -291,8 +309,13 @@ public class Speech : MonoBehaviour {
 
     public static void SetSpecification(bool value)
     {
-        GameObject scrollButton = GameObject.Find("GUI/Canvas/DefaultButtons/SpecifyButton").gameObject;
-        scrollButton.GetComponent<Toggle>().isOn = value;
+        GameObject specifyButton = GameObject.Find("GUI/Canvas/DefaultButtons/SpecifyButton").gameObject;
+        specifyButton.GetComponent<Toggle>().isOn = value;
+    }
+
+    public static bool GetSpecification()
+    {
+        return specifyDescription;
     }
 
     private string GetTranscript(Hashtable googleOutput) {

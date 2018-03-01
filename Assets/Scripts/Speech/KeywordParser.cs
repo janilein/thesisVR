@@ -63,9 +63,18 @@ public class KeywordParser
     {
         Entity entity = null;
 
+        //Done specifying?
+        entity = GetEntityFromEntityList("Command");
+        if(entity != null)
+        {
+            Debug.Log("Done specifying");
+            Speech.SetSpecification(false);
+            jsonConverter.disabledSpecifyDescription();
+        }
+
         //Eerste mogelijkheid: geen quantities, 1 direction (voor verandering van direction ofzo)
         entity = GetEntityFromEntityList("Direction");
-        if (entity != null && quantityList.Count == 0) //no quantities + 1 direction concept for a direction change
+        if (entity != null) //no quantities + 1 direction concept for a direction change
         {
             Debug.Log("Found direction pair");
             jsonConverter.CreateDirectionJSON(entity);

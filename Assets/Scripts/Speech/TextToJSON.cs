@@ -251,6 +251,8 @@ public class TextToJSON
                     )
                 );
 
+            GenerateWorldObject(specifiedDescription.ToString());
+
             //Set the specify bool to true
             Speech.SetSpecification(true);
 
@@ -296,6 +298,8 @@ public class TextToJSON
             }
 
             Debug.Log("New JSON string: " + specifiedDescription);
+
+            GenerateWorldObject(specifiedDescription.ToString());
         }
 
 
@@ -578,17 +582,6 @@ public class TextToJSON
 
                 array3.Add(floorObject);
             }
-
-            //                                    new JObject(
-            //                                        new JProperty("type", "floor"),
-            //                                        new JProperty("attr", new JArray(
-            //                                            new JObject(
-            //                                                new JProperty("level", "1"),
-            //                                                new JProperty("color", "red")
-            //                                                )
-            //                                        )
-            //                                        )
-
         }
 
         private JArray GetAttrArray()
@@ -649,16 +642,16 @@ public class TextToJSON
         }
         }
 
-        internal void disabledSpecifyDescription()
+        public void disabledSpecifyDescription()
         {
             if (specifiedDescription != null)
             {
-                Debug.Log(specifiedDescription.ToString());
-                bool successParse = true;
-                Hashtable o = (Hashtable)JSON.JsonDecode(specifiedDescription.ToString(), ref successParse);
-                hashParser.PrintHashTable(o);     //Convert the hashtable to WorldObjects
-                WorldObject root = hashParser.getRootObject();
-                manager.GenerateWorldObject(root);
+                //Debug.Log(specifiedDescription.ToString());
+                //bool successParse = true;
+                //Hashtable o = (Hashtable)JSON.JsonDecode(specifiedDescription.ToString(), ref successParse);
+                //hashParser.PrintHashTable(o);     //Convert the hashtable to WorldObjects
+                //WorldObject root = hashParser.getRootObject();
+                //manager.GenerateWorldObject(root, specifiedDescription.ToString());
 
                 specifiedDescription = null;
             }
@@ -668,4 +661,21 @@ public class TextToJSON
                 return;
             }
         }
+
+    private void GenerateWorldObject(string JSONstring)
+    {
+        if (JSONstring != null)
+        {
+            bool successParse = true;
+            Hashtable o = (Hashtable)JSON.JsonDecode(JSONstring, ref successParse);
+            hashParser.PrintHashTable(o);     //Convert the hashtable to WorldObjects
+            WorldObject root = hashParser.getRootObject();
+            manager.GenerateWorldObject(root, JSONstring);
+        }
+        else
+        {
+            Debug.Log("Specified description null");
+            return;
+        }
+    }
     }

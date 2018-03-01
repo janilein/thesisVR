@@ -11,6 +11,8 @@ public class StreetGenerator : Generator {
     //toegevoegd voot T, maar werkt niet
     private string previousOrientation;
 
+    private static int streetID = 1;
+
     public StreetGenerator() {
 
     }
@@ -21,20 +23,20 @@ public class StreetGenerator : Generator {
         spawnPosition = new Vector3(0, 0.2f, 0);
 
         //Obj is the 'lot' root obj
-        int streetNumber;
-        if (obj.directAttributes.ContainsKey("streetID")) {
-            string streetString = (string)obj.directAttributes["streetID"];
-            Int32.TryParse(streetString, out streetNumber);
-        } else {
-            System.Random random = new System.Random();
-            streetNumber = random.Next(1000, 1000000);
-        }
+        //int streetNumber;
+        //if (obj.directAttributes.ContainsKey("streetID")) {
+        //    string streetString = (string)obj.directAttributes["streetID"];
+        //    Int32.TryParse(streetString, out streetNumber);
+        //} else {
+        //    System.Random random = new System.Random();
+        //    streetNumber = random.Next(1000, 1000000);
+        //}
         obj = obj.GetChildren()[0];
 
         //Only 5 types of streets allowed, so switch case them all
         string type = obj.GetObjectValue();
         Debug.Log("Street type: " + type);
-        Transform parent = (new GameObject("streetID:" + streetNumber)).transform;
+        Transform parent = (new GameObject("streetID:" + streetID++)).transform;
         parent.position = spawnPosition;
         switch (type) {
             case "straight":

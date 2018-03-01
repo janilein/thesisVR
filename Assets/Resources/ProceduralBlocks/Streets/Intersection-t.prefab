@@ -55,7 +55,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1075258413780656}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -265.40414, y: 239.48334, z: -105.120125}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4745835636719970}
@@ -68,13 +68,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1790471975808220}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4622586534348354}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 90, z: 0}
 --- !u!23 &23128249256628048
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -143,8 +143,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 25.35, y: 30.00001, z: 0.3000001}
-  m_Center: {x: -2.325, y: 0.0000004768373, z: 0.15}
+  m_Size: {x: 30, y: 0.3, z: 25}
+  m_Center: {x: 0, y: 0, z: 2.37}
 --- !u!95 &95548316800425366
 Animator:
   serializedVersion: 3
@@ -185,8 +185,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerPoint: {x: 0, y: 0, z: 0}
-  topPoint: {x: -4.5, y: 0, z: 0}
-  leftPoint: {x: 0, y: 0, z: -15}
-  rightPoint: {x: 0, y: 0, z: 15}
-  bottomPoint: {x: 15, y: 0, z: 0}
+  spawnStart: {x: 0, y: 0, z: 0}
+  topPoint: {x: 0, y: 0, z: 15}
+  leftPoint: {x: 15, y: 0, z: 0}
+  rightPoint: {x: -15, y: 0, z: 0}
   type: intersectionT

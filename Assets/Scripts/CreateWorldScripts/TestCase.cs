@@ -222,6 +222,46 @@ public class TestCase : MonoBehaviour {
                                  new JProperty("orientation", "leftRight")
                                  ))))))));
 
+        JObject rss7 = new JObject(
+         new JObject(
+                 new JProperty("type", "streets"),
+                 new JProperty("attr", new JArray(
+                     new JObject(
+                         new JProperty("streetID", "1")),
+                     new JObject(
+                         new JProperty("type", "intersection-t"),
+                         new JProperty("attr", new JArray(
+                             new JObject(
+                                 new JProperty("length", "long"),
+                                 new JProperty("lotsLeft", "2"),
+                                 new JProperty("lotsRight", "6"),
+                                 new JProperty("orientation", "leftStraight")
+                                 ))))))));
+
+        JObject rss8 = new JObject(
+            new JObject(
+                    new JProperty("type", "orientation"),
+                    new JProperty("attr", new JArray(
+                        new JObject(
+                            new JProperty("direction", "straight"))
+                        ))));
+
+        JObject rss9 = new JObject(
+         new JObject(
+                 new JProperty("type", "streets"),
+                 new JProperty("attr", new JArray(
+                     new JObject(
+                         new JProperty("streetID", "1")),
+                     new JObject(
+                         new JProperty("type", "intersection-t"),
+                         new JProperty("attr", new JArray(
+                             new JObject(
+                                 new JProperty("length", "long"),
+                                 new JProperty("lotsLeft", "2"),
+                                 new JProperty("lotsRight", "6"),
+                                 new JProperty("orientation", "rightStraight")
+                                 ))))))));
+
         Hashtable o5 = (Hashtable)JSON.JsonDecode(rss5.ToString(), ref successParse);
         hashParser.PrintHashTable(o5);     //Convert the hashtable to WorldObjects
         WorldObject root5 = hashParser.getRootObject();
@@ -233,6 +273,18 @@ public class TestCase : MonoBehaviour {
         Hashtable o6 = (Hashtable)JSON.JsonDecode(rss6.ToString(), ref successParse);
         hashParser.PrintHashTable(o6);     //Convert the hashtable to WorldObjects
         WorldObject root6 = hashParser.getRootObject();
+
+        Hashtable o7 = (Hashtable)JSON.JsonDecode(rss7.ToString(), ref successParse);
+        hashParser.PrintHashTable(o7);     //Convert the hashtable to WorldObjects
+        WorldObject root7 = hashParser.getRootObject();
+
+        Hashtable o8 = (Hashtable)JSON.JsonDecode(rss8.ToString(), ref successParse);
+        hashParser.PrintHashTable(o8);     //Convert the hashtable to WorldObjects
+        WorldObject root8 = hashParser.getRootObject();
+
+        Hashtable o9 = (Hashtable)JSON.JsonDecode(rss9.ToString(), ref successParse);
+        hashParser.PrintHashTable(o9);     //Convert the hashtable to WorldObjects
+        WorldObject root9 = hashParser.getRootObject();
 
         //4 small streets
         manager.GenerateWorldObject(root);
@@ -255,6 +307,24 @@ public class TestCase : MonoBehaviour {
         //t-intersection
         manager.GenerateWorldObject(root6);
 
+        //Take a right
+        manager.GenerateWorldObject(root5);
+
+        //1 long street
+        manager.GenerateWorldObject(root2);
+
+        //1 long street
+        manager.GenerateWorldObject(root2);
+
+        //1 long street
+        manager.GenerateWorldObject(root2);
+
+        //1 long street
+        manager.GenerateWorldObject(root2);
+
+        //t-intersection
+        manager.GenerateWorldObject(root7);
+
         //Take a left
         manager.GenerateWorldObject(root3);
 
@@ -271,25 +341,34 @@ public class TestCase : MonoBehaviour {
         manager.GenerateWorldObject(root2);
 
         //t-intersection
-        manager.GenerateWorldObject(root6);
+        manager.GenerateWorldObject(root7);
 
-        //Take a left
-        manager.GenerateWorldObject(root3);
-
-        //1 long street
-        manager.GenerateWorldObject(root2);
-
-        //1 long street
-        manager.GenerateWorldObject(root2);
-
-        //1 long street
-        manager.GenerateWorldObject(root2);
+        //go straight
+        manager.GenerateWorldObject(root8);
 
         //1 long street
         manager.GenerateWorldObject(root2);
 
         //t-intersection
-        manager.GenerateWorldObject(root6);
+        manager.GenerateWorldObject(root9);
+
+        //Take a right
+        manager.GenerateWorldObject(root5);
+
+        //1 long street
+        manager.GenerateWorldObject(root2);
+
+        //x-intersection
+        manager.GenerateWorldObject(root4);
+
+        //go straight
+        manager.GenerateWorldObject(root8);
+
+        //1 long street
+        manager.GenerateWorldObject(root2);
+
+        //x-intersection
+        manager.GenerateWorldObject(root4);
 
         //Take a left
         manager.GenerateWorldObject(root3);
@@ -297,13 +376,22 @@ public class TestCase : MonoBehaviour {
         //1 long street
         manager.GenerateWorldObject(root2);
 
-        //Intersection
+        //x-intersection
+        manager.GenerateWorldObject(root4);
+
+        //Take a right
+        manager.GenerateWorldObject(root5);
+
+        //1 long street
+        manager.GenerateWorldObject(root2);
+
+        ////Intersection
         //manager.GenerateWorldObject(root6);
 
-        //Take a left
+        ////Take a left
         //manager.GenerateWorldObject(root3);
 
-        //2 long streets
+        ////2 long streets
         //manager.GenerateWorldObject(root2);
         //manager.GenerateWorldObject(root2);
         //manager.GenerateWorldObject(root2);

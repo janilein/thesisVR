@@ -7,6 +7,7 @@ public class StreetGeneratorV2 : Generator {
 
     private Vector3 spawnPosition;
     private GenericStreet previousStreetScript = null;
+    //private string newPointDirection = "";
 
     private static int streetID = 1;
 
@@ -34,7 +35,7 @@ public class StreetGeneratorV2 : Generator {
                 GenerateIntersectionT(obj, parent, currentDirection, ref currentPosition, pointDirection);
                 break;
             case "intersection-x":
-                //GenerateIntersectionX(obj, parent, currentDirection, ref currentPosition);
+                GenerateIntersectionX(obj, parent, currentDirection, ref currentPosition, pointDirection);
                 break;
             case "roundabout":
                 //GenerateRoundabout(obj, parent, currentDirection);
@@ -45,6 +46,16 @@ public class StreetGeneratorV2 : Generator {
         }
         //previousStreet = parent.transform;
 
+    }
+
+    private void GenerateIntersectionX(WorldObject obj, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection)
+    {
+        Debug.Log("Generating Intersection-x");
+        //Fetch the x intersection from resources
+        GameObject street = Resources.Load("ProceduralBlocks/Streets/Intersection-x") as GameObject;
+        street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
+        UpdateAllowedPointsIntersectionX(street);
+        SpawnStreet(street, parent, currentDirection, ref currentPosition, "intersection-x", pointDirection);
     }
 
     private void GenerateIntersectionT(WorldObject obj, Transform parent, Vector3 currentDirection, ref Vector3 currentPosition, string pointDirection)
@@ -84,24 +95,42 @@ public class StreetGeneratorV2 : Generator {
         }
 
         street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
-        UpdateOrientationIntersectionT(parent, orientation);
+        UpdateOrientationIntersectionT(parent, orientation, pointDirection);
         UpdateAllowedPointsIntersectionT(street, orientation);
         SpawnStreet(street, parent, currentDirection, ref currentPosition, "intersection-t", pointDirection);
 
     }
 
-    private void UpdateOrientationIntersectionT(Transform parent, string orientation)
+    private void UpdateOrientationIntersectionT(Transform parent, string orientation, string pointDirection)
     {
         switch (orientation)
         {
             case "leftRight":
                 parent.transform.Rotate(new Vector3(0, 1, 0), 180);
+                //newPointDirection = pointDirection;
+                //Debug.Log("PointDir0 = " + pointDirection);
+                //Debug.Log("NewPointDir0 = " + newPointDirection);
                 break;
             case "leftStraight":
                 parent.transform.Rotate(new Vector3(0, 1, 0), -90);
+                //if (pointDirection.Equals("left"))
+                //{
+                //    newPointDirection = "straight";
+                //} else if (pointDirection.Equals("straight"))
+                //{
+                //    newPointDirection = "left";
+                //}
                 break;
             case "rightStraight":
                 parent.transform.Rotate(new Vector3(0, 1, 0), 90);
+                //if (pointDirection.Equals("right"))
+                //{
+                //    newPointDirection = "straight";
+                //}
+                //else if (pointDirection.Equals("straight"))
+                //{
+                //    newPointDirection = "right";
+                //}
                 break;
         }
     }
@@ -167,6 +196,14 @@ public class StreetGeneratorV2 : Generator {
 
         street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
         UpdateAllowedPointsStraightStreet(street);
+        //Debug.Log("PointDir1 = " + pointDirection);
+        //Debug.Log("NewPointDir1 = " + newPointDirection);
+        //if (!newPointDirection.Equals("")){
+        //    pointDirection = newPointDirection;
+        //}
+        //Debug.Log("PointDir2 = " + pointDirection);
+        //Debug.Log("NewPointDir2 = " + newPointDirection);
+        //newPointDirection = "";
         SpawnStreet(street, parent, currentDirection, ref currentPosition, "straight", pointDirection);
     }
 
@@ -221,6 +258,15 @@ public class StreetGeneratorV2 : Generator {
     private void UpdateAllowedPointsStraightStreet(GameObject street)
     {
         street.GetComponent<GenericStreet>().SetAllowedPoints();
+    }
+
+    private void UpdateAllowedPointsIntersectionX(GameObject street)
+    {
+        List<string> allowedDirections = new List<string>();
+        allowedDirections.Add("left");
+        allowedDirections.Add("right");
+        allowedDirections.Add("straight");
+        street.GetComponent<GenericStreet>().SetAllowedPoints(allowedDirections);
     }
 
     private void UpdateAllowedPointsIntersectionT(GameObject street, string orientation)

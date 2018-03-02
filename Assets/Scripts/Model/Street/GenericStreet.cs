@@ -25,12 +25,17 @@ public class GenericStreet : MonoBehaviour
             point = rotatedVector;
             rotatedPoints.Add(new KeyValuePair<string, Vector3>(pair.Key, point));
         }
+        allowedPoints.Clear();
+        foreach(KeyValuePair<string, Vector3> pair in rotatedPoints)
+        {
+            allowedPoints.Add(new KeyValuePair<string, Vector3>(pair.Key, pair.Value));
+        }
+        rotatedPoints.Clear();
     }
 
     public void SetCorrectPoint(string pointDirection)
     {
-
-        foreach (KeyValuePair<string, Vector3> pair in rotatedPoints)
+        foreach (KeyValuePair<string, Vector3> pair in allowedPoints)
         {
             if (pair.Key.Equals(pointDirection))
             {

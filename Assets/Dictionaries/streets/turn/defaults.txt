@@ -1,2 +1,4 @@
 lotsLeft:1
 lotsRight:3
+angle:90
+direction:left

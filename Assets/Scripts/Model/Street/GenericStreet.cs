@@ -40,6 +40,7 @@ public class GenericStreet : MonoBehaviour
             if (pair.Key.Equals(pointDirection))
             {
                 spawnStart = pair.Value;
+                Debug.Log("Spawnstart set to: " + spawnStart.ToString());
                 return;
             }
         }
@@ -78,5 +79,7 @@ public class GenericStreet : MonoBehaviour
     public virtual void SetBottomPoint(Vector3 point) { }
     public virtual void SetLeftPoint(Vector3 point) { }
     public virtual void SetRightPoint(Vector3 point) { }
+
+    public virtual void SetRightTurn() { }
 
 }

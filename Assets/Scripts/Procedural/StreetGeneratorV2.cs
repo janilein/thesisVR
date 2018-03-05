@@ -17,13 +17,13 @@ public class StreetGeneratorV2 : Generator {
     }
 
 
-    public override void GenerateWorldObject(WorldObject obj, Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection) {
+    public override void GenerateWorldObject(WorldObject obj, ref Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection) {
 
         obj = obj.GetChildren()[0];
 
         //Only 5 types of streets allowed, so switch case them all
         string type = obj.GetObjectValue();
-        Debug.Log("Street type: " + type);
+        Debug.Log("Street type: " + type + " -----------------------------------");
         Transform parent = (new GameObject("streetID:" + streetID++)).transform;
         parent.position = spawnPosition;
         switch (type)
@@ -41,7 +41,7 @@ public class StreetGeneratorV2 : Generator {
                 //GenerateRoundabout(obj, parent, currentDirection);
                 break;
             case "turn":
-                //GenerateTurn(obj, parent, currentDirection);
+                GenerateTurn(obj, parent, ref currentDirection, ref currentPosition, pointDirection);
                 break;
         }
         //previousStreet = parent.transform;
@@ -135,7 +135,61 @@ public class StreetGeneratorV2 : Generator {
         }
     }
 
-    private void GenerateStraightStreet(WorldObject obj, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection)
+    private void GenerateTurn(WorldObject obj, Transform parent, ref Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection)
+    {
+        string angle = (string)obj.directAttributes["angle"];
+        GameObject street = Resources.Load("ProceduralBlocks/Streets/Turn" + angle) as GameObject;
+
+        string direction = (string)obj.directAttributes["direction"];
+        Debug.Log("Direction: " + direction);
+
+        float spawnAngle = 0f;
+        switch (angle)
+        {
+            case "90":
+                spawnAngle = 45f;
+                break;
+            case "45":
+                spawnAngle = 22.5f;
+                break;
+        }
+
+        Debug.Log("Spawnangle: " + spawnAngle);
+
+        if (direction.ToLower().Equals("right"))
+        {
+            street = GameObject.Instantiate(street, spawnPosition, Quaternion.Euler(-90f, spawnAngle, 0), parent);
+            street.transform.localScale = new Vector3(-1f, 1f, 1f);
+            street.GetComponent<GenericStreet>().SetRightTurn();
+        } else
+        {
+            street = GameObject.Instantiate(street, spawnPosition, Quaternion.Euler(-90f, -spawnAngle, 0), parent);
+        }
+        UpdateAllowedPointsStraightStreet(street);
+
+        SpawnStreet(street, parent, currentDirection, ref currentPosition, "turn", pointDirection);
+
+        int sign = 1;
+        if (direction.ToLower().Equals("left"))
+        {
+            sign = -1;
+        } else
+        {
+            sign = +1;
+        }
+
+        switch (angle)
+        {
+            case "90":
+                currentDirection.x = (currentDirection.x + sign * 90) % 360;
+                break;
+            case "45":
+                currentDirection.x = (currentDirection.x + sign * 45) % 360;
+                break;
+        }
+    }
+
+        private void GenerateStraightStreet(WorldObject obj, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection)
     {
         Debug.Log("Generating straight street");
 
@@ -214,7 +268,6 @@ public class StreetGeneratorV2 : Generator {
 
     private void SpawnStreet(GameObject street, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string typeOfStreet, string pointDirection)
     {
-        //Spawn the street itself
         //street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
         RotateStreet(parent, currentDirection);
         street.GetComponent<GenericStreet>().RotateAllowedPoints((int) currentDirection.x);

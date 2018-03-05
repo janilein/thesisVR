@@ -60,7 +60,7 @@ public class GeneratorManager {
             Debug.Log("parent is streets");
             //StreetGenerator generator = new StreetGenerator(); //gaan veel van deze maken, misschien in een singleton steken die we gaan oproepen?
             //streetGen.GenerateWorldObject(obj, currentDirection, ref currentPosition, pointDirection);
-            streetGenV2.GenerateWorldObject(obj, currentDirection, ref currentPosition, pointDirection);
+            streetGenV2.GenerateWorldObject(obj, ref currentDirection, ref currentPosition, pointDirection);
 
             //correct pointdirection if pos switch with T
             WorldObject dummy = obj.GetChildren()[0];

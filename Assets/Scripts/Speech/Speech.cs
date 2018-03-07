@@ -107,6 +107,8 @@ public class Speech : MonoBehaviour {
         writer.Close();
         writer = null;
 
+        //BtnSpeechInfo_Click();
+
         //reader = new WaveFileReader("audio.raw"); // (new MemoryStream(bytes));
         //waveOut.Init(reader);
         //waveOut.PlaybackStopped += new EventHandler<StoppedEventArgs>(WaveOut_PlaybackStopped);
@@ -194,7 +196,7 @@ public class Speech : MonoBehaviour {
 
                     bool successParse = true;
                     Hashtable o = (Hashtable)JSON.JsonDecode(googleOutputText, ref successParse);
-                    googleOutputText = GetTranscript(o);
+                    googleOutputText = GetTranscript(o).ToLower(); ;
 
                 }
             } catch (System.Net.WebException exc) {
@@ -213,6 +215,13 @@ public class Speech : MonoBehaviour {
         } else {
             Debug.Log("Audio File Missing ");
         }
+    }
+
+    public void EndAndProcessRecording()
+    {
+        BtnSave_Click();
+        BtnSpeechInfo_Click();
+        MakeRequest();
     }
 
     public void MakeRequest() {

@@ -16,7 +16,6 @@ public class LotManager : MonoBehaviour
             if (!lotManager)
             {
                 lotManager = FindObjectOfType(typeof(LotManager)) as LotManager;
-                EditorGUIUtility.PingObject(lotManager);
 
                 if (!lotManager)
                 {

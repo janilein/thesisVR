@@ -23,7 +23,7 @@ public class Speech : MonoBehaviour {
     public string apiKeyGoogle;
 
     WaveIn waveIn;
-    WaveOut waveOut;
+    //WaveOut waveOut;
     WaveFileWriter writer;
     WaveFileReader reader;
     string output = "audio.raw";
@@ -36,7 +36,7 @@ public class Speech : MonoBehaviour {
     // Use this for initialization
     void Start () {
         keywordParser = new KeywordParser();
-        waveOut = new WaveOut();
+        //waveOut = new WaveOut();
         waveIn = new WaveIn();
 
         waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(WaveIn_DataAvailable);
@@ -56,7 +56,7 @@ public class Speech : MonoBehaviour {
     public void BtnRecordVoice_Click() {
         if(waveIn == null)
         {
-            waveOut = new WaveOut();
+            //waveOut = new WaveOut();
             waveIn = new WaveIn();
             waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(WaveIn_DataAvailable);
             waveIn.WaveFormat = new NAudio.Wave.WaveFormat(16000, 1);
@@ -332,6 +332,7 @@ public class Speech : MonoBehaviour {
                 return GetTranscript((Hashtable)attrList[0]);
             } catch (Exception e) {
                 Debug.Log("Could not cast to ArrayList");
+                Debug.LogError(e.Message);
             }
         }
         return null;

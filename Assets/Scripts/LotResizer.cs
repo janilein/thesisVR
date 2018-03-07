@@ -165,6 +165,7 @@ public class LotResizer : MonoBehaviour {
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         plane.transform.parent = this.transform;
         plane.transform.localPosition = new Vector3(0f, 0f, 0f);
+        Destroy(plane.GetComponent<Collider>());
 
         Mesh planeMesh = plane.GetComponent<MeshFilter>().mesh;
         Vector3 planeSize = planeMesh.bounds.size;

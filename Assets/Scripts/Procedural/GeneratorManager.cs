@@ -15,6 +15,9 @@ public class GeneratorManager {
 
     public GameObject previousObject = null;
 
+    //The active lot on which we want to spawn a building
+    public GameObject activeLot;
+
     public GeneratorManager() {
         buildingGen = new BuildingGenerator();
         //streetGen = new StreetGenerator();
@@ -171,5 +174,10 @@ public class GeneratorManager {
                 break;
         }
         orientation = "";
+    }
+
+    public void SetActiveLot(GameObject newLot)
+    {
+        activeLot = newLot;
     }
 }

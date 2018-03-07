@@ -41,9 +41,9 @@ GameObject:
   - component: {fileID: 64177831707331896}
   - component: {fileID: 54870282066796398}
   - component: {fileID: 114319136957717846}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Turn45
-  m_TagString: Untagged
+  m_TagString: Highlightable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

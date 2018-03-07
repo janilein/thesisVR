@@ -135,6 +135,17 @@ public class BuildingGenerator : Generator {
         parent.GetComponent<BoxCollider>().size = new Vector3(xSize, ySize, zSize);
         parent.GetComponent<BoxCollider>().center = new Vector3(0, ySize / 2, 0);
 
+        //Move the spawned house to the active lot
+        GameObject lotToSpawn = LotManager.getLot();
+        if(lotToSpawn != null)
+        {
+            Debug.Log("Lot to spawn position: " + lotToSpawn.transform.position.ToString());
+            parent.transform.position = lotToSpawn.transform.position;
+
+            //Set the LotToSpawn as the lot's parent
+            lot.transform.SetParent(lotToSpawn.transform);
+        }
+
         return lot;
 
     }

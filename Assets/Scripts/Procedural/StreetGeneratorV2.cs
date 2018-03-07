@@ -377,6 +377,9 @@ public class StreetGeneratorV2 : Generator {
             GameObject lot = GameObject.Instantiate(prefabLot, parent);
             lot.transform.localPosition = spawnPointLot;
             lot.transform.rotation = Quaternion.identity;
+            //Set the collider from the lot
+            BoxCollider coll = lot.transform.GetComponent<BoxCollider>();
+            coll.size = new Vector3(lotWidth, 0.05f, lotLength);
 
             //Set width & height in the lot script
             LotResizer resizer = lot.GetComponent<LotResizer>();

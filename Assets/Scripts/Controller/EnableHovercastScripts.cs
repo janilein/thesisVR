@@ -29,7 +29,7 @@ public class EnableHovercastScripts : MonoBehaviour {
     }
 
     private void Update() {
-        if (Controller.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)) {
+        if (Controller.GetPressDown(SteamVR_Controller.ButtonMask.ApplicationMenu)) {
             ChangeHoverStatus();
         }
     }

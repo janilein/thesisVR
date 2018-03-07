@@ -66,6 +66,13 @@
             Manager.ToggleObjectActive("GUI/Canvas/DefaultButtons", false);
             Manager.ToggleObjectActive("GUI/Canvas/SpawnButtons", true);
         }
+
+        public void Test()
+        {
+            Debug.Log("Test functions");
+            Manager.ToggleObjectActive("GUI/Canvas/DefaultButtons", false);
+            Manager.ToggleObjectActive("GUI/Canvas/TestButtons", true);
+        }
     }
 
 }

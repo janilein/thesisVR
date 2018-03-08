@@ -168,6 +168,7 @@ public class LotResizer : MonoBehaviour {
         Destroy(plane.GetComponent<Collider>());
 
         Mesh planeMesh = plane.GetComponent<MeshFilter>().mesh;
+        plane.GetComponent<MeshRenderer>().material = Resources.Load("Outlined_Material", typeof(Material)) as Material;
         Vector3 planeSize = planeMesh.bounds.size;
         plane.transform.localScale = new Vector3(lotWidth / planeSize.z, 1f, lotLength / planeSize.x);
         this.plane = plane;

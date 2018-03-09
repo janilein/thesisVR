@@ -49,44 +49,6 @@ public class TextToJSON
         string streetType = streetEntity.form;
         entities.Remove(streetEntity);
 
-        string length = null;
-        foreach (Entity entity in entities)
-        {
-            if (entity.type.ToLower().Equals("length"))
-            {
-                length = entity.form;
-                entities.Remove(entity);
-                break;
-            }
-        }
-
-        string orientation = null;
-        foreach (Entity entity in entities)
-        {
-            if (entity.type.Equals("TDirection"))
-            {
-                if (entity.form.ToLower().Equals("left and right"))
-                {
-                    orientation = "leftRight";
-                    entities.Remove(entity);
-                    break;
-                }
-                else if (entity.form.ToLower().Equals("right and straight"))
-                {
-                    orientation = "rightStraight";
-                    entities.Remove(entity);
-                    break;
-                }
-                else if (entity.form.ToLower().Equals("left and straight"))
-                {
-                    orientation = "leftStraight";
-                    entities.Remove(entity);
-                    break;
-                }
-
-            }
-        }
-
         string type = null;
         Debug.Log("StreetType: " + streetType);
         switch (streetType)
@@ -100,9 +62,84 @@ public class TextToJSON
             case "four-way intersection":
                 type = "intersection-x";
                 break;
+            case "turn":
+                type = "turn";
+                break;
             default:
                 type = "straight";
                 break;
+        }
+
+        //In case of a straight street, check for the length as well
+        string length = null;
+        if (type.Equals("straight"))
+        {
+            foreach (Entity entity in entities)
+            {
+                if (entity.type.ToLower().Equals("length"))
+                {
+                    length = entity.form;
+                    break;
+                }
+            }
+        }
+
+        //In case of an intersection-t, check for the orientation
+        string orientation = null;
+        if (type.Equals("intersection-t"))
+        {
+            foreach (Entity entity in entities)
+            {
+                if (entity.type.Equals("TDirection"))
+                {
+                    if (entity.form.ToLower().Equals("left and right"))
+                    {
+                        orientation = "leftRight";
+                        break;
+                    }
+                    else if (entity.form.ToLower().Equals("right and straight"))
+                    {
+                        orientation = "rightStraight";
+                        break;
+                    }
+                    else if (entity.form.ToLower().Equals("left and straight"))
+                    {
+                        orientation = "leftStraight";
+                        break;
+                    }
+
+                }
+            }
+        }
+
+        //In case of a turn, check for the direction & if it's sharp of slight
+        string direction = null;
+        int degrees = 0;
+        if (type.Equals("turn"))
+        {
+            foreach (Entity entity in entities)
+            {
+                if (entity.type.Equals("Direction"))
+                {
+                    direction = entity.form;
+                    break;
+                }
+            }
+            foreach(Entity entity in entities)
+            {
+                if (entity.type.Equals("TurnAmount")){
+                    switch (entity.form.ToLower())
+                    {
+                        case "slight":
+                            degrees = 45;
+                            break;
+                        case "sharp":
+                            degrees = 90;
+                            break;
+                    }
+                    break;
+                }
+            }
         }
 
         JObject obj = new JObject();
@@ -117,6 +154,14 @@ public class TextToJSON
         if (orientation != null)
         {
             obj2.Add(new JProperty("orientation", orientation));
+        }
+        if(direction != null)
+        {
+            obj2.Add(new JProperty("direction", direction));
+        }
+        if(degrees != 0)
+        {
+            obj2.Add(new JProperty("angle", degrees.ToString()));
         }
 
         List<KeyValuePair<Entity, int>> linkedEntities = new List<KeyValuePair<Entity, int>>();

@@ -72,16 +72,7 @@ public class KeywordParser
             jsonConverter.disabledSpecifyDescription();
         }
 
-        //Eerste mogelijkheid: geen quantities, 1 direction (voor verandering van direction ofzo)
-        entity = GetEntityFromEntityList("Direction");
-        if (entity != null) //no quantities + 1 direction concept for a direction change
-        {
-            Debug.Log("Found direction pair");
-            jsonConverter.CreateDirectionJSON(entity);
-            return;
-        }
-
-        //Tweede mogelijkheid: een straat beschrijving
+        //Eerste mogelijkheid: een street type
         entity = GetEntityFromEntityList("StreetType");
         if (entity != null)
         {
@@ -101,6 +92,16 @@ public class KeywordParser
             jsonConverter.CreateStreetJSON(entityList, quantityList);
             return;
         }
+
+        //Tweede mogelijkheid: een direction (voor verandering van direction)
+        entity = GetEntityFromEntityList("Direction");
+        if (entity != null) //no quantities + 1 direction concept for a direction change
+        {
+            Debug.Log("Found direction pair");
+            jsonConverter.CreateDirectionJSON(entity);
+            return;
+        }
+
 
         entity = GetEntityFromEntityList("HouseType");
         if (entity != null || Speech.specifyDescription)                          //Voorlopig gewoon kijken of specify aanstaat en er van uit gaan dat het dan over een huis gaat

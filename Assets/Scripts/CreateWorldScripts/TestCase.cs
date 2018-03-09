@@ -416,6 +416,18 @@ public class TestCase : MonoBehaviour {
         //1 small street
         manager.GenerateWorldObject(root);
 
+        //45° Right turn
+        manager.GenerateWorldObject(root13);
+
+        //45° Right turn
+        manager.GenerateWorldObject(root13);
+
+        //45° Left turn
+        manager.GenerateWorldObject(root12);
+
+        //1 small street
+        manager.GenerateWorldObject(root);
+
         //Debug.Log(rss.ToString());
         //hashParser.PrintWorldObjects(); //Print all WorldObjects to proofread
 

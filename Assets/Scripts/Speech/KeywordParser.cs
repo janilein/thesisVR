@@ -69,7 +69,7 @@ public class KeywordParser
         {
             Debug.Log("Done specifying");
             Speech.SetSpecification(false);
-            jsonConverter.disabledSpecifyDescription();
+            //jsonConverter.disabledSpecifyDescription();
         }
 
         //Eerste mogelijkheid: geen quantities, 1 direction (voor verandering van direction ofzo)

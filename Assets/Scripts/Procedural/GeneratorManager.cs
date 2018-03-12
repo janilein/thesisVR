@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -179,5 +180,22 @@ public class GeneratorManager {
     public void SetActiveLot(GameObject newLot)
     {
         activeLot = newLot;
+    }
+
+    public void stopSpecifying()
+    {
+        if(previousObject != null)
+        {
+            //Previous object is the lot, get the house in the lot
+            Transform house = previousObject.transform.Find("Building");
+            if(house != null)
+            {
+                house.tag = "Highlightable";
+            } else
+            {
+                Debug.Log("No house found in lot");
+            }
+            previousObject = null;
+        }
     }
 }

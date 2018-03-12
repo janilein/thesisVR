@@ -1,2 +1,2 @@
-lotsStraight:0
+lotsStraight:2
 orientation:leftRight

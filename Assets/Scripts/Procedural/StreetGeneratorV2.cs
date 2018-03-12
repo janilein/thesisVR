@@ -77,21 +77,32 @@ public class StreetGeneratorV2 : Generator {
         streetLength = scale.z * meshSize.y;    //Swapping these is not by accident (street is turned 90 degrees)
         streetHeight = scale.y * meshSize.z;
 
-        //Create lots equally spaced along both sides of the straight street nigga
+        //Create lots equally spaced along both sides of the straight street
         //First left side
         if (lotsStraight > 0)
         {
             float lotSpacing = streetLength / lotsStraight;
-            float lotLength = lotSpacing;
-            float lotWidth = 20f;
+            float lotLength = 20f;
+            float lotWidth = lotSpacing;
+
+            Debug.Log("---------------------------------");
+            Debug.Log("Street length: " + streetLength);
+            Debug.Log("Street width: " + streetWidth);
+            Debug.Log("Lot spacing: " + lotSpacing);
+            Debug.Log("Lot length: " + lotLength);
+            
 
             //Get the starting point (left bottom corner of the street)
-            Vector3 spawnPointLot = new Vector3(streetWidth / 2, 0f, streetLength / 2);
-            //Debug.Log("#1: " + spawnPointLot.x);
-            spawnPointLot += new Vector3(lotWidth / 2, 0f, lotLength / 2);
-            spawnPointLot -= new Vector3(2.675f, 0f, 0f); //correct offset due to different symmetry
-            //Debug.Log("#2: " + spawnPointLot.x);
-            SpawnLot(lotsStraight, spawnPointLot, lotWidth, lotLength, parent);
+            Vector3 spawnPointLot = new Vector3(-streetLength / 2, 0f, -10.35f);
+            //spawnPointLot += new Vector3(0f, 0f, -1.275f); //correct offset due to different symmetry
+
+            Debug.Log("SpawnpointLot: " + spawnPointLot.ToString());
+
+            spawnPointLot += new Vector3(lotWidth / 2, 0f, -lotLength / 2);
+            Debug.Log("Spawnpoint lot 2: " + spawnPointLot.ToString());
+            Debug.Log("---------------------------------");
+
+            SpawnLot(lotsStraight, spawnPointLot, lotLength, lotWidth, parent, Orientation.straight, new Vector3(lotWidth, 0f, 0f));
         }
 
         street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
@@ -226,26 +237,38 @@ public class StreetGeneratorV2 : Generator {
         if (lotsLeft > 0)
         {
             float lotSpacing = streetLength / lotsLeft;
-            float lotLength = lotSpacing;
-            float lotWidth = 20f;
+            float lotLength = 20f;
+            float lotWidth = lotSpacing;
+
+            Debug.Log("Lot Width: " + lotWidth.ToString());
+            Debug.Log("Lot length: " + lotLength.ToString());
 
             //Get the starting point (left bottom corner of the street)
-            Vector3 spawnPointLot = new Vector3(-streetWidth / 2, 0f, streetLength / 2);
-            spawnPointLot += new Vector3(-lotWidth / 2, 0f, lotLength / 2);
-            SpawnLot(lotsLeft, spawnPointLot, lotWidth, lotLength, parent);
+            Vector3 spawnPointLot = new Vector3(-streetWidth / 2, 0f, -streetLength / 2);
+            spawnPointLot += new Vector3(-lotLength / 2, 0f, lotWidth / 2);
+
+            Debug.Log("First spawnpoint lot: " + spawnPointLot.ToString());
+
+            SpawnLot(lotsLeft, spawnPointLot, lotWidth, lotLength, parent, Orientation.left, new Vector3(0f, 0f, lotWidth));
         }
 
         //Then right
         if (lotsRight > 0)
         {
             float lotSpacing = streetLength / lotsRight;
-            float lotLength = lotSpacing;
-            float lotWidth = 20f;
+            float lotLength = 20f;
+            float lotWidth = lotSpacing;
+
+            Debug.Log("Lot Width: " + lotWidth.ToString());
+            Debug.Log("Lot length: " + lotLength.ToString());
 
             //Get the starting point (right bottom corner of the street)
-            Vector3 spawnPointLot = new Vector3(streetWidth / 2, 0f, streetLength / 2);
-            spawnPointLot += new Vector3(lotWidth / 2, 0f, lotLength / 2);
-            SpawnLot(lotsRight, spawnPointLot, lotWidth, lotLength, parent);
+            Vector3 spawnPointLot = new Vector3(streetWidth / 2, 0f, -streetLength / 2);
+            spawnPointLot += new Vector3(lotLength / 2, 0f, lotWidth / 2);
+
+            Debug.Log("First spawnpoint lot: " + spawnPointLot.ToString());
+
+            SpawnLot(lotsRight, spawnPointLot, lotWidth, lotLength, parent, Orientation.right, new Vector3(0f, 0f, lotWidth));
         }
 
         street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
@@ -285,7 +308,15 @@ public class StreetGeneratorV2 : Generator {
         else
         {
             Debug.Log("Spawning new street, previous street exists");
-            previousStreetScript.SetCorrectPoint(pointDirection);
+            try
+            {
+                previousStreetScript.SetCorrectPoint(pointDirection);
+            } catch(Exception e)
+            {
+                Debug.Log(e.Message);
+                MonoBehaviour.Destroy(parent.gameObject);
+                return;
+            }
 
             Debug.Log("Previous turned point: " + previousStreetScript.GetSpawnPoint());
 
@@ -350,15 +381,48 @@ public class StreetGeneratorV2 : Generator {
         street.GetComponent<GenericStreet>().RotateAllowedPoints(degrees);
     }
 
-    private void SpawnLot(int nbLots, Vector3 spawnPointLot, float lotWidth, float lotLength, Transform parent)
+    private void SpawnLot(int nbLots, Vector3 spawnPointLot, float lotWidth, float lotLength, Transform parent, Orientation orient, Vector3 growDirection)
     {
+        //bool isLeft is used for the orientation of the lots
+
         GameObject prefabLot = Resources.Load("ProceduralBlocks/Lot") as GameObject;
         GameObject[] spawnedLots = new GameObject[nbLots];
+
+        //If lot is on the left, should turn 90° along Y-axis
+        //If on the right, 90° against Y-axis
+        //Straight 180°
+        //Thanks to this, the Z-axis of the lot will always point towards the street, which can be used for the house orientation later on
+        //Because of the rotation, it is also (possibly) necessary to switch the width & length
+        float rotate = 0f;
+        float dummy;
+        switch (orient)
+        {
+            case Orientation.left:
+                rotate = 90f;
+                dummy = lotWidth;
+                lotWidth = lotLength;
+                lotLength = dummy;
+                Debug.Log("Left, swapped");
+                break;
+            case Orientation.right:
+                rotate = -90f;
+                dummy = lotWidth;
+                lotWidth = lotLength;
+                lotLength = dummy;
+                Debug.Log("Right, swapped");
+                break;
+            case Orientation.straight:
+                rotate = 0f;
+                break;
+            default:
+                rotate = 0f;
+                break;
+        }
 
         for (int i = 0; i < nbLots; i++)
         {
             //Calculate the center of the lot that we will spawn
-            spawnPointLot += new Vector3(0f, 0f, -lotLength);
+            //spawnPointLot += new Vector3(0f, 0f, -lotLength);
 
             //For now use a simple plane
             /*
@@ -376,10 +440,12 @@ public class StreetGeneratorV2 : Generator {
             // GameObject lot = GameObject.Instantiate(prefabLot, spawnPointLot, Quaternion.identity, parent);
             GameObject lot = GameObject.Instantiate(prefabLot, parent);
             lot.transform.localPosition = spawnPointLot;
-            lot.transform.rotation = Quaternion.identity;
+            Debug.Log("Spawned lot at position: " + spawnPointLot.ToString());
+            lot.transform.rotation = Quaternion.identity; 
+
             //Set the collider from the lot
             BoxCollider coll = lot.transform.GetComponent<BoxCollider>();
-            coll.size = new Vector3(lotWidth, 0.05f, lotLength);
+            coll.size = new Vector3(lotLength, 0.05f, lotWidth);
 
             //Set width & height in the lot script
             LotResizer resizer = lot.GetComponent<LotResizer>();
@@ -387,6 +453,9 @@ public class StreetGeneratorV2 : Generator {
             resizer.SetLotWidth(lotWidth);
 
             resizer.SpawnPlane();
+
+            Debug.Log("Rotate: " + rotate);
+            lot.transform.Rotate(new Vector3(0, 1f, 0), rotate);
 
             spawnedLots[i] = lot;
 
@@ -402,7 +471,7 @@ public class StreetGeneratorV2 : Generator {
             //plane.transform.parent = parent;
             //plane.transform.localPosition = spawnPointLot;
 
-
+            spawnPointLot += growDirection;
         }
 
         //In the lot resizers, set the necessary neighbors
@@ -436,4 +505,7 @@ public class StreetGeneratorV2 : Generator {
         lotLeft.GetComponent<LotResizer>().SetRightNeighbor(lotRight);
         lotRight.GetComponent<LotResizer>().SetLeftNeighbor(lotLeft);
     }
+
+    private enum Orientation { left, right, straight};
+
 }

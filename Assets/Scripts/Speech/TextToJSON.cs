@@ -653,7 +653,11 @@ public class TextToJSON
                 //WorldObject root = hashParser.getRootObject();
                 //manager.GenerateWorldObject(root, specifiedDescription.ToString());
 
+
+                //Now the house that we were specifying should get the 'highlightable' tag
+
                 specifiedDescription = null;
+                manager.stopSpecifying();
             }
             else
             {

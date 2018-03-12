@@ -26,11 +26,22 @@ public class VoiceController : MonoBehaviour {
         if (Controller.GetPressDown(SteamVR_Controller.ButtonMask.Grip))
         {
             Debug.Log("Pressed grip");
+            StartCoroutine(Vibrate(0.2f , 1500));
             speechManager.BtnRecordVoice_Click();
         } else if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
         {
             Debug.Log("Released grip");
+            StartCoroutine(Vibrate(0.2f , 1500));
             speechManager.EndAndProcessRecording();
+        }
+    }
+
+    IEnumerator Vibrate(float length, ushort strength)
+    {
+        for (float i = 0; i < length; i += Time.deltaTime)
+        {
+            Controller.TriggerHapticPulse(strength);
+            yield return null;
         }
     }
 }

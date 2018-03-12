@@ -308,6 +308,7 @@ public class Speech : MonoBehaviour {
     {
         GameObject specifyButton = GameObject.Find("GUI/Canvas/TestButtons/SpecifyButton").gameObject;
         specifyDescription = specifyButton.GetComponent<Toggle>().isOn;
+        Debug.Log("Toggled specification");
 
         //If specifyDescription gets disabled, pass this to KeywordParser --> TextToJSON so it can spawn the fully described entity
         if(specifyDescription == false)

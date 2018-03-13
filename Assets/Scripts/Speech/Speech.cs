@@ -9,6 +9,9 @@ using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.UI;
 
+using System.Threading;
+using System.Diagnostics;
+
 public class Speech : MonoBehaviour {
     //private KeywordParser keywordParser;
 
@@ -18,6 +21,7 @@ public class Speech : MonoBehaviour {
     private const string tt = "ecnr"; //named entities, concepts, quantities and relations
     private const string ud = "ThesisVR";
     public string googleOutputText = "";
+    private string meaningCloudOutput = "";
 
     private BufferedWaveProvider bwp;
     public string apiKeyGoogle;
@@ -33,6 +37,10 @@ public class Speech : MonoBehaviour {
     //Used to specify descriptions. E.g. first a house, then specify floor colours
     public static bool specifyDescription = false;
 
+    bool threadRunning = false;
+    bool workDone = false;
+    Thread thread;
+
     // Use this for initialization
     void Start () {
         keywordParser = new KeywordParser();
@@ -46,6 +54,14 @@ public class Speech : MonoBehaviour {
 
         //btnRecordVoice.Enabled = true;
         //btnSave.Enabled = false;
+    }
+
+    void Update() {
+        if (workDone)
+        {
+            UseKeywordParser();
+            workDone = false;
+        }
     }
 
     void WaveIn_DataAvailable(object sender, WaveInEventArgs e) {
@@ -219,9 +235,39 @@ public class Speech : MonoBehaviour {
 
     public void EndAndProcessRecording()
     {
+        //BtnSave_Click();
+        //BtnSpeechInfo_Click();
+        //MakeRequest();
+
+        Console.Log("Main thread PID: " + Process.GetCurrentProcess().Id);
+
+        //Start a new thread here as the web calls will block the main unity thread
+        if (!threadRunning && !workDone)    //Only allow to create a new thread when the output of the previous one has not been processed yet
+        {
+            threadRunning = true;
+            thread = new Thread(ThreadedWork);
+            thread.Start();
+        }
+    }
+
+    private void ThreadedWork()
+    {
+        Console.Log("Work thread PID: " + Process.GetCurrentProcess().Id);
         BtnSave_Click();
         BtnSpeechInfo_Click();
         MakeRequest();
+        threadRunning = false;
+        workDone = true;
+    }
+
+    //OnDisable we should wait for the thread to end as well
+    void OnDisable()
+    {
+        if (threadRunning)
+        {
+            threadRunning = false;
+            thread.Join();
+        }
     }
 
     public void MakeRequest() {
@@ -241,7 +287,6 @@ public class Speech : MonoBehaviour {
                 streamWriter.Close();
             }
 
-            string meaningCloudOutput = "";
             try {
                 Debug.Log("Starting MeaningCloud Request");
                 var httpResponse = (HttpWebResponse)req.GetResponse();
@@ -249,7 +294,7 @@ public class Speech : MonoBehaviour {
                     meaningCloudOutput = streamReader.ReadToEnd();
                     SaveToTxt(meaningCloudOutput);
                     Debug.Log(meaningCloudOutput);
-                    UseKeywordParser(meaningCloudOutput);
+                    //UseKeywordParser(meaningCloudOutput);
                 }
             } catch (System.Net.WebException exc) {
                 using (var stream = exc.Response.GetResponseStream())

@@ -10,7 +10,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using System.Threading;
-using System.Diagnostics;
 
 public class Speech : MonoBehaviour {
     //private KeywordParser keywordParser;
@@ -59,8 +58,7 @@ public class Speech : MonoBehaviour {
     void Update() {
         if (workDone)
         {
-            //To be done
-            UseKeywordParser();
+            UseKeywordParser(meaningCloudOutput);
             workDone = false;
         }
     }
@@ -240,7 +238,7 @@ public class Speech : MonoBehaviour {
         //BtnSpeechInfo_Click();
         //MakeRequest();
 
-        Console.Log("Main thread PID: " + Process.GetCurrentProcess().Id);
+        Debug.Log("Main thread PID: " + Thread.CurrentThread.ManagedThreadId);
 
         //Start a new thread here as the web calls will block the main unity thread
         if (!threadRunning && !workDone)    //Only allow to create a new thread when the output of the previous one has not been processed yet
@@ -253,7 +251,7 @@ public class Speech : MonoBehaviour {
 
     private void ThreadedWork()
     {
-        Console.Log("Work thread PID: " + Process.GetCurrentProcess().Id);
+        Debug.Log("Work thread PID: " + Thread.CurrentThread.ManagedThreadId);
         BtnSave_Click();
         BtnSpeechInfo_Click();
         MakeRequest();

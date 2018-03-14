@@ -550,13 +550,15 @@ public class TextToJSON
             if (relation.form.Equals("floor"))
             {
                 level = relation.Amount;
-                if (level == 0)
-                    throw new Exception("No floor number given");
+                break;
 
             }
         }
 
-       // Debug.Log("Level to string: " + level.ToString());
+        if (level == 0)
+            throw new Exception("No floor number given");
+
+        // Debug.Log("Level to string: " + level.ToString());
 
         //Do we already have a specification for this floor level?
         JArray array3 = GetAttrArray();

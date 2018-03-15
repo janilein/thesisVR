@@ -21,8 +21,8 @@ GameObject:
   - component: {fileID: 4287433345905384}
   - component: {fileID: 64928424939164220}
   - component: {fileID: 54126616032127430}
-  - component: {fileID: 114433372558705014}
   - component: {fileID: 114783882581638602}
+  - component: {fileID: 114629400406761834}
   m_Layer: 8
   m_Name: Turn90
   m_TagString: Highlightable
@@ -163,7 +163,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114433372558705014
+--- !u!114 &114629400406761834
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1334455634259462}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4be15459b874bed47a109b29517b9a71, type: 3}
+  m_Script: {fileID: 11500000, guid: 9c89f88a747c2f4468d724714ebcbeee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114783882581638602

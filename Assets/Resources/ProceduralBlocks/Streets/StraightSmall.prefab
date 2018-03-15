@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4418439033508710}
   - component: {fileID: 54477714616448402}
-  - component: {fileID: 114293836674318706}
   - component: {fileID: 65394324770829208}
   - component: {fileID: 114121588572255594}
+  - component: {fileID: 114441027300413286}
   m_Layer: 8
   m_Name: StraightSmall
   m_TagString: Highlightable
@@ -84,6 +84,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -100,6 +101,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -171,8 +173,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerPoint: {x: 0, y: 0, z: 0}
+  spawnStart: {x: 0, y: 0, z: 0}
   topPoint: {x: 0, y: 0, z: 15}
---- !u!114 &114293836674318706
+  type: straightstreet
+--- !u!114 &114441027300413286
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -180,6 +184,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1377183864988878}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4be15459b874bed47a109b29517b9a71, type: 3}
+  m_Script: {fileID: 11500000, guid: 9c89f88a747c2f4468d724714ebcbeee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

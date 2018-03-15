@@ -31,5 +31,32 @@ public class LotManager : MonoBehaviour
         return instance.lot;
     }
 
+    public static void setLot(GameObject lot)
+    {
+        if (lot.Equals(instance.lot))
+            return;
+        else
+        {
+            if (instance.lot)
+            {
+                instance.lot.GetComponent<SelectableObject>().RemoveHighlight();
+            }
+
+            instance.lot = lot;
+            lot.GetComponent<SelectableObject>().HighlightObject();
+            
+            
+        }
+    }
+
+    public static void DeselectLot()
+    {
+        if (instance.lot)
+        {
+            instance.lot.GetComponent<SelectableObject>().RemoveHighlight();
+            instance.lot = null;
+        }
+    }
+
 
 }

@@ -63,7 +63,7 @@ public class ObjectManager : MonoBehaviour {
         LockCurrentObject();
 
         if (instance.currentObject && instance.currentObject.tag.Equals("Highlightable")) {
-            instance.currentObject.GetComponent<SelectableObject>().HightlightObject();
+            instance.currentObject.GetComponent<SelectableObject>().HighlightObject();
         }
     }
 
@@ -81,7 +81,7 @@ public class ObjectManager : MonoBehaviour {
                         instance.previousObject.GetComponent<SelectableObject>().RemoveHighlight();
                     }
                     if (instance.currentObject && instance.currentObject.tag.Equals("Highlightable")) {
-                        instance.currentObject.GetComponent<SelectableObject>().HightlightObject();
+                        instance.currentObject.GetComponent<SelectableObject>().HighlightObject();
                     }
                 }
             }
@@ -157,7 +157,7 @@ public class ObjectManager : MonoBehaviour {
             InstantiateCopy();
 
             if (instance.currentObject && instance.currentObject.tag.Equals("Highlightable")) {
-                        instance.currentObject.GetComponent<SelectableObject>().HightlightObject();
+                        instance.currentObject.GetComponent<SelectableObject>().HighlightObject();
                     }
 
             instance.lockedObjectDeleted = false;

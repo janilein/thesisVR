@@ -16,6 +16,7 @@ public class LotResizer : MonoBehaviour {
     public float lotLength;
 
     private GameObject plane;
+    private Texture2D tex;
 
     //To test
     public float currentLength;
@@ -24,6 +25,38 @@ public class LotResizer : MonoBehaviour {
     private void Awake() {
         leftNeighbor = null;
         rightNeighbor = null;
+
+        tex = new Texture2D(256, 256, TextureFormat.ARGB32, false);
+
+        Color fillColor = Color.clear;
+        Color[] fillPixels = new Color[tex.width * tex.height];
+
+        for (int i = 0; i < fillPixels.Length; i++)
+        {
+            fillPixels[i] = fillColor;
+        }
+
+        tex.SetPixels(fillPixels);
+
+        for (int i = 0; i < 256; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                tex.SetPixel(i, j, Color.green);
+                tex.SetPixel(i, 255 - j, Color.green);
+            }
+        }
+
+        for (int j = 0; j < 256; j++)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                tex.SetPixel(i, j, Color.green);
+                tex.SetPixel(255 - i, j, Color.green);
+            }
+        }
+
+        tex.Apply();
     }
 
     private void Update() {
@@ -168,9 +201,12 @@ public class LotResizer : MonoBehaviour {
         Destroy(plane.GetComponent<Collider>());
 
         Mesh planeMesh = plane.GetComponent<MeshFilter>().mesh;
-        plane.GetComponent<MeshRenderer>().material = Resources.Load("Outlined_Material", typeof(Material)) as Material;
+        //plane.GetComponent<MeshRenderer>().material = Resources.Load("Outlined_Material", typeof(Material)) as Material;
+        plane.GetComponent<MeshRenderer>().material.shader = Shader.Find("Transparent/Diffuse");
         Vector3 planeSize = planeMesh.bounds.size;
         plane.transform.localScale = new Vector3(lotLength / planeSize.z, 1f, lotWidth / planeSize.x);
         this.plane = plane;
+ 
+        plane.GetComponent<MeshRenderer>().material.SetTexture("_MainTex" ,tex);
     }
 }

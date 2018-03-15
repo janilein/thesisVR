@@ -37,10 +37,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4697926555827394}
-  - component: {fileID: 114586569464579224}
   - component: {fileID: 64177831707331896}
   - component: {fileID: 54870282066796398}
   - component: {fileID: 114319136957717846}
+  - component: {fileID: 114722343064054058}
   m_Layer: 8
   m_Name: Turn45
   m_TagString: Highlightable
@@ -178,7 +178,7 @@ MonoBehaviour:
   spawnStart: {x: 0, y: 0, z: 0}
   topPoint: {x: -22.08, y: 0, z: 33.1}
   bottomPoint: {x: 7.8, y: 0, z: -38.9}
---- !u!114 &114586569464579224
+--- !u!114 &114722343064054058
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -186,6 +186,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1520459389607152}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4be15459b874bed47a109b29517b9a71, type: 3}
+  m_Script: {fileID: 11500000, guid: 9c89f88a747c2f4468d724714ebcbeee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

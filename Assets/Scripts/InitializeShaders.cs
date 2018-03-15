@@ -19,7 +19,7 @@ public class InitializeShaders : MonoBehaviour {
 
     public void UpdateObjects() {
         highlightableObjects = GameObject.FindGameObjectsWithTag("Highlightable");
-        //Debug.Log("Found " + highlightableObjects.Length + " objects");
+        Debug.Log("Found " + highlightableObjects.Length + " objects");
     }
 
     public void UpdateShaders() {

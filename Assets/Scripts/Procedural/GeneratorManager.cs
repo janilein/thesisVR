@@ -16,6 +16,8 @@ public class GeneratorManager {
 
     public GameObject previousObject = null;
 
+    private InitializeShaders shaderScript;
+
     //The active lot on which we want to spawn a building
     public GameObject activeLot;
 
@@ -30,6 +32,8 @@ public class GeneratorManager {
         currentPosition = Vector3.zero;
         pointDirection = "straight";
         orientation = "";
+
+        shaderScript = GameObject.Find("ObjectManager").GetComponent<InitializeShaders>();
     }
 
 	public void GenerateWorldObject(WorldObject obj, string JSON = null) {
@@ -81,6 +85,8 @@ public class GeneratorManager {
         } else {
             Debug.Log("ne marche pas");
         }
+
+        shaderScript.UpdateShaders();
         return;
     }
 
@@ -195,6 +201,7 @@ public class GeneratorManager {
             {
                 Debug.Log("No house found in lot");
             }
+            LotManager.DeselectLot();
             previousObject = null;
         }
     }

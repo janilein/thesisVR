@@ -58,8 +58,8 @@ public class Speech : MonoBehaviour {
     void Update() {
         if (workDone)
         {
-            UseKeywordParser(meaningCloudOutput);
             workDone = false;
+            UseKeywordParser(meaningCloudOutput);
         }
     }
 

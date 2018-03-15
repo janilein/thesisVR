@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class LaserSelector : MonoBehaviour {
 
-    public LayerMask teleportMask;
-    private LotManager lotManager;
+    public LayerMask mask;
     private SteamVR_TrackedObject trackedObj;
     private Vector3 hitPoint;
     private LineRenderer lineRenderer;
@@ -24,12 +23,6 @@ public class LaserSelector : MonoBehaviour {
         trackedObj = GetComponent<SteamVR_TrackedObject>();
         lineRenderer = GetComponent<LineRenderer>();
         laserMaterial = lineRenderer.material;
-
-        lotManager = GameObject.Find("ObjectManager").transform.GetComponent<LotManager>();
-        if (!lotManager)
-        {
-            Debug.Log("Didn't find lotManager script!");
-        }
     }
 
     private void ShowLaser(RaycastHit hit)
@@ -55,7 +48,7 @@ public class LaserSelector : MonoBehaviour {
             if (Controller.GetPress(SteamVR_Controller.ButtonMask.Trigger))
             {
                 RaycastHit hit;
-                if (Physics.Raycast(trackedObj.transform.position, transform.forward, out hit, lookDistance, teleportMask))
+                if (Physics.Raycast(trackedObj.transform.position, transform.forward, out hit, lookDistance, mask))
                 {
                     hitPoint = hit.point;
                     ShowLaser(hit);
@@ -81,7 +74,7 @@ public class LaserSelector : MonoBehaviour {
 
     private void SelectLot(RaycastHit hit)
     {
-        lotManager.lot = hit.collider.gameObject;
-        hit.collider.gameObject.GetComponent<SelectableObject>().HightlightObject();
+        //lotManager.lot = hit.collider.gameObject;
+        LotManager.setLot(hit.collider.gameObject);
     }
 }

@@ -21,10 +21,11 @@ GameObject:
   - component: {fileID: 4639190947387784}
   - component: {fileID: 54680489175873150}
   - component: {fileID: 65671368062890186}
-  - component: {fileID: 114104541253603040}
+  - component: {fileID: 122366417390221024}
+  - component: {fileID: 114259515297918908}
   m_Layer: 0
   m_Name: House
-  m_TagString: Untagged
+  m_TagString: Highlightable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -69,7 +70,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 10, y: 30, z: 10}
   m_Center: {x: 0, y: 15, z: 0}
---- !u!114 &114104541253603040
+--- !u!114 &114259515297918908
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -77,6 +78,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1298227441682842}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c89f88a747c2f4468d724714ebcbeee, type: 3}
+  m_Script: {fileID: 11500000, guid: d78b98a9031b8d24eb05fa908babb77e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!122 &122366417390221024
+Halo:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1298227441682842}
+  m_Enabled: 0
+  m_Color:
+    serializedVersion: 2
+    rgba: 4278255601
+  m_Size: -15

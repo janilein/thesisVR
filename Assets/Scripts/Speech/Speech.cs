@@ -39,6 +39,7 @@ public class Speech : MonoBehaviour {
     bool threadRunning = false;
     bool workDone = false;
     Thread thread;
+    private bool automateProcess = false;
 
     // Use this for initialization
     void Start () {
@@ -55,7 +56,8 @@ public class Speech : MonoBehaviour {
         //btnSave.Enabled = false;
     }
 
-    void Update() {
+    void Update()
+    {
         if (workDone)
         {
             workDone = false;
@@ -190,39 +192,46 @@ public class Speech : MonoBehaviour {
             //textBox1.Text = textBox1.Text + Environment.NewLine + "Json object to string: ";
             //textBox1.Text = textBox1.Text + Environment.NewLine + jsonString;
 
-            var req = (HttpWebRequest)WebRequest.Create("https://speech.googleapis.com/v1/speech:recognize?key=" + apiKeyGoogle);
-            req.ContentType = "application/json";
-            req.Method = "POST";
-            string text = "";
+            //var req = (HttpWebRequest)WebRequest.Create("https://speech.googleapis.com/v1/speech:recognize?key=" + apiKeyGoogle);
+            //req.ContentType = "application/json";
+            //req.Method = "POST";
+            //string text = "";
             ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
-            using (var streamWriter = new StreamWriter(req.GetRequestStream())) {
-                streamWriter.Write(jsonString);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
+            //using (var streamWriter = new StreamWriter(req.GetRequestStream())) {
+            //    streamWriter.Write(jsonString);
+            //    streamWriter.Flush();
+            //    streamWriter.Close();
+            //}
 
             try {
-                var httpResponse = (HttpWebResponse)req.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream())) {
-                    string result = streamReader.ReadToEnd();
-                    text = text + Environment.NewLine + result;
-                    googleOutputText = text;
-                    Debug.Log(text);
 
-                    bool successParse = true;
-                    Hashtable o = (Hashtable)JSON.JsonDecode(googleOutputText, ref successParse);
-                    googleOutputText = GetTranscript(o).ToLower(); ;
+                WebClient wc = new WebClient();
+                wc.UploadStringCompleted += new UploadStringCompletedEventHandler(GoogleCallFinished);
+                wc.Headers["Content-Type"] = "application/json";
 
-                }
-            } catch (System.Net.WebException exc) {
-                using (var stream = exc.Response.GetResponseStream())
-                using (var reader = new StreamReader(stream)) {
-                    text = text + Environment.NewLine + "Error: " + reader.ReadToEnd();
-                    Debug.Log(text);
-                    googleOutputText = null;
-                }
+                wc.UploadStringAsync(new Uri("https://speech.googleapis.com/v1/speech:recognize?key=" + apiKeyGoogle), "POST", jsonString);
+
+                //var httpResponse = (HttpWebResponse)req.GetResponse();
+                //using (var streamReader = new StreamReader(httpResponse.GetResponseStream())) {
+                //    string result = streamReader.ReadToEnd();
+                //    text = text + Environment.NewLine + result;
+                //    googleOutputText = text;
+                //    Debug.Log(text);
+
+                //    bool successParse = true;
+                //    Hashtable o = (Hashtable)JSON.JsonDecode(googleOutputText, ref successParse);
+                //    googleOutputText = GetTranscript(o).ToLower(); ;
+
+                //}
+                //} catch (System.Net.WebException exc) {
+                //    using (var stream = exc.Response.GetResponseStream())
+                //    using (var reader = new StreamReader(stream)) {
+                //        text = text + Environment.NewLine + "Error: " + reader.ReadToEnd();
+                //        Debug.Log(text);
+                //        googleOutputText = null;
+                //    }
             } catch (Exception exc) {
-                text = text + Environment.NewLine + "Other error: " + exc.ToString();
+                string text = "Other error: " + exc.ToString();
                 Debug.Log(text);
                 googleOutputText = null;
             }
@@ -234,19 +243,19 @@ public class Speech : MonoBehaviour {
 
     public void EndAndProcessRecording()
     {
-        //BtnSave_Click();
-        //BtnSpeechInfo_Click();
-        //MakeRequest();
+        automateProcess = true;
+        BtnSave_Click();
+        BtnSpeechInfo_Click();
 
-        Debug.Log("Main thread PID: " + Thread.CurrentThread.ManagedThreadId);
+        //Debug.Log("Main thread PID: " + Thread.CurrentThread.ManagedThreadId);
 
         //Start a new thread here as the web calls will block the main unity thread
-        if (!threadRunning && !workDone)    //Only allow to create a new thread when the output of the previous one has not been processed yet
-        {
-            threadRunning = true;
-            thread = new Thread(ThreadedWork);
-            thread.Start();
-        }
+        //if (!threadRunning && !workDone)    //Only allow to create a new thread when the output of the previous one has not been processed yet
+        //{
+        //    threadRunning = true;
+        //    thread = new Thread(ThreadedWork);
+        //    thread.Start();
+        //}
     }
 
     private void ThreadedWork()
@@ -260,14 +269,14 @@ public class Speech : MonoBehaviour {
     }
 
     //OnDisable we should wait for the thread to end as well
-    void OnDisable()
-    {
-        if (threadRunning)
-        {
-            threadRunning = false;
-            thread.Join();
-        }
-    }
+    //void OnDisable()
+    //{
+    //    if (threadRunning)
+    //    {
+    //        threadRunning = false;
+    //        thread.Join();
+    //    }
+    //}
 
     public void MakeRequest() {
 
@@ -276,31 +285,40 @@ public class Speech : MonoBehaviour {
         //googleOutputText = "I was walking on a long street.";
 
         if (googleOutputText != null || googleOutputText.Length != 0) {
-            var req = (HttpWebRequest)WebRequest.Create("http://api.meaningcloud.com/topics-2.0");
-            req.ContentType = "application/x-www-form-urlencoded";
-            req.Method = "POST";
+            //var req = (HttpWebRequest)WebRequest.Create("http://api.meaningcloud.com/topics-2.0");
+            //req.ContentType = "application/x-www-form-urlencoded";
+            //req.Method = "POST";
             string body = "key=" + APIKeyMeaningCloud + "&lang=" + lang + "&txt=" + googleOutputText + "&tt=" + tt + "&ud=" + ud;
-            using (var streamWriter = new StreamWriter(req.GetRequestStream())) {
-                streamWriter.Write(body);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
+            //using (var streamWriter = new StreamWriter(req.GetRequestStream())) {
+            //    streamWriter.Write(body);
+            //    streamWriter.Flush();
+            //    streamWriter.Close();
+            //}
 
             try {
                 Debug.Log("Starting MeaningCloud Request");
-                var httpResponse = (HttpWebResponse)req.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream())) {
-                    meaningCloudOutput = streamReader.ReadToEnd();
-                    SaveToTxt(meaningCloudOutput);
-                    Debug.Log(meaningCloudOutput);
-                    //UseKeywordParser(meaningCloudOutput);
-                }
-            } catch (System.Net.WebException exc) {
-                using (var stream = exc.Response.GetResponseStream())
-                using (var reader = new StreamReader(stream)) {
-                    string text = "Error: " + reader.ReadToEnd();
-                    Debug.Log(text);
-                }
+                //var httpResponse = (HttpWebResponse)req.GetResponse();
+
+                WebClient wc = new WebClient();
+                wc.UploadStringCompleted += new UploadStringCompletedEventHandler(MeaningCloudCallFinished);
+                wc.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+
+
+                wc.UploadStringAsync(new Uri("http://api.meaningcloud.com/topics-2.0"), "POST", body);
+
+
+                //using (var streamReader = new StreamReader(httpResponse.GetResponseStream())) {
+                //    meaningCloudOutput = streamReader.ReadToEnd();
+                //    SaveToTxt(meaningCloudOutput);
+                //    Debug.Log(meaningCloudOutput);
+                //    //UseKeywordParser(meaningCloudOutput);
+                //}
+            //} catch (System.Net.WebException exc) {
+            //    using (var stream = exc.Response.GetResponseStream())
+            //    using (var reader = new StreamReader(stream)) {
+            //        string text = "Error: " + reader.ReadToEnd();
+            //        Debug.Log(text);
+            //    }
             } catch (Exception exc) {
                 string text = "Other error: " + exc.ToString();
                 Debug.Log(text);
@@ -309,6 +327,50 @@ public class Speech : MonoBehaviour {
             Debug.Log("Nothing to send to MeaningCloud");
         }
 
+    }
+
+    public void MeaningCloudCallFinished(object sender, UploadStringCompletedEventArgs e)
+    {
+        Debug.Log("Meaningcloud call finished!");
+        if (e.Error != null)
+        {
+            Debug.Log("Error: " + e.Error.Message);
+            return;
+        }
+
+        meaningCloudOutput = e.Result.ToString();
+        Debug.Log("Result");
+        Debug.Log(meaningCloudOutput);
+        SaveToTxt(meaningCloudOutput);
+
+        if (automateProcess) {
+            workDone = true;
+            automateProcess = false;
+        }
+    }
+
+    public void GoogleCallFinished(object sender, UploadStringCompletedEventArgs e)
+    {
+        Debug.Log("Google call finished!");
+        if (e.Error != null)
+        {
+            googleOutputText = null;
+            Debug.Log("Error: " + e.Error.Message);
+            return;
+        }
+
+        googleOutputText = e.Result.ToString();
+        bool successParse = false;
+        Hashtable o = (Hashtable)JSON.JsonDecode(googleOutputText, ref successParse);
+        googleOutputText = GetTranscript(o).ToLower();
+
+
+
+        Debug.Log("Result");
+        Debug.Log(googleOutputText);
+
+        if (automateProcess)
+            MakeRequest();
     }
 
     private void SaveToTxt(string line) {

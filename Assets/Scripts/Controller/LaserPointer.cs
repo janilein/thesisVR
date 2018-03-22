@@ -24,7 +24,6 @@ public class LaserPointer : MonoBehaviour {
     private LineRenderer lineRenderer;
     private Material laserMaterial;
     
-    private bool pointerEnabled = true;
     private float lookDistance = 100f;
 
     void Awake() {
@@ -68,31 +67,34 @@ public class LaserPointer : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (pointerEnabled) {
-            if (Controller.GetPress(SteamVR_Controller.ButtonMask.Trigger)) {
+            if (Controller.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
+            {
 
                 RaycastHit hit;
 
-                if (Physics.Raycast(trackedObj.transform.position, transform.forward, out hit, lookDistance, teleportMask)) {
+                if (Physics.Raycast(trackedObj.transform.position, transform.forward, out hit, lookDistance, teleportMask))
+                {
                     hitPoint = hit.point;
                     ShowLaser(hit);
                     reticle.SetActive(true);
                     teleportReticleTransform.position = hitPoint + teleportReticleOffset;
                     shouldTeleport = true;
-                } else {
+                }
+                else
+                {
                     shouldTeleport = false;
                     reticle.SetActive(false);
                     ShowLaserNoHit();
                 }
-                if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad) && shouldTeleport) {
+            }
+            else if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad) && shouldTeleport) {
                     Teleport();
-                }
-            } else {
+            }
+            else {
                 lineRenderer.enabled = false;
                 //laser.SetActive(false);
                 reticle.SetActive(false);
             }
-        }
 	}
 
     private void Teleport() {

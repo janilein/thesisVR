@@ -25,6 +25,8 @@ public class Speech : MonoBehaviour {
     private BufferedWaveProvider bwp;
     public string apiKeyGoogle;
 
+    private Text projectionText;
+
     WaveIn waveIn;
     //WaveOut waveOut;
     WaveFileWriter writer;
@@ -40,6 +42,16 @@ public class Speech : MonoBehaviour {
     bool workDone = false;
     Thread thread;
     private bool automateProcess = false;
+    private bool updateProjectorText = false;
+
+    private void Awake()
+    {
+        projectionText = GameObject.Find("TheRoom/Projector Screen/CanvasHolder").GetComponent<Text>();
+        if(projectionText == null)
+        {
+            Debug.Log("Could not find a projector!");
+        }
+    }
 
     // Use this for initialization
     void Start () {
@@ -62,6 +74,12 @@ public class Speech : MonoBehaviour {
         {
             workDone = false;
             UseKeywordParser(meaningCloudOutput);
+        }
+        if (updateProjectorText)
+        {
+            updateProjectorText = false;
+            if (projectionText)
+                projectionText.text = googleOutputText;
         }
     }
 
@@ -364,10 +382,10 @@ public class Speech : MonoBehaviour {
         Hashtable o = (Hashtable)JSON.JsonDecode(googleOutputText, ref successParse);
         googleOutputText = GetTranscript(o).ToLower();
 
-
-
         Debug.Log("Result");
         Debug.Log(googleOutputText);
+
+        updateProjectorText = true;
 
         if (automateProcess)
             MakeRequest();

@@ -13,6 +13,7 @@ public class LaserSelector : MonoBehaviour {
     private bool pointerEnabled = true;
     private bool shouldSelect = false;
     private float lookDistance = 100f;
+    private RaycastHit hit;
 
     private SteamVR_Controller.Device Controller {
         get { return SteamVR_Controller.Input((int)trackedObj.index); }
@@ -45,7 +46,7 @@ public class LaserSelector : MonoBehaviour {
     void Update () {
         if (pointerEnabled)
         {
-            if (Controller.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+            if (Controller.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
             {
                 RaycastHit hit;
                 if (Physics.Raycast(trackedObj.transform.position, transform.forward, out hit, lookDistance, mask))
@@ -53,17 +54,18 @@ public class LaserSelector : MonoBehaviour {
                     hitPoint = hit.point;
                     ShowLaser(hit);
                     shouldSelect = true;
+                    this.hit = hit;
                 }
                 else
                 {
                     shouldSelect = false;
                     ShowLaserNoHit();
                 }
-                if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad) && shouldSelect)
-                {
-                    Debug.Log("Lot selected");
-                    SelectLot(hit);
-                }
+            }
+            else if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad) && shouldSelect){
+                Debug.Log("Lot selected");
+                shouldSelect = false;
+                SelectLot(hit);
             }
             else
             {

@@ -18,6 +18,8 @@ public class ObjectManager : MonoBehaviour {
 
     private bool lockedObjectDeleted = false;
 
+    
+
     private static ObjectManager objectManager;
 
     public static ObjectManager instance {
@@ -49,7 +51,9 @@ public class ObjectManager : MonoBehaviour {
 
     public static void DeleteCurrentObject() {
         //instance.currentObject.SetActive(false);
+        //instance.lockedObject.GetComponent<ObjectRelation>().DeleteOther();
         Destroy(instance.lockedObject);
+        //RelationManager.Delete(instance.lockedObject);
         instance.lockedObject = null;
         instance.lockedObjectDeleted = true;
     }
@@ -116,7 +120,9 @@ public class ObjectManager : MonoBehaviour {
             if (instance.lockedObject && instance.lockedObject.tag.Equals("Highlightable")) {
                 instance.lockedObject.GetComponent<SelectableObject>().RemoveHighlight();
             }
+            //instance.lockedObject.GetComponent<ObjectRelation>().ApplyChanges();
             instance.lockedObject = null;
+            //instance.originalLockedObject.GetComponent<ObjectRelation>().DeleteOther();
             Destroy(instance.originalLockedObject);
         }
         if (instance.currentObject && instance.currentObject.tag.Equals("Highlightable")) {
@@ -135,10 +141,12 @@ public class ObjectManager : MonoBehaviour {
         movement= instance.headRotation * Vector3.forward * x + instance.headRotation * Vector3.left * z;
         movement.y = y;
         instance.lockedObject.transform.position = instance.lockedObject.transform.position + movement;
+        //RelationManager.MoveObject(movement, instance.lockedObject);
     }
 
     public static void RotateObject(Vector3 rotateValue) {
         if (instance.lockedObject) {
+            //RelationManager.RotateObject(rotateValue, instance.lockedObject);
             instance.lockedObject.transform.Rotate(rotateValue);
         }
     }
@@ -147,10 +155,16 @@ public class ObjectManager : MonoBehaviour {
         Debug.Log("Called undo changes");
         if (instance.lockedObject || instance.lockedObjectDeleted) {
 
+            //instance.lockedObject.GetComponent<ObjectRelation>().DeleteOther();
             Destroy(instance.lockedObject);
+            //RelationManager.Delete(instance.lockedObject);
             instance.lockedObject = instance.originalLockedObject;
             instance.currentObject = instance.originalLockedObject;
+
             instance.lockedObject.SetActive(true);
+
+            //instance.lockedObject.GetComponent<ObjectRelation>().ActivateOther();
+
             string name = instance.originalLockedObject.name;
             instance.lockedObject.name = name.Substring(0, name.Length - 7);
 
@@ -158,7 +172,7 @@ public class ObjectManager : MonoBehaviour {
 
             if (instance.currentObject && instance.currentObject.tag.Equals("Highlightable")) {
                         instance.currentObject.GetComponent<SelectableObject>().HighlightObject();
-                    }
+            }
 
             instance.lockedObjectDeleted = false;
         }
@@ -168,6 +182,9 @@ public class ObjectManager : MonoBehaviour {
         instance.originalLockedObject = Instantiate(instance.lockedObject, instance.lockedObject.GetComponent<Transform>().position, instance.lockedObject.GetComponent<Transform>().rotation);
         instance.originalLockedObject.transform.SetParent(instance.lockedObject.transform.parent);
         instance.originalLockedObject.SetActive(false);
+
+        //instance.originalLockedObject.GetComponent<ObjectRelation>().CreateOther(instance.lockedObject);
+        //RelationManager.InstantiateCopy(instance.lockedObject);
     }
 
     

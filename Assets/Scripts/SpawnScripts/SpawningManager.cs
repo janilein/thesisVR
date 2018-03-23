@@ -72,6 +72,7 @@
 
             InitializeShaders shaderScript = GameObject.Find("ObjectManager").gameObject.GetComponent<InitializeShaders>();
             shaderScript.UpdateShaders();
+            instance.transform.parent = GameObject.Find("World").transform;
 
             ObjectManager.SetAndLockGameObject(instance);
 

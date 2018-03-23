@@ -13,6 +13,10 @@ public class BuildingGenerator : Generator {
  
     public BuildingGenerator() {
         bounds = new Hashtable();
+        if(worldTransform == null)
+        {
+            worldTransform = GameObject.Find("World").transform;
+        }
     }
 
     public override GameObject GenerateWorldObject(WorldObject obj, Vector3 currentDirection, string JSON = null) {
@@ -151,6 +155,9 @@ public class BuildingGenerator : Generator {
 
             //The street rotation: 
             //Debug.Log("Street euler: " + lotToSpawn.transform.parent.transform.localEulerAngles.ToString());
+        } else
+        {
+            lot.transform.parent = worldTransform;
         }
 
         return lot;

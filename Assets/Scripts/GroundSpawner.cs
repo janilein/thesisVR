@@ -10,6 +10,7 @@ public class GroundSpawner : MonoBehaviour{
 	void Awake () {
         //Parent Gameobject
         GameObject parent = new GameObject("FloorParent");
+        parent.transform.parent = GameObject.Find("World").transform;
 
         int width = 20;
         int length = 20;

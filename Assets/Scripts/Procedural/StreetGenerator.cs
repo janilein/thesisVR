@@ -37,7 +37,7 @@ public class StreetGenerator : Generator {
         string type = obj.GetObjectValue();
         Debug.Log("Street type: " + type);
         Transform parent = (new GameObject("streetID:" + streetID++)).transform;
-        parent.position = spawnPosition;
+        parent.localPosition = spawnPosition;
         switch (type) {
             case "straight":
                 GenerateStraightStreet(obj, parent, currentDirection, ref currentPosition, pointDirection);

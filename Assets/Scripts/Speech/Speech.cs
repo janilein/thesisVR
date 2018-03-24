@@ -46,11 +46,16 @@ public class Speech : MonoBehaviour {
 
     private void Awake()
     {
-        projectionText = GameObject.Find("TheRoom/Projector Screen/CanvasHolder").GetComponent<Text>();
-        if(projectionText == null)
-        {
-            Debug.Log("Could not find a projector!");
-        }
+		GameObject canvasHolder = GameObject.Find ("TheRoom/Projector Screen/CanvasHolder");
+		if (canvasHolder) {
+			projectionText = canvasHolder.GetComponent<Text>();
+			if(projectionText == null)
+			{
+				Debug.Log("Could not find a projector!");
+			}
+		} else {
+			Debug.LogError ("No Canvasholder found in TheRoom!");
+		}
     }
 
     // Use this for initialization
@@ -424,6 +429,10 @@ public class Speech : MonoBehaviour {
     {
         bool successParse = true;
         Hashtable o = (Hashtable)JSON.JsonDecode(meaningCloudOutput, ref successParse);
+		if (keywordParser == null) {
+			Debug.LogError ("KeywordParser is null");
+			return;
+		}
         keywordParser.ConvertHashtable(o);
 
     }

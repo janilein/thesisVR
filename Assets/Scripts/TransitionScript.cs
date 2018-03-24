@@ -5,7 +5,7 @@ using UnityEngine;
 public class TransitionScript : MonoBehaviour {
 
     private GameObject room;
-    private static bool isInRoom = true;
+    private static bool isInRoom = false;
     private Transform world;
     private static float scalingFactor;
     private Vector3 roomPosition;
@@ -23,21 +23,28 @@ public class TransitionScript : MonoBehaviour {
         scalingFactor = 100;
         world = GameObject.Find("World").transform;
         room = GameObject.Find("TheRoom");
-        roomPosition = room.transform.Find("table1").transform.position + new Vector3(0.05f, tableOffset, 0.05f); //to get it just right
+        //roomPosition = room.transform.Find("table1").transform.position + new Vector3(0.05f, tableOffset, 0.05f); //to get it just right
+		roomPosition = room.transform.position + new Vector3(0f, 3f, 0f);
     }
 
     public void GoToRoom()
     {
-        room.gameObject.SetActive(true);
-        world.localScale = world.localScale / scalingFactor;
-        world.position = roomPosition;
+		if (!isInRoom) {
+			room.gameObject.SetActive (true);
+			world.localScale = world.localScale / scalingFactor;
+			world.localPosition = roomPosition;
+		}
+		isInRoom = true;
     }
 
     public void GoToWorld()
     {
-        room.gameObject.SetActive(false);
-        world.localScale = world.localScale * scalingFactor;
-        world.position = Vector3.zero;
+		if (isInRoom) {
+			room.gameObject.SetActive (false);
+			world.localScale = world.localScale * scalingFactor;
+			world.localPosition = Vector3.zero;
+		}
+		isInRoom = false;
     }
 
     public static bool IsInRoom()

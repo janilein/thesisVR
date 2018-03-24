@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using UnityEditor;
-
 public class StreetGeneratorV2 : Generator {
 
     private Vector3 spawnPosition;
@@ -26,11 +24,8 @@ public class StreetGeneratorV2 : Generator {
 
     public override void GenerateWorldObject(WorldObject obj, ref Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection) {
         float yOffset = 0.2f;
-        if (TransitionScript.IsInRoom())
-        {
-            yOffset = yOffset / TransitionScript.GetScalingFactor();
-        }
-        spawnPosition = worldTransform.position + new Vector3(-0.05f, yOffset, -0.05f);
+        //spawnPosition = worldTransform.position + new Vector3(-0.05f, yOffset, -0.05f);
+		spawnPosition = new Vector3(0f, yOffset, 0f);
 
         obj = obj.GetChildren()[0];
 
@@ -38,11 +33,8 @@ public class StreetGeneratorV2 : Generator {
         string type = obj.GetObjectValue();
         Debug.Log("Street type: " + type + " -----------------------------------");
         Transform parent = (new GameObject("streetID:" + streetID++)).transform;
-        //Debug.Log("pos1############:" + parent.position.ToString());
         parent.SetParent(worldTransform, false);
-        //Debug.Log("pos2############:" + parent.position.ToString());
-        parent.localPosition = spawnPosition;
-        //Debug.Log("pos3############:" + parent.position.ToString());
+		parent.localPosition = spawnPosition;
 
         //parent.gameObject.GetComponent<ObjectRelation>().CreateGameObject();
 
@@ -69,7 +61,12 @@ public class StreetGeneratorV2 : Generator {
     }
 
     public GameObject InstantiateStreet(GameObject street, Vector3 spawnPosition, Quaternion rotation, Transform parent) {
-        return GameObject.Instantiate(street, spawnPosition, rotation, parent);
+		GameObject newStreet = GameObject.Instantiate (street);
+		newStreet.transform.SetParent (parent, false);
+		newStreet.transform.localPosition = Vector3.zero;
+		return newStreet;
+
+		//return GameObject.Instantiate(street, spawnPosition, rotation, parent);
 
         //float scale = ObjectManager.GetScalingFactor();
         //if (ObjectManager.IsInRoom()) {
@@ -195,10 +192,10 @@ public class StreetGeneratorV2 : Generator {
         switch (angle)
         {
             case "90":
-                spawnAngle = 45f;
+                spawnAngle = 90f;
                 break;
             case "45":
-                spawnAngle = 22.5f;
+                spawnAngle = 45f;
                 break;
         }
 
@@ -207,13 +204,21 @@ public class StreetGeneratorV2 : Generator {
         if (direction.ToLower().Equals("right"))
         {
             //street = GameObject.Instantiate(street, spawnPosition, Quaternion.Euler(-90f, spawnAngle, 0), parent);
-            street = InstantiateStreet(street, spawnPosition, Quaternion.Euler(-90f, spawnAngle, 0), parent);
+            
+			//street = InstantiateStreet(street, spawnPosition, Quaternion.Euler(-90f, spawnAngle, 0), parent);
+			street = InstantiateStreet(street, spawnPosition, Quaternion.identity, parent);
+			//parent.Rotate(new Vector3(-90f, spawnAngle, 0f));
+			parent.Rotate(new Vector3(0f, spawnAngle, 0f));
+
             street.transform.localScale = new Vector3(-1f, 1f, 1f);
             street.GetComponent<GenericStreet>().SetRightTurn();
         } else
         {
             // street = GameObject.Instantiate(street, spawnPosition, Quaternion.Euler(-90f, -spawnAngle, 0), parent);
-            street = InstantiateStreet(street, spawnPosition, Quaternion.Euler(-90f, -spawnAngle, 0), parent);
+            //street = InstantiateStreet(street, spawnPosition, Quaternion.Euler(-90f, -spawnAngle, 0), parent);
+			street = InstantiateStreet(street, spawnPosition, Quaternion.identity, parent);
+			//parent.Rotate(new Vector3(-90f, -spawnAngle, 0f));
+			parent.Rotate(new Vector3(0f, 0f, 0f));
         }
         UpdateAllowedPointsStraightStreet(street);
 
@@ -340,10 +345,8 @@ public class StreetGeneratorV2 : Generator {
         if (previousStreetScript == null)        //We have no previous street, so spawning is in currentPosition
         {
             Debug.Log("Spawning new first street");
-            Debug.Log("pos4##############:" + parent.position.ToString());
             parent.localPosition = currentPosition + spawnPosition;
-            Debug.Log("pos5############:" + parent.position.ToString());
-            EditorGUIUtility.PingObject(parent);
+            //EditorGUIUtility.PingObject(parent);
 
             previousStreetScript = street.GetComponent<GenericStreet>();
 
@@ -373,7 +376,7 @@ public class StreetGeneratorV2 : Generator {
             currentPosition += rotatedTopPoint;
             Debug.Log("Currentposition set to: " + currentPosition.ToString());
 
-            parent.position = currentPosition + spawnPosition;
+            parent.localPosition = currentPosition + spawnPosition;
             previousStreetScript = street.GetComponent<GenericStreet>();
 
             //Debug.Log("Spawning new street, previous street exists");
@@ -482,7 +485,8 @@ public class StreetGeneratorV2 : Generator {
     */
 
             // GameObject lot = GameObject.Instantiate(prefabLot, spawnPointLot, Quaternion.identity, parent);
-            GameObject lot = GameObject.Instantiate(prefabLot, parent);
+            GameObject lot = GameObject.Instantiate(prefabLot);
+			lot.transform.SetParent (parent, false);
             lot.transform.localPosition = spawnPointLot;
             Debug.Log("Spawned lot at position: " + spawnPointLot.ToString());
             lot.transform.rotation = Quaternion.identity; 

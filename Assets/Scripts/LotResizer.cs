@@ -196,7 +196,8 @@ public class LotResizer : MonoBehaviour {
 
     public void SpawnPlane() {
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        plane.transform.parent = this.transform;
+		plane.transform.SetParent (this.transform, false);
+        //plane.transform.parent = this.transform;
         plane.transform.localPosition = new Vector3(0f, 0f, 0f);
         Destroy(plane.GetComponent<Collider>());
 

@@ -67,7 +67,8 @@ public class BuildingGenerator : Generator {
         GameObject house = Resources.Load("ProceduralBlocks/House") as GameObject;
         GameObject parent = GameObject.Instantiate(house, new Vector3(0, 0, 0), Quaternion.identity);
         parent.transform.name = "Building";
-        parent.transform.parent = lot.transform;
+		parent.transform.SetParent (lot.transform, false);
+       // parent.transform.parent = lot.transform;
         Transform parentTransform = parent.transform;
 
         //Count fully & partially defined floors
@@ -144,11 +145,11 @@ public class BuildingGenerator : Generator {
         if(lotToSpawn != null)
         {
             Debug.Log("Lot to spawn position: " + lotToSpawn.transform.position.ToString());
-            lot.transform.position = lotToSpawn.transform.position;
+            lot.transform.localPosition = lotToSpawn.transform.position;
             lot.transform.rotation = lotToSpawn.transform.parent.transform.localRotation; 
 
             //Set the LotToSpawn as the lot's parent
-            lot.transform.SetParent(lotToSpawn.transform);
+			lot.transform.SetParent(lotToSpawn.transform, false);
 
             //The lots rotation
             //Debug.Log("Lot euler: " + lotToSpawn.transform.localEulerAngles.ToString());
@@ -157,7 +158,7 @@ public class BuildingGenerator : Generator {
             //Debug.Log("Street euler: " + lotToSpawn.transform.parent.transform.localEulerAngles.ToString());
         } else
         {
-            lot.transform.parent = worldTransform;
+			lot.transform.SetParent(worldTransform);
         }
 
         return lot;

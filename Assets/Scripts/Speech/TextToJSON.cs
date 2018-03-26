@@ -180,7 +180,7 @@ public class TextToJSON
         }
         foreach (Entity entity in entities)
         {
-            if (entity.form.ToLower().Contains("left"))
+            if (entity.form.ToLower().Equals("on the left"))
             {
                 foreach (KeyValuePair<Entity, int> pair in linkedEntities)
                 {
@@ -191,7 +191,7 @@ public class TextToJSON
                     }
                 }
             }
-            else if (entity.form.ToLower().Contains("right"))
+            else if (entity.form.ToLower().Equals("on the right"))
             {
                 foreach (KeyValuePair<Entity, int> pair in linkedEntities)
                 {

@@ -70,6 +70,7 @@ public class KeywordParser
             Debug.Log("Done specifying");
             Speech.SetSpecification(false);
             //jsonConverter.disabledSpecifyDescription();
+            return;
         }
 
         //Eerste mogelijkheid: een street type

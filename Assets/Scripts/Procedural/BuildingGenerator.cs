@@ -93,38 +93,48 @@ public class BuildingGenerator : Generator {
             }
         }
 
-        //Generate partially defined floors
-        foreach(WorldObject child in partiallyDefinedFloors) {
-            child.directAttributes["level"] = floorNumbersToGenerate[0];
-            floorNumbersToGenerate.Remove(floorNumbersToGenerate[0]);
-            Debug.Log("Generationg partially defined floor");
-            Hashtable floorBounds = GenerateFloor(child, parentTransform, specifiedDefaults);
-            UpdateBounds(floorBounds);
-        }
+		try{
+			//Generate partially defined floors
+			foreach(WorldObject child in partiallyDefinedFloors) {
+				if(floorNumbersToGenerate.Count > 0){
+					child.directAttributes["level"] = floorNumbersToGenerate[0].ToString();
+					floorNumbersToGenerate.Remove(floorNumbersToGenerate[0]);
+					Debug.Log("Generationg partially defined floor");
+					Hashtable floorBounds = GenerateFloor(child, parentTransform, specifiedDefaults);
+					UpdateBounds(floorBounds);
+				} else break;
+			}
 
-        //check if there are still fully default
-        if(floorNumbersToGenerate.Count != 0) {
-            for (int i = 0; i < floorNumbersToGenerate.Count; i++) {
-                Hashtable floorBounds = GenerateDefaultFloor(floorNumbersToGenerate[i], parentTransform, specifiedDefaults);
-                UpdateBounds(floorBounds);
-            }
-        }
+			//check if there are still fully default
+			if(floorNumbersToGenerate.Count != 0) {
+				for (int i = 0; i < floorNumbersToGenerate.Count; i++) {
+					Hashtable floorBounds = GenerateDefaultFloor(floorNumbersToGenerate[i], parentTransform, specifiedDefaults);
+					UpdateBounds(floorBounds);
+				}
+			}
 
-        if (generateRoof) {
-            //Generate the roof
-            foreach (WorldObject child in obj.GetChildren()) {
-                if (child.GetObjectValue().Equals("roof")) {
-                    float height = ((Vector2)bounds["yBounds"]).y; //Max height reached
-                    Hashtable roofBounds = GenerateRoof(child, parentTransform, specifiedDefaults, height);
-                    UpdateBounds(roofBounds);
-                }
-            }
-        } else {
-            //Generate default roof, ah ja he
-            float height = ((Vector2)bounds["yBounds"]).y; //Max height reached
-            Hashtable roofBounds = GenerateDefaultRoof(parentTransform, height, specifiedDefaults);
-            UpdateBounds(roofBounds);
-        }
+			if (generateRoof) {
+				//Generate the roof
+				foreach (WorldObject child in obj.GetChildren()) {
+					if (child.GetObjectValue().Equals("roof")) {
+						float height = ((Vector2)bounds["yBounds"]).y; //Max height reached
+						Hashtable roofBounds = GenerateRoof(child, parentTransform, specifiedDefaults, height);
+						UpdateBounds(roofBounds);
+					}
+				}
+			} else {
+				//Generate default roof, ah ja he
+				float height = ((Vector2)bounds["yBounds"]).y; //Max height reached
+				Hashtable roofBounds = GenerateDefaultRoof(parentTransform, height, specifiedDefaults);
+				UpdateBounds(roofBounds);
+			}
+		}
+		
+		catch(Exception e){
+			MonoBehaviour.Destroy(lot);
+			Debug.Log(e.Message);
+			return null;
+		}
 
         //Update the parent (house) box collider using the bounds
         //BoxCollider coll = house.GetComponent<BoxCollider>();

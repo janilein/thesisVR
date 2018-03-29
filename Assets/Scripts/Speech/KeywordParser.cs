@@ -7,7 +7,7 @@ using UnityEngine;
 public class KeywordParser
 {
     private TextToJSON jsonConverter;
-
+    
     private List<Quantity> quantityList;
     private List<Relation> relationList;
     //private List<KeyValuePair<string, string>> entityList;      //Key : semenity (ontologytype), Value : form
@@ -67,9 +67,16 @@ public class KeywordParser
         entity = GetEntityFromEntityList("Command");
         if(entity != null)
         {
-            Debug.Log("Done specifying");
-            Speech.SetSpecification(false);
-            //jsonConverter.disabledSpecifyDescription();
+            if (entity.form.ToLower().Equals("finished"))
+            {
+                Debug.Log("Done specifying");
+                Speech.SetSpecification(false);
+            } else if (entity.form.ToLower().Equals("switch"))
+            {
+                Debug.Log("Teleporting");
+                GameObject.Find("TransitionManager").GetComponent<TransitionScript>().Teleport();
+            }
+            
             return;
         }
 

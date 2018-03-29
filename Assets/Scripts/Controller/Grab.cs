@@ -9,6 +9,7 @@ public class Grab : MonoBehaviour {
     private SteamVR_TrackedObject trackedObj;
     private GameObject grabbedObject;
     private GameObject collidedObject;
+    private TransitionScript transitionScript;
 
     private SteamVR_Controller.Device Controller {
         get { return SteamVR_Controller.Input((int)trackedObj.index); }
@@ -17,6 +18,7 @@ public class Grab : MonoBehaviour {
     void Awake()
     {
         trackedObj = GetComponent<SteamVR_TrackedObject>();
+        transitionScript = GameObject.Find("TransitionManager").GetComponent<TransitionScript>();
     }
 
     private void Update()
@@ -26,7 +28,13 @@ public class Grab : MonoBehaviour {
             Debug.Log("Pressed trigger");
             if (collidedObject)
             {
-                GrabObject(collidedObject);
+                if (collidedObject.transform.name.ToLower().Contains("doorhandle"))
+                {
+                    transitionScript.OpenDoor();
+                } else
+                {
+                    GrabObject(collidedObject);
+                }
             }
         }
         else if (Controller.GetHairTriggerUp()) {

@@ -361,72 +361,98 @@ public class TestCase : MonoBehaviour {
         manager.GenerateWorldObject(root);
 
         //90° Left turn
-        manager.GenerateWorldObject(root10);
-
-        //1 small street
-        manager.GenerateWorldObject(root);
-
-        //90° Right turn
-        manager.GenerateWorldObject(root11);
-
-        //45° Right turn
-        manager.GenerateWorldObject(root13);
-
-        //1 small street
-        manager.GenerateWorldObject(root);
-
-        //45° Right turn
-        manager.GenerateWorldObject(root13);
-
-        //90° Left turn
-        manager.GenerateWorldObject(root10);
-
-        //1 small street
-        manager.GenerateWorldObject(root);
-
-        //90° Right turn
-        manager.GenerateWorldObject(root11);
-
-        //45° Right turn
-        manager.GenerateWorldObject(root13);
-
-        //1 small street
-        manager.GenerateWorldObject(root);
-
-        //90° Right turn
-        manager.GenerateWorldObject(root11);
-
-        //1 small street
-        manager.GenerateWorldObject(root);
-        //1 small street
-        manager.GenerateWorldObject(root);
-        //1 small street
-        manager.GenerateWorldObject(root);
-
-        //45° Right turn
-        manager.GenerateWorldObject(root13);
-
-        //90° Left turn
-        manager.GenerateWorldObject(root10);
-        //90° Left turn
-        manager.GenerateWorldObject(root10);
-
-        //1 small street
-        manager.GenerateWorldObject(root);
-        //1 small street
-        manager.GenerateWorldObject(root);
-
-        //45° Right turn
-        manager.GenerateWorldObject(root13);
-
-        //45° Right turn
-        manager.GenerateWorldObject(root13);
-
-        //45° Left turn
         manager.GenerateWorldObject(root12);
 
+        manager.GenerateWorldObject(root);
+
         //1 small street
         manager.GenerateWorldObject(root);
+
+        //90° Right turn
+        manager.GenerateWorldObject(root13);
+        manager.GenerateWorldObject(root);
+
+        ////45° Right turn
+        manager.GenerateWorldObject(root13);
+
+        ////1 small street
+        manager.GenerateWorldObject(root);
+
+
+        ////45° Right turn
+        manager.GenerateWorldObject(root13);
+
+        ////90° Left turn
+        manager.GenerateWorldObject(root10);
+
+        ////1 small street
+        manager.GenerateWorldObject(root);
+
+        ////90° Right turn
+        manager.GenerateWorldObject(root11);
+
+        ////45° Right turn
+        manager.GenerateWorldObject(root13);
+
+        ////1 small street
+        manager.GenerateWorldObject(root);
+
+        ////90° Right turn
+        manager.GenerateWorldObject(root11);
+
+        ////1 small street
+        manager.GenerateWorldObject(root);
+        ////1 small street
+        manager.GenerateWorldObject(root);
+        ////1 small street
+        manager.GenerateWorldObject(root);
+
+        ////45° Right turn
+        manager.GenerateWorldObject(root13);
+
+        ////90° Left turn
+        manager.GenerateWorldObject(root10);
+        ////90° Left turn
+        manager.GenerateWorldObject(root10);
+
+        ////1 small street
+        manager.GenerateWorldObject(root);
+        ////1 small street
+        manager.GenerateWorldObject(root);
+
+        ////45° Right turn
+        manager.GenerateWorldObject(root13);
+
+        ////45° Right turn
+        manager.GenerateWorldObject(root13);
+
+        ////45° Left turn
+        manager.GenerateWorldObject(root12);
+
+        ////1 small street
+        manager.GenerateWorldObject(root);
+
+
+        manager.GenerateWorldObject(root9);
+
+        manager.GenerateWorldObject(root8);
+
+        manager.GenerateWorldObject(root);
+
+        manager.GenerateWorldObject(root7);
+
+        manager.GenerateWorldObject(root3);
+
+        manager.GenerateWorldObject(root);
+
+        manager.GenerateWorldObject(root);
+
+        manager.GenerateWorldObject(root6);
+
+        manager.GenerateWorldObject(root3);
+
+        manager.GenerateWorldObject(root4);
+
 
         //Debug.Log(rss.ToString());
         //hashParser.PrintWorldObjects(); //Print all WorldObjects to proofread

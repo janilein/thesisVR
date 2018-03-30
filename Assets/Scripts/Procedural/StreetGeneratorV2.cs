@@ -140,24 +140,28 @@ public class StreetGeneratorV2 : Generator {
 
         //street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
         street = InstantiateStreet(street, spawnPosition, Quaternion.identity, parent);
-        UpdateOrientationIntersectionT(parent, orientation, pointDirection);
+        int angle = UpdateOrientationIntersectionT(parent, orientation, pointDirection);
+        street.GetComponent<GenericStreet>().RotateColliderPositions(angle);
         UpdateAllowedPointsIntersectionT(street, orientation);
         SpawnStreet(street, parent, currentDirection, ref currentPosition, "intersection-t", pointDirection);
 
     }
 
-    private void UpdateOrientationIntersectionT(Transform parent, string orientation, string pointDirection)
+    private int UpdateOrientationIntersectionT(Transform parent, string orientation, string pointDirection)
     {
+        int angle = 0;
         switch (orientation)
         {
             case "leftRight":
                 parent.transform.Rotate(new Vector3(0, 1, 0), 180);
+                angle = 180;
                 //newPointDirection = pointDirection;
                 //Debug.Log("PointDir0 = " + pointDirection);
                 //Debug.Log("NewPointDir0 = " + newPointDirection);
                 break;
             case "leftStraight":
                 parent.transform.Rotate(new Vector3(0, 1, 0), -90);
+                angle = -90;
                 //if (pointDirection.Equals("left"))
                 //{
                 //    newPointDirection = "straight";
@@ -168,6 +172,7 @@ public class StreetGeneratorV2 : Generator {
                 break;
             case "rightStraight":
                 parent.transform.Rotate(new Vector3(0, 1, 0), 90);
+                angle = 90;
                 //if (pointDirection.Equals("right"))
                 //{
                 //    newPointDirection = "straight";
@@ -178,6 +183,7 @@ public class StreetGeneratorV2 : Generator {
                 //}
                 break;
         }
+        return angle;
     }
 
     private void GenerateTurn(WorldObject obj, Transform parent, ref Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection)
@@ -209,8 +215,10 @@ public class StreetGeneratorV2 : Generator {
 			street = InstantiateStreet(street, spawnPosition, Quaternion.identity, parent);
 			//parent.Rotate(new Vector3(-90f, spawnAngle, 0f));
 			parent.Rotate(new Vector3(0f, spawnAngle, 0f));
+            //street.GetComponent<GenericStreet>().RotateColliderPositions((int)spawnAngle);
 
-            street.transform.localScale = new Vector3(-1f, 1f, 1f);
+            //street.transform.localScale = new Vector3(-1f, 1f, 1f);
+            street.transform.parent.localScale = new Vector3(-1f, 1f, -1f);
             street.GetComponent<GenericStreet>().SetRightTurn();
         } else
         {
@@ -218,10 +226,12 @@ public class StreetGeneratorV2 : Generator {
             //street = InstantiateStreet(street, spawnPosition, Quaternion.Euler(-90f, -spawnAngle, 0), parent);
 			street = InstantiateStreet(street, spawnPosition, Quaternion.identity, parent);
 			//parent.Rotate(new Vector3(-90f, -spawnAngle, 0f));
-			parent.Rotate(new Vector3(0f, 0f, 0f));
         }
         UpdateAllowedPointsStraightStreet(street);
-
+        if (direction.ToLower().Equals("right"))
+        {
+            street.GetComponent<GenericStreet>().RotateColliderPositions(3*(int)spawnAngle);
+        }
         SpawnStreet(street, parent, currentDirection, ref currentPosition, "turn", pointDirection);
 
         int sign = 1;
@@ -272,9 +282,9 @@ public class StreetGeneratorV2 : Generator {
         streetLength = scale.z * meshSize.y;    //Swapping these is not by accident (street is turned 90 degrees)
         streetHeight = scale.y * meshSize.z;
 
-        Debug.Log("Streetwidth: " + streetWidth);
-        Debug.Log("Streetlength: " + streetLength);
-        Debug.Log("Streetheight: " + streetHeight);
+        //Debug.Log("Streetwidth: " + streetWidth);
+        //Debug.Log("Streetlength: " + streetLength);
+        //Debug.Log("Streetheight: " + streetHeight);
 
         //Create lots equally spaced along both sides of the straight street nigga
         //First left side
@@ -284,14 +294,14 @@ public class StreetGeneratorV2 : Generator {
             float lotLength = 20f;
             float lotWidth = lotSpacing;
 
-            Debug.Log("Lot Width: " + lotWidth.ToString());
-            Debug.Log("Lot length: " + lotLength.ToString());
+            //Debug.Log("Lot Width: " + lotWidth.ToString());
+            //Debug.Log("Lot length: " + lotLength.ToString());
 
             //Get the starting point (left bottom corner of the street)
             Vector3 spawnPointLot = new Vector3(-streetWidth / 2, 0f, -streetLength / 2);
             spawnPointLot += new Vector3(-lotLength / 2, 0f, lotWidth / 2);
 
-            Debug.Log("First spawnpoint lot: " + spawnPointLot.ToString());
+            //Debug.Log("First spawnpoint lot: " + spawnPointLot.ToString());
 
             SpawnLot(lotsLeft, spawnPointLot, lotWidth, lotLength, parent, Orientation.left, new Vector3(0f, 0f, lotWidth));
         }
@@ -303,14 +313,14 @@ public class StreetGeneratorV2 : Generator {
             float lotLength = 20f;
             float lotWidth = lotSpacing;
 
-            Debug.Log("Lot Width: " + lotWidth.ToString());
-            Debug.Log("Lot length: " + lotLength.ToString());
+            //Debug.Log("Lot Width: " + lotWidth.ToString());
+            //Debug.Log("Lot length: " + lotLength.ToString());
 
             //Get the starting point (right bottom corner of the street)
             Vector3 spawnPointLot = new Vector3(streetWidth / 2, 0f, -streetLength / 2);
             spawnPointLot += new Vector3(lotLength / 2, 0f, lotWidth / 2);
 
-            Debug.Log("First spawnpoint lot: " + spawnPointLot.ToString());
+            //Debug.Log("First spawnpoint lot: " + spawnPointLot.ToString());
 
             SpawnLot(lotsRight, spawnPointLot, lotWidth, lotLength, parent, Orientation.right, new Vector3(0f, 0f, lotWidth));
         }
@@ -337,8 +347,10 @@ public class StreetGeneratorV2 : Generator {
     private void SpawnStreet(GameObject street, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string typeOfStreet, string pointDirection)
     {
         //street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
-        RotateStreet(parent, currentDirection);
         street.GetComponent<GenericStreet>().RotateAllowedPoints((int) currentDirection.x);
+        street.GetComponent<GenericStreet>().SpawnColliders();
+
+        RotateStreet(parent, currentDirection);
 
         //Street is rotated, now update it's position
         //Depending on whether or not we have a previous street, spawning happens in currentPosition or an updated currentPosition
@@ -370,8 +382,9 @@ public class StreetGeneratorV2 : Generator {
             currentPosition += previousStreetScript.GetSpawnPoint();
             Debug.Log("Currentposition set to: " + currentPosition.ToString());
 
-            Vector3 rotatedTopPoint = Quaternion.AngleAxis(currentDirection.x, Vector3.up) * street.GetComponent<GenericStreet>().GetTopPoint();
-            Debug.Log("Rotated top point: " + rotatedTopPoint.ToString());
+            Debug.Log("Offset point: " + street.GetComponent<GenericStreet>().GetOffsetPoint().ToString());
+            Vector3 rotatedTopPoint = Quaternion.AngleAxis(currentDirection.x, Vector3.up) * street.GetComponent<GenericStreet>().GetOffsetPoint();
+            Debug.Log("Rotated offset point: " + rotatedTopPoint.ToString());
 
             currentPosition += rotatedTopPoint;
             Debug.Log("Currentposition set to: " + currentPosition.ToString());
@@ -488,7 +501,7 @@ public class StreetGeneratorV2 : Generator {
             GameObject lot = GameObject.Instantiate(prefabLot);
 			lot.transform.SetParent (parent, false);
             lot.transform.localPosition = spawnPointLot;
-            Debug.Log("Spawned lot at position: " + spawnPointLot.ToString());
+            //Debug.Log("Spawned lot at position: " + spawnPointLot.ToString());
             lot.transform.rotation = Quaternion.identity; 
 
             //Set the collider from the lot
@@ -502,7 +515,7 @@ public class StreetGeneratorV2 : Generator {
 
             resizer.SpawnPlane();
 
-            Debug.Log("Rotate: " + rotate);
+            //Debug.Log("Rotate: " + rotate);
             lot.transform.Rotate(new Vector3(0, 1f, 0), rotate);
 
             spawnedLots[i] = lot;

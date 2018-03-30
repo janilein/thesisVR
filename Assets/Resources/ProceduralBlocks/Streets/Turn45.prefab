@@ -178,6 +178,9 @@ MonoBehaviour:
   spawnStart: {x: 0, y: 0, z: 0}
   topPoint: {x: -22.08, y: 0, z: 33.1}
   bottomPoint: {x: 7.8, y: 0, z: -38.9}
+  offsetPoint: {x: -7.8, y: 0, z: 38.9}
+  colliderTopPoint: {x: -23.58, y: 0, z: 34.6}
+  colliderBottomPoint: {x: 6.3, y: 0, z: -40.4}
 --- !u!114 &114722343064054058
 MonoBehaviour:
   m_ObjectHideFlags: 1

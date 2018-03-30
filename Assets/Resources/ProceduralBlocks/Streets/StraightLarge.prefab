@@ -187,3 +187,4 @@ MonoBehaviour:
   spawnStart: {x: 0, y: 0, z: 0}
   topPoint: {x: 0, y: 0, z: 45}
   type: straightstreet
+  colliderTopPoint: {x: 0, y: 0, z: 46.5}

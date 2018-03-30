@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class SelectableLot : SelectableObject {
 
-    private Texture2D defaultTex, highlightTex;
+    private static Texture2D defaultTex, highlightTex;
 
     public void Awake()
     {
-        defaultTex = generateTexture(Color.green);
-        highlightTex = generateTexture(Color.yellow);
+        if(defaultTex == null)
+            defaultTex = generateTexture(Color.green);
+        if(highlightTex == null)
+            highlightTex = generateTexture(Color.yellow);
     }
 
     private Texture2D generateTexture(Color col)

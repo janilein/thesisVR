@@ -55,7 +55,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1075258413780656}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -265.40414, y: 239.48334, z: -105.120125}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4745835636719970}
@@ -189,4 +189,7 @@ MonoBehaviour:
   topPoint: {x: 0, y: 0, z: 15}
   leftPoint: {x: 15, y: 0, z: 0}
   rightPoint: {x: -15, y: 0, z: 0}
+  colliderTopPoint: {x: 0, y: 0, z: 16.5}
+  colliderLeftPoint: {x: 16.5, y: 0, z: 0}
+  colliderRightPoint: {x: -16.5, y: 0, z: 0}
   type: intersectionT

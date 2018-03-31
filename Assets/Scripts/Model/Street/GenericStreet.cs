@@ -100,6 +100,56 @@ public class GenericStreet : MonoBehaviour
         }
     }
 
+    public void RemoveCollider(string direction)
+    {
+        //Remove collider from this specific direction (also deletes this direction from allowedpoints)
+        allowedPoints.RemoveAll(x => x.Key.Equals(direction));
+        colliderAllowedPoints.RemoveAll(x => x.Key.Equals(direction));
+
+        Transform colliderChild = this.transform.Find("Colliders");
+        if(colliderChild != null)
+        {
+            Transform collider = colliderChild.Find(direction);
+            if(collider != null)
+            {
+                MonoBehaviour.Destroy(collider);
+            }
+        }
+    }
+
+    public void CheckColliders(bool checkOther)
+    {
+        //Check for all colliders whether or not they collided with a street
+        Transform colliderChild = this.transform.Find("Colliders");
+        if(colliderChild != null)
+        {
+            //Check all children
+            Transform colliderTransform;
+            ColliderScript colliderScript;
+            List<Transform> childrenToDestroy = new List<Transform>();
+            int nbChildren = colliderChild.childCount;
+            for(int i = 0; i < nbChildren; i++)
+            {
+                colliderTransform = colliderChild.GetChild(i);
+                colliderScript = colliderTransform.GetComponent<ColliderScript>();
+                if (colliderScript.CheckCollision())
+                {
+                    childrenToDestroy.Add(colliderTransform);
+                }
+            }
+
+            //Destroy all these children, also important: the street they collided with has to check their points again as well
+            foreach(Transform child in childrenToDestroy)
+            {
+                if (checkOther)
+                {
+                    child.GetComponent<ColliderScript>().CheckOtherStreet();
+                }
+                MonoBehaviour.Destroy(child);
+            }
+        }
+    }
+
 
     public void SetCorrectPoint(string pointDirection)
     {

@@ -390,7 +390,14 @@ public class StreetGeneratorV2 : Generator {
             Debug.Log("Currentposition set to: " + currentPosition.ToString());
 
             parent.localPosition = currentPosition + spawnPosition;
+
+            //Remove collider from previous street on the end on which we spawned a new street
+            street.GetComponent<GenericStreet>().RemoveCollider(pointDirection);
+
             previousStreetScript = street.GetComponent<GenericStreet>();
+
+            //Check on the freshly spawned street if some of the colliders have collided with another street
+            street.GetComponent<GenericStreet>().CheckColliders(true);
 
             //Debug.Log("Spawning new street, previous street exists");
 

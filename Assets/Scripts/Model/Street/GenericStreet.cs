@@ -102,6 +102,7 @@ public class GenericStreet : MonoBehaviour
 
     public void RemoveCollider(string direction)
     {
+        //Debug.LogError("Remove collider: " + direction);
         //Remove collider from this specific direction (also deletes this direction from allowedpoints)
         allowedPoints.RemoveAll(x => x.Key.Equals(direction));
         colliderAllowedPoints.RemoveAll(x => x.Key.Equals(direction));
@@ -112,7 +113,7 @@ public class GenericStreet : MonoBehaviour
             Transform collider = colliderChild.Find(direction);
             if(collider != null)
             {
-                MonoBehaviour.Destroy(collider);
+                MonoBehaviour.Destroy(collider.gameObject);
             }
         }
     }
@@ -145,7 +146,9 @@ public class GenericStreet : MonoBehaviour
                 {
                     child.GetComponent<ColliderScript>().CheckOtherStreet();
                 }
-                MonoBehaviour.Destroy(child);
+                Debug.LogError("Calling RemoveCollider: " + child.name);
+                RemoveCollider(child.name);
+                //MonoBehaviour.Destroy(child.gameObject);
             }
         }
     }
@@ -162,6 +165,7 @@ public class GenericStreet : MonoBehaviour
                 return;
             }
         }
+
         Debug.Log("PointDirection given: " + pointDirection);
         foreach (KeyValuePair<string, Vector3> pair in allowedPoints)
         {

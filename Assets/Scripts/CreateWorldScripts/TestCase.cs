@@ -6,7 +6,11 @@ using UnityEngine;
 
 public class TestCase : MonoBehaviour {
 
+    List<WorldObject> worldObjects = new List<WorldObject>();
+    GeneratorManager manager;
+
     public void Test() {
+        manager = new GeneratorManager();
 
         //JObject rss =
         //        new JObject(
@@ -147,7 +151,6 @@ public class TestCase : MonoBehaviour {
         ////string path = hashParser.SearchBestFit();
         WorldObject root = hashParser.getRootObject();
         //Debug.Log("Starting to generate");
-        GeneratorManager manager = new GeneratorManager();
 
         JObject rss2 = new JObject(
             new JObject(
@@ -357,107 +360,157 @@ public class TestCase : MonoBehaviour {
         hashParser.PrintHashTable(o13);     //Convert the hashtable to WorldObjects
         WorldObject root13 = hashParser.getRootObject();
 
-        //1 small street
-        manager.GenerateWorldObject(root);
+        worldObjects.Add(root);
+        worldObjects.Add(root2);
+        worldObjects.Add(root3);
+        worldObjects.Add(root4);
+        worldObjects.Add(root5);
+        worldObjects.Add(root6);
+        worldObjects.Add(root7);
+        worldObjects.Add(root8);
+        worldObjects.Add(root9);
+        worldObjects.Add(root10);
+        worldObjects.Add(root11);
+        worldObjects.Add(root12);
+        worldObjects.Add(root13);
 
-        //90° Left turn
-        manager.GenerateWorldObject(root12);
+        StartCoroutine(GenerateWorldObjects());
+    }
 
-        manager.GenerateWorldObject(root);
+    private IEnumerator GenerateWorldObjects()
+    {
+        manager.GenerateWorldObject(worldObjects[3]);   //Intersection X
+        yield return null;
+        //manager.GenerateWorldObject(worldObjects[4]);   //Right Turn
+        //yield return null;
 
-        //1 small street
-        manager.GenerateWorldObject(root);
+        //manager.GenerateWorldObject(worldObjects[3]);
+        //yield return null;
+        //manager.GenerateWorldObject(worldObjects[4]);
+        //yield return null;
 
-        //90° Right turn
-        manager.GenerateWorldObject(root13);
-        manager.GenerateWorldObject(root);
+        //manager.GenerateWorldObject(worldObjects[3]);
+        //yield return null;
+        //manager.GenerateWorldObject(worldObjects[4]);
+        //yield return null;
 
-        ////45° Right turn
-        manager.GenerateWorldObject(root13);
+        //manager.GenerateWorldObject(worldObjects[3]);
+        //yield return null;
+        //manager.GenerateWorldObject(worldObjects[4]);
+        //yield return null;
+
+        //manager.GenerateWorldObject(worldObjects[4]);
+        //yield return null;
+        //manager.GenerateWorldObject(worldObjects[5]);
+        //yield return null;
+
+        //manager.GenerateWorldObject(worldObjects[4]);
+        //yield return null;
+        //manager.GenerateWorldObject(worldObjects[5]);
+        yield return null;
+
+        //manager.GenerateWorldObject(root4);
+        //manager.GenerateWorldObject(root5);
 
         ////1 small street
-        manager.GenerateWorldObject(root);
-
-
-        ////45° Right turn
-        manager.GenerateWorldObject(root13);
+        //manager.GenerateWorldObject(root);
 
         ////90° Left turn
-        manager.GenerateWorldObject(root10);
+        //manager.GenerateWorldObject(root12);
+
+        //manager.GenerateWorldObject(root);
 
         ////1 small street
-        manager.GenerateWorldObject(root);
+        //manager.GenerateWorldObject(root);
 
         ////90° Right turn
-        manager.GenerateWorldObject(root11);
+        //manager.GenerateWorldObject(root13);
+        //manager.GenerateWorldObject(root);
 
-        ////45° Right turn
-        manager.GenerateWorldObject(root13);
+        //////45° Right turn
+        //manager.GenerateWorldObject(root13);
 
-        ////1 small street
-        manager.GenerateWorldObject(root);
-
-        ////90° Right turn
-        manager.GenerateWorldObject(root11);
-
-        ////1 small street
-        manager.GenerateWorldObject(root);
-        ////1 small street
-        manager.GenerateWorldObject(root);
-        ////1 small street
-        manager.GenerateWorldObject(root);
-
-        ////45° Right turn
-        manager.GenerateWorldObject(root13);
-
-        ////90° Left turn
-        manager.GenerateWorldObject(root10);
-        ////90° Left turn
-        manager.GenerateWorldObject(root10);
-
-        ////1 small street
-        manager.GenerateWorldObject(root);
-        ////1 small street
-        manager.GenerateWorldObject(root);
-
-        ////45° Right turn
-        manager.GenerateWorldObject(root13);
-
-        ////45° Right turn
-        manager.GenerateWorldObject(root13);
-
-        ////45° Left turn
-        manager.GenerateWorldObject(root12);
-
-        ////1 small street
-        manager.GenerateWorldObject(root);
+        //////1 small street
+        //manager.GenerateWorldObject(root);
 
 
-        manager.GenerateWorldObject(root9);
+        //////45° Right turn
+        //manager.GenerateWorldObject(root13);
 
-        manager.GenerateWorldObject(root8);
+        //////90° Left turn
+        //manager.GenerateWorldObject(root10);
 
-        manager.GenerateWorldObject(root);
+        //////1 small street
+        //manager.GenerateWorldObject(root);
 
-        manager.GenerateWorldObject(root7);
+        //////90° Right turn
+        //manager.GenerateWorldObject(root11);
 
-        manager.GenerateWorldObject(root3);
+        //////45° Right turn
+        //manager.GenerateWorldObject(root13);
 
-        manager.GenerateWorldObject(root);
+        //////1 small street
+        //manager.GenerateWorldObject(root);
 
-        manager.GenerateWorldObject(root);
+        //////90° Right turn
+        //manager.GenerateWorldObject(root11);
 
-        manager.GenerateWorldObject(root6);
+        //////1 small street
+        //manager.GenerateWorldObject(root);
+        //////1 small street
+        //manager.GenerateWorldObject(root);
+        //////1 small street
+        //manager.GenerateWorldObject(root);
 
-        manager.GenerateWorldObject(root3);
+        //////45° Right turn
+        //manager.GenerateWorldObject(root13);
 
-        manager.GenerateWorldObject(root4);
+        //////90° Left turn
+        //manager.GenerateWorldObject(root10);
+        //////90° Left turn
+        //manager.GenerateWorldObject(root10);
+
+        //////1 small street
+        //manager.GenerateWorldObject(root);
+        //////1 small street
+        //manager.GenerateWorldObject(root);
+
+        //////45° Right turn
+        //manager.GenerateWorldObject(root13);
+
+        //////45° Right turn
+        //manager.GenerateWorldObject(root13);
+
+        //////45° Left turn
+        //manager.GenerateWorldObject(root12);
+
+        //////1 small street
+        //manager.GenerateWorldObject(root);
+
+
+        //manager.GenerateWorldObject(root9);
+
+        //manager.GenerateWorldObject(root8);
+
+        //manager.GenerateWorldObject(root);
+
+        //manager.GenerateWorldObject(root7);
+
+        //manager.GenerateWorldObject(root3);
+
+        //manager.GenerateWorldObject(root);
+
+        //manager.GenerateWorldObject(root);
+
+        //manager.GenerateWorldObject(root6);
+
+        //manager.GenerateWorldObject(root3);
+
+        //manager.GenerateWorldObject(root4);
 
 
         //Debug.Log(rss.ToString());
         //hashParser.PrintWorldObjects(); //Print all WorldObjects to proofread
-
     }
-
 
 }

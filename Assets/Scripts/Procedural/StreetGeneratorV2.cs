@@ -6,7 +6,7 @@ using UnityEngine;
 public class StreetGeneratorV2 : Generator {
 
     private Vector3 spawnPosition;
-    private GenericStreet previousStreetScript = null;
+    private static GenericStreet previousStreetScript = null;
     //private string newPointDirection = "";
 
     private static int streetID = 1;
@@ -143,7 +143,7 @@ public class StreetGeneratorV2 : Generator {
         int angle = UpdateOrientationIntersectionT(parent, orientation, pointDirection);
         street.GetComponent<GenericStreet>().RotateColliderPositions(angle);
         UpdateAllowedPointsIntersectionT(street, orientation);
-        SpawnStreet(street, parent, currentDirection, ref currentPosition, "intersection-t", pointDirection);
+        SpawnStreet(street, parent, currentDirection, ref currentPosition, "intersection-t", pointDirection, orientation);
 
     }
 
@@ -252,6 +252,12 @@ public class StreetGeneratorV2 : Generator {
                 currentDirection.x = (currentDirection.x + sign * 45) % 360;
                 break;
         }
+
+        foreach (ColliderScript collScript in previousStreetScript.GetComponentsInChildren<ColliderScript>())
+        {
+            collScript.SetDirection(currentDirection);
+        }
+
     }
 
         private void GenerateStraightStreet(WorldObject obj, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection)
@@ -344,7 +350,7 @@ public class StreetGeneratorV2 : Generator {
         parent.transform.Rotate(new Vector3(0, 1, 0), currentDirection.x);
     }
 
-    private void SpawnStreet(GameObject street, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string typeOfStreet, string pointDirection)
+    private void SpawnStreet(GameObject street, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string typeOfStreet, string pointDirection, string orientation = "")
     {
         //street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
         street.GetComponent<GenericStreet>().RotateAllowedPoints((int) currentDirection.x);
@@ -361,8 +367,6 @@ public class StreetGeneratorV2 : Generator {
             //EditorGUIUtility.PingObject(parent);
 
             previousStreetScript = street.GetComponent<GenericStreet>();
-
-            return;
         }
         else
         {
@@ -392,17 +396,20 @@ public class StreetGeneratorV2 : Generator {
             parent.localPosition = currentPosition + spawnPosition;
 
             //Remove collider from previous street on the end on which we spawned a new street
-            street.GetComponent<GenericStreet>().RemoveCollider(pointDirection);
+            previousStreetScript.RemoveCollider(pointDirection);
 
             previousStreetScript = street.GetComponent<GenericStreet>();
 
             //Check on the freshly spawned street if some of the colliders have collided with another street
-            street.GetComponent<GenericStreet>().CheckColliders(true);
+            //street.GetComponent<GenericStreet>().CheckColliders(true);
 
             //Debug.Log("Spawning new street, previous street exists");
 
-            //Update the current position first
+        }
 
+        foreach (ColliderScript collScript in previousStreetScript.GetComponentsInChildren<ColliderScript>())
+        {
+           collScript.SetVars(currentPosition, orientation, currentDirection);
         }
     }
 
@@ -572,6 +579,11 @@ public class StreetGeneratorV2 : Generator {
         //Debug.Log("lotRight: " + lotRight.transform);
         lotLeft.GetComponent<LotResizer>().SetRightNeighbor(lotRight);
         lotRight.GetComponent<LotResizer>().SetLeftNeighbor(lotLeft);
+    }
+
+    public static void SetPreviousStreetScript(GenericStreet script)
+    {
+        previousStreetScript = script;
     }
 
     private enum Orientation { left, right, straight};

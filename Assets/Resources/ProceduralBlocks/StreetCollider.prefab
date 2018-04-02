@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4475176511956714}
   - component: {fileID: 65437194519126310}
   - component: {fileID: 114351098466375998}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: StreetCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -15,8 +15,8 @@ public class IntersectionX : GenericStreet {
     public IntersectionX()
     {
         colliderTopPoint = topPoint + new Vector3(0, 0, 1.5f);
-        colliderLeftPoint = leftPoint + new Vector3(1.5f, 0, 0);
-        colliderRightPoint = rightPoint + new Vector3(-1.5f, 0, 0);
+        colliderLeftPoint = leftPoint + new Vector3(-1.5f, 0, 0);
+        colliderRightPoint = rightPoint + new Vector3(1.5f, 0, 0);
         colliderBottomPoint = bottomPoint + new Vector3(0, 0, -1.5f);
     }
 

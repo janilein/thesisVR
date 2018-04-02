@@ -9,10 +9,10 @@ public class GeneratorManager {
     //private StreetGenerator streetGen;
     private StreetGeneratorV2 streetGenV2;
     //private Vector3 currentDirection;
-    private Vector2 currentDirection;
-    private Vector3 currentPosition;
-    private string pointDirection;
-    private string orientation;
+    private static Vector2 currentDirection;
+    private static Vector3 currentPosition;
+    private static string pointDirection;
+    private static string orientation;
 
     public GameObject previousObject = null;
 
@@ -90,7 +90,7 @@ public class GeneratorManager {
         return;
     }
 
-    private void ChangeDirection(string direction) {
+    private static void ChangeDirection(string direction) {
         Debug.Log("direction switch: " + direction);
         //switch (direction) {
         //    case "left":
@@ -181,6 +181,15 @@ public class GeneratorManager {
                 break;
         }
         orientation = "";
+    }
+
+    public static void ChangeDirectionFromCollider(Vector3 position, string direction, string orientation, Vector2 dir)
+    {
+        GeneratorManager.currentDirection = dir;
+        position = new Vector3(position.x, 0f, position.z);
+        GeneratorManager.currentPosition = position;
+        GeneratorManager.orientation = orientation;
+        GeneratorManager.ChangeDirection(direction);
     }
 
     public void SetActiveLot(GameObject newLot)

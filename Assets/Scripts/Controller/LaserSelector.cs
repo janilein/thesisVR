@@ -63,9 +63,21 @@ public class LaserSelector : MonoBehaviour {
                 }
             }
             else if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad) && shouldSelect){
-                Debug.Log("Lot selected");
+
                 shouldSelect = false;
-                SelectLot(hit);
+                //Check if we hit a lot, or a street direction collider
+                Transform hitObject = hit.collider.transform;
+                if (hitObject.name.ToLower().Contains("lot"))
+                {
+                    Debug.Log("Lot selected");
+                    SelectLot(hit);
+                } else
+                {
+                    Debug.Log("Direction selected");
+                    hitObject.GetComponent<ColliderScript>().SelectedCollider();
+                }
+
+                
             }
             else
             {

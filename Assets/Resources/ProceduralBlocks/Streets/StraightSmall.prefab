@@ -173,10 +173,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerPoint: {x: 0, y: 0, z: 0}
+  keepPosition: 0
   spawnStart: {x: 0, y: 0, z: 0}
   topPoint: {x: 0, y: 0, z: 15}
   type: straightstreet
-  colliderTopPoint: {x: 0, y: 0, z: 16.5}
+  colliderTopPoint: {x: 0, y: 0, z: 1.5}
 --- !u!114 &114441027300413286
 MonoBehaviour:
   m_ObjectHideFlags: 1

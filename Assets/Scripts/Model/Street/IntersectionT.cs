@@ -7,6 +7,7 @@ public class IntersectionT : GenericStreet
     public Vector3 topPoint = new Vector3(0, 0, 15f);
     public Vector3 leftPoint = new Vector3(15f, 0, 0);
     public Vector3 rightPoint = new Vector3(-15f, 0, 0);
+	public Vector3 offsetPoint;
 
     public Vector3 colliderTopPoint, colliderLeftPoint, colliderRightPoint;
 
@@ -14,9 +15,10 @@ public class IntersectionT : GenericStreet
 
     public IntersectionT()
     {
-        colliderTopPoint = topPoint + new Vector3(0, 0, 1.5f);
-        colliderLeftPoint = leftPoint + new Vector3(1.5f, 0, 0);
-        colliderRightPoint = rightPoint + new Vector3(-1.5f, 0, 0);
+        colliderTopPoint = new Vector3(0, 0, 1.5f);
+        colliderLeftPoint = new Vector3(1.5f, 0, 0);
+        colliderRightPoint = new Vector3(-1.5f, 0, 0);
+		offsetPoint = topPoint;
     }
 
     public override void SetAllowedPoints(List<string> allowedDirections = null) {
@@ -24,21 +26,45 @@ public class IntersectionT : GenericStreet
         {
             switch (direction)
             {
-                case "left":
-                    allowedPoints.Add(new KeyValuePair<string, Vector3>(direction, leftPoint));
-                    colliderAllowedPoints.Add(new KeyValuePair<string, Vector3>(direction, colliderLeftPoint));
+			case "left":
+					colliderAllowedPoints.Add(direction, leftPoint);
+					centerOffset.Add(direction, colliderLeftPoint);
                     break;
                 case "right":
-                    allowedPoints.Add(new KeyValuePair<string, Vector3>(direction, rightPoint));
-                    colliderAllowedPoints.Add(new KeyValuePair<string, Vector3>(direction, colliderRightPoint));
+					colliderAllowedPoints.Add(direction, rightPoint);
+					centerOffset.Add(direction, colliderRightPoint);
                     break;
                 case "straight":
-                    allowedPoints.Add(new KeyValuePair<string, Vector3>(direction, topPoint));
-                    colliderAllowedPoints.Add(new KeyValuePair<string, Vector3>(direction, colliderTopPoint));
+					colliderAllowedPoints.Add(direction, topPoint);
+					centerOffset.Add(direction, colliderTopPoint);
                     break;
             }
         }
     }
+
+	public void ChangeOrientation(string orientation){
+		Debug.LogError ("Chaning T orientation to " + orientation);
+		switch (orientation)
+		{
+		case "leftRight":
+			break;
+		case "leftStraight":
+			topPoint = new Vector3 (15f, 0, 0);
+			leftPoint = new Vector3 (0, 0, 15f);
+
+			colliderTopPoint = new Vector3 (1.5f, 0, 0);
+			colliderLeftPoint = new Vector3 (0, 0, 1.5f);
+			break;
+		case "rightStraight":
+			rightPoint = new Vector3 (0, 0, 15f);
+			topPoint = new Vector3 (-15f, 0, 0);
+
+			colliderRightPoint = new Vector3 (0, 0, 1.5f);
+			colliderTopPoint = new Vector3 (-1.5f, 0, 0);
+
+			break;
+		}
+	}
 
     public override string GetTypePoint()
     {
@@ -46,7 +72,7 @@ public class IntersectionT : GenericStreet
     }
 
     public override Vector3 GetOffsetPoint() {
-        return topPoint;
+		return offsetPoint;
     }
 
     public override Vector3 GetTopPoint()

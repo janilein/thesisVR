@@ -9,7 +9,7 @@ using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.UI;
 
-using System.Threading;
+
 
 public class Speech : MonoBehaviour {
     //private KeywordParser keywordParser;
@@ -35,17 +35,19 @@ public class Speech : MonoBehaviour {
 
     KeywordParser keywordParser;
 
+	WebClient wc;
+
     //Used to specify descriptions. E.g. first a house, then specify floor colours
     public static bool specifyDescription = false;
 
     bool threadRunning = false;
     bool workDone = false;
-    Thread thread;
     private bool automateProcess = false;
     private bool updateProjectorText = false;
 
     private void Awake()
     {
+		wc = new WebClient();
 		GameObject canvasHolder = GameObject.Find ("TheRoom/Projector Screen/CanvasHolder");
 		if (canvasHolder) {
 			projectionText = canvasHolder.GetComponent<Text>();
@@ -227,8 +229,6 @@ public class Speech : MonoBehaviour {
             //}
 
             try {
-
-                WebClient wc = new WebClient();
                 wc.UploadStringCompleted += new UploadStringCompletedEventHandler(GoogleCallFinished);
                 wc.Headers["Content-Type"] = "application/json";
 
@@ -281,15 +281,15 @@ public class Speech : MonoBehaviour {
         //}
     }
 
-    private void ThreadedWork()
-    {
-        Debug.Log("Work thread PID: " + Thread.CurrentThread.ManagedThreadId);
-        BtnSave_Click();
-        BtnSpeechInfo_Click();
-        MakeRequest();
-        threadRunning = false;
-        workDone = true;
-    }
+//    private void ThreadedWork()
+//    {
+//        Debug.Log("Work thread PID: " + Thread.CurrentThread.ManagedThreadId);
+//        BtnSave_Click();
+//        BtnSpeechInfo_Click();
+//        MakeRequest();
+//        threadRunning = false;
+//        workDone = true;
+//    }
 
     //OnDisable we should wait for the thread to end as well
     //void OnDisable()
@@ -321,8 +321,6 @@ public class Speech : MonoBehaviour {
             try {
                 Debug.Log("Starting MeaningCloud Request");
                 //var httpResponse = (HttpWebResponse)req.GetResponse();
-
-                WebClient wc = new WebClient();
                 wc.UploadStringCompleted += new UploadStringCompletedEventHandler(MeaningCloudCallFinished);
                 wc.Headers["Content-Type"] = "application/x-www-form-urlencoded";
 

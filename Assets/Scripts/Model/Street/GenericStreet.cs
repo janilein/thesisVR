@@ -7,55 +7,37 @@ public class GenericStreet : MonoBehaviour
 {
 
     public Vector3 centerPoint;
-    public List<KeyValuePair<string, Vector3>> allowedPoints = new List<KeyValuePair<string, Vector3>>();
-    public List<KeyValuePair<string, Vector3>> rotatedPoints = new List<KeyValuePair<string, Vector3>>();
 
-    public List<KeyValuePair<string, Vector3>> colliderAllowedPoints = new List<KeyValuePair<string, Vector3>>();
-    public List<KeyValuePair<string, Vector3>> colliderRotatedPoints = new List<KeyValuePair<string, Vector3>>();
+	public Dictionary<string, Vector3> colliderAllowedPoints = new Dictionary<string, Vector3>();
+	public Dictionary<string, Vector3> colliderRotatedPoints = new Dictionary<string, Vector3>();
+	public Dictionary<string, Vector3> centerOffset = new Dictionary<string, Vector3>();
+
+	public bool keepPosition = false;
 
     public Vector3 spawnStart;
 
     public virtual void SetAllowedPoints(List<string> allowedDirections = null) { }
 
-    public void RotateAllowedPoints(int degrees)
-    {
-        Vector3 point;
-        foreach (KeyValuePair<string, Vector3> pair in allowedPoints)
-        {
-            point = pair.Value;
-            Vector3 rotatedVector = Quaternion.AngleAxis(degrees, Vector3.up) * point;
-            //Debug.Log("Rotated vector " + point.ToString() + " by " + degrees + " resulting in " + rotatedVector.ToString());
-            point = rotatedVector;
-            rotatedPoints.Add(new KeyValuePair<string, Vector3>(pair.Key, point));
-        }
-        allowedPoints.Clear();
-        foreach(KeyValuePair<string, Vector3> pair in rotatedPoints)
-        {
-            allowedPoints.Add(new KeyValuePair<string, Vector3>(pair.Key, pair.Value));
-        }
-        rotatedPoints.Clear();
-    }
-
-    public void RotateColliderPositions(int degrees)
-    {
-        Debug.Log("In call---------------");
-        Vector3 point;
-        Debug.Log("Allowed points length: " + colliderAllowedPoints.Count);
-        foreach (KeyValuePair<string, Vector3> pair in colliderAllowedPoints)
-            {
-                point = pair.Value;
-                Vector3 rotatedVector = Quaternion.AngleAxis(degrees, Vector3.up) * point;
-                Debug.Log("Collider Rotated vector " + point.ToString() + " by " + degrees + " resulting in " + rotatedVector.ToString());
-                point = rotatedVector;
-                colliderRotatedPoints.Add(new KeyValuePair<string, Vector3>(pair.Key, point));
-            }
-        colliderAllowedPoints.Clear();
-        foreach (KeyValuePair<string, Vector3> pair in colliderRotatedPoints)
-        {
-            colliderAllowedPoints.Add(new KeyValuePair<string, Vector3>(pair.Key, pair.Value));
-        }
-        colliderRotatedPoints.Clear();
-    }
+//    public void RotateColliderPositions(int degrees)
+//    {
+//        Debug.Log("In call---------------");
+//        Vector3 point;
+//        Debug.Log("Allowed points length: " + colliderAllowedPoints.Count);
+//        foreach (KeyValuePair<string, Vector3> pair in colliderAllowedPoints)
+//            {
+//                point = pair.Value;
+//                Vector3 rotatedVector = Quaternion.AngleAxis(degrees, Vector3.up) * point;
+//                Debug.Log("Collider Rotated vector " + point.ToString() + " by " + degrees + " resulting in " + rotatedVector.ToString());
+//                point = rotatedVector;
+//                colliderRotatedPoints.Add(new KeyValuePair<string, Vector3>(pair.Key, point));
+//            }
+//        colliderAllowedPoints.Clear();
+//        foreach (KeyValuePair<string, Vector3> pair in colliderRotatedPoints)
+//        {
+//            colliderAllowedPoints.Add(new KeyValuePair<string, Vector3>(pair.Key, pair.Value));
+//        }
+//        colliderRotatedPoints.Clear();
+//    }
 
     public void SpawnColliders()
     {
@@ -73,41 +55,38 @@ public class GenericStreet : MonoBehaviour
         //Load streetCollider resource
         GameObject streetCollider = Resources.Load("ProceduralBlocks/StreetCollider") as GameObject;
 
-        Transform colliderChild = this.transform.Find("Colliders");
+        Transform colliderChild = this.transform.parent.Find("Colliders");
         GameObject colliders;
         if (colliderChild == null)
         {
             colliders = new GameObject("Colliders");
-            colliders.transform.SetParent(this.transform, false);
-            colliders.transform.localPosition = Vector3.zero;
+			colliders.transform.localPosition = Vector3.zero;
+			colliders.transform.SetParent(this.transform.parent, false);
         }
         else colliders = colliderChild.gameObject;
 
         //Alle colliders plaatsen
-        foreach (KeyValuePair<string, Vector3> colliderAllowedPoint in colliderAllowedPoints)
+		foreach (KeyValuePair<string, Vector3> colliderAllowedPoint in colliderAllowedPoints)
         {
-            //Delete the possible already existing child
-            //Transform child = this.transform.Find(colliderAllowedPoint.Key);
-            //if (child != null)
-            //    Destroy(child);
-
             //Spawn a collider
             GameObject newCollider = GameObject.Instantiate(streetCollider);
-            newCollider.transform.SetParent(this.transform.parent, false);
             newCollider.transform.localPosition = colliderAllowedPoint.Value;
-            newCollider.transform.SetParent(colliders.transform, true);
+			newCollider.transform.SetParent(colliders.transform, keepPosition);			//worldPosition to true so orientation of the street model does not change the position
+			Vector3 localPos = newCollider.transform.localPosition;
+			newCollider.transform.localPosition = new Vector3(localPos.x, 0f, localPos.z);
             newCollider.name = colliderAllowedPoint.Key;
+			newCollider.GetComponent<BoxCollider>().center = centerOffset [colliderAllowedPoint.Key];
         }
     }
 
     public void RemoveCollider(string direction)
     {
         //Debug.LogError("Remove collider: " + direction);
-        //Remove collider from this specific direction (also deletes this direction from allowedpoints)
-        allowedPoints.RemoveAll(x => x.Key.Equals(direction));
-        colliderAllowedPoints.RemoveAll(x => x.Key.Equals(direction));
+        //Remove collider from this specific direction
+		colliderAllowedPoints.Remove(direction);
+		centerOffset.Remove (direction);
 
-        Transform colliderChild = this.transform.Find("Colliders");
+        Transform colliderChild = this.transform.parent.Find("Colliders");
         if(colliderChild != null)
         {
             Transform collider = colliderChild.Find(direction);
@@ -121,7 +100,7 @@ public class GenericStreet : MonoBehaviour
     public void CheckColliders(bool checkOther)
     {
         //Check for all colliders whether or not they collided with a street
-        Transform colliderChild = this.transform.Find("Colliders");
+        Transform colliderChild = this.transform.parent.Find("Colliders");
         if(colliderChild != null)
         {
             //Check all children
@@ -146,7 +125,6 @@ public class GenericStreet : MonoBehaviour
                 {
                     child.GetComponent<ColliderScript>().CheckOtherStreet();
                 }
-                Debug.LogError("Calling RemoveCollider: " + child.name);
                 RemoveCollider(child.name);
                 //MonoBehaviour.Destroy(child.gameObject);
             }
@@ -156,21 +134,21 @@ public class GenericStreet : MonoBehaviour
 
     public void SetCorrectPoint(string pointDirection)
     {
-        foreach (KeyValuePair<string, Vector3> pair in allowedPoints)
-        {
-            if (pair.Key.Equals(pointDirection))
-            {
-                spawnStart = pair.Value;
-                Debug.Log("Spawnstart set to: " + spawnStart.ToString());
-                return;
-            }
-        }
+		//For all colliders, check their position
+		Transform colliderChild = this.transform.parent.Find("Colliders");
+		if (colliderChild != null) {
+			int nbChildren = colliderChild.childCount;
+			Transform child;
+			for (int i = 0; i < nbChildren; i++) {
+				child = colliderChild.GetChild (i);
+				if (child.name.Equals (pointDirection)) {
+					spawnStart = child.position;
+					spawnStart.y = 0f;
+					return;
+				}
+			}
 
-        Debug.Log("PointDirection given: " + pointDirection);
-        foreach (KeyValuePair<string, Vector3> pair in allowedPoints)
-        {
-            Debug.Log("Direction in list: " + pair.Key);
-        }
+		}
 
         throw new Exception("Given direction not found in allowedPairs");
 

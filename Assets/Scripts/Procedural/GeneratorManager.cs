@@ -10,9 +10,8 @@ public class GeneratorManager {
     private StreetGeneratorV2 streetGenV2;
     //private Vector3 currentDirection;
     private static Vector2 currentDirection;
-    private static Vector3 currentPosition;
+    private Vector3 currentPosition;
     private static string pointDirection;
-    private static string orientation;
 
     public GameObject previousObject = null;
 
@@ -31,7 +30,6 @@ public class GeneratorManager {
         //currentPosition = Vector3.positiveInfinity;
         currentPosition = Vector3.zero;
         pointDirection = "straight";
-        orientation = "";
 
         shaderScript = GameObject.Find("ObjectManager").GetComponent<InitializeShaders>();
     }
@@ -69,15 +67,8 @@ public class GeneratorManager {
             //StreetGenerator generator = new StreetGenerator(); //gaan veel van deze maken, misschien in een singleton steken die we gaan oproepen?
             //streetGen.GenerateWorldObject(obj, currentDirection, ref currentPosition, pointDirection);
             streetGenV2.GenerateWorldObject(obj, ref currentDirection, ref currentPosition, pointDirection);
-
-            //correct pointdirection if pos switch with T
-            WorldObject dummy = obj.GetChildren()[0];
-            if (dummy.GetObjectValue().Equals("intersection-t"))
-            {
-                orientation = (string)dummy.directAttributes["orientation"];
-            }
-
             pointDirection = "straight";
+
         } else if (obj.GetObjectValue().Equals("orientation")) {
             ChangeDirection((string)obj.directAttributes["direction"]);
             //Debug.Log("currentDir x: " + currentDirection.x);
@@ -92,104 +83,41 @@ public class GeneratorManager {
 
     private static void ChangeDirection(string direction) {
         Debug.Log("direction switch: " + direction);
-        //switch (direction) {
-        //    case "left":
-        //        if (currentDirection.x == 1) {
-        //            currentDirection.x = 0;
-        //            currentDirection.z = 1;
-        //            //pointDirection = "left";
-        //        } else if (currentDirection.x == -1) {
-        //            currentDirection.x = 0;
-        //            currentDirection.z = -1;
-        //            //pointDirection = "right";
-        //        } else if (currentDirection.z == 1) {
-        //            currentDirection.x = -1;
-        //            currentDirection.z = 0;
-        //            //pointDirection = "bottom";
-        //        } else if (currentDirection.z == -1) {
-        //            currentDirection.x = 1;
-        //            currentDirection.z = 0;
-        //            //pointDirection = "top";
-        //        }
-        //        pointDirection = "left";
-        //        break;
-        //    case "right":
-        //        if (currentDirection.x == 1) {
-        //            currentDirection.x = 0;
-        //            currentDirection.z = -1;
-        //            //pointDirection = "right";
-        //        } else if (currentDirection.x == -1) {
-        //            currentDirection.x = 0;
-        //            currentDirection.z = 1;
-        //            //pointDirection = "left";
-        //        } else if (currentDirection.z == 1) {
-        //            currentDirection.x = 1;
-        //            currentDirection.z = 0;
-        //            //pointDirection = "top";
-        //        } else if (currentDirection.z == -1) {
-        //            currentDirection.x = -1;
-        //            currentDirection.z = 0;
-        //            //pointDirection = "bottom";
-        //        }
-        //        pointDirection = "right";
-        //        break;
-        //    case "straigth":
-        //        //don't do anything
-        //        break;
-        //}
+
         switch (direction)
         {
             case "left":
-                currentDirection.x = (currentDirection.x - 90) % 360;
-                if (orientation.Equals("leftStraight"))
-                {
-                    pointDirection = "straight";
-                } else
-                {
-                    pointDirection = "left";
-                }
-                Debug.Log("Point direction set to left");
+				if(pointDirection.Equals("right")){
+					pointDirection = "straight";
+					currentDirection.x = (currentDirection.x - 90) % 360;
+				} else if(pointDirection.Equals("straight"))  {
+					pointDirection = "left";
+					currentDirection.x = (currentDirection.x - 90) % 360;
+				}
+				Debug.Log("Point direction set to " + pointDirection);
                 break;
             case "right":
-                currentDirection.x = (currentDirection.x + 90) % 360;
-                if (orientation.Equals("rightStraight"))
-                {
-                    pointDirection = "straight";
-                }
-                else
-                {
-                    pointDirection = "right";
-                }
-                Debug.Log("Point direction set to right");
-                break;
+				if(pointDirection.Equals("left")){
+					pointDirection = "straight";
+					currentDirection.x = (currentDirection.x + 90) % 360;
+				} else if(pointDirection.Equals("straight"))  {
+					pointDirection = "right";
+					currentDirection.x = (currentDirection.x + 90) % 360;
+				}
+				Debug.Log("Point direction set to " + pointDirection);
+				break;
             case "straight":
                 //don't do anything
-                //Debug.Log("orientation must be leftStraight but is:" + orientation);
-                if (orientation.Equals("leftStraight"))
-                {
-                    pointDirection = "left";
-                    //Debug.Log("hierzoo######################");
-                }
-                else if (orientation.Equals("rightStraight"))
-                {
-                    pointDirection = "right";
-                }
-                else
-                {
-                    pointDirection = "straight";
-                }
+				Debug.Log("Point direction set to " + pointDirection);
                 break;
         }
-        orientation = "";
     }
 
-    public static void ChangeDirectionFromCollider(Vector3 position, string direction, string orientation, Vector2 dir)
+    public static void ChangeDirectionFromCollider(string direction, Vector2 dir)
     {
         GeneratorManager.currentDirection = dir;
-        position = new Vector3(position.x, 0f, position.z);
-        GeneratorManager.currentPosition = position;
-        GeneratorManager.orientation = orientation;
-        GeneratorManager.ChangeDirection(direction);
+		GeneratorManager.pointDirection = "straight";	//Start from a 'default' straight direction again
+		GeneratorManager.ChangeDirection (direction);
     }
 
     public void SetActiveLot(GameObject newLot)

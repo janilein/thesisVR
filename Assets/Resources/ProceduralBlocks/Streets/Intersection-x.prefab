@@ -180,10 +180,10 @@ MonoBehaviour:
   rightPoint: {x: 15, y: 0, z: 0}
   bottomPoint: {x: 0, y: 0, z: -15}
   type: intersectionX
-  colliderTopPoint: {x: 0, y: 0, z: 16.5}
-  colliderLeftPoint: {x: -16.5, y: 0, z: 0}
-  colliderRightPoint: {x: 16.5, y: 0, z: 0}
-  colliderBottomPoint: {x: 0, y: 0, z: -16.5}
+  colliderTopPoint: {x: 0, y: 0, z: 1.5}
+  colliderLeftPoint: {x: -1.5, y: 0, z: 0}
+  colliderRightPoint: {x: 1.5, y: 0, z: 0}
+  colliderBottomPoint: {x: 0, y: 0, z: -1.5}
 --- !u!114 &114947184437220070
 MonoBehaviour:
   m_ObjectHideFlags: 1

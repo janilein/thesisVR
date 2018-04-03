@@ -379,8 +379,13 @@ public class TestCase : MonoBehaviour {
 
     private IEnumerator GenerateWorldObjects()
     {
-        manager.GenerateWorldObject(worldObjects[3]);   //Intersection X
-        yield return null;
+		manager.GenerateWorldObject(worldObjects[0]);   //Small street
+		yield return null;
+		manager.GenerateWorldObject(worldObjects[5]);   //Intersection-T leftright
+		yield return null;
+
+        //manager.GenerateWorldObject(worldObjects[3]);   //Intersection X
+        //yield return null;
         //manager.GenerateWorldObject(worldObjects[4]);   //Right Turn
         //yield return null;
 

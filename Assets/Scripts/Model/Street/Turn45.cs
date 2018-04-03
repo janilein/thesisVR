@@ -12,15 +12,14 @@ public class Turn45 : GenericStreet {
 
     public Turn45()
     {
-        colliderTopPoint = topPoint + new Vector3(-1.5f, 0, 1.5f);
-        colliderBottomPoint = bottomPoint + new Vector3(-1.5f, 0, -1.5f);
+        colliderTopPoint = new Vector3(-1.5f, 0, 0);
+        colliderBottomPoint = new Vector3(-1.5f, 0, 0);
     }
 
     public override void SetAllowedPoints(List<string> allowedDirections = null)
     {
-        Debug.Log("Called set allowed points @@@@@@@@@@@@@@@@");
-        allowedPoints.Add(new KeyValuePair<string, Vector3>("straight", topPoint));
-        colliderAllowedPoints.Add(new KeyValuePair<string, Vector3>("straight", colliderTopPoint));
+		colliderAllowedPoints.Add("straight", topPoint);
+		centerOffset.Add ("straight", colliderTopPoint);
     }
 
     public override Vector3 GetTopPoint()
@@ -40,15 +39,13 @@ public class Turn45 : GenericStreet {
 
     public override void SetRightTurn()
     {
-        //topPoint = new Vector3(22.08f, 0, 33.1f);
-        //topPoint = new Vector3(-7.8f, 0, 38.9f);
-        //bottomPoint = new Vector3(22.08f, 0, -33.1f);
-        //offsetPoint = new Vector3(-22.08f, 0, -33.1f);
-        topPoint = new Vector3(22.08f, 0f, 33.1f);
-        bottomPoint = new Vector3(-7.8f, 0, -38.9f);
-        offsetPoint = new Vector3(7.8f, 0f, 38.9f);
+		keepPosition = true;
 
-        colliderTopPoint = topPoint + new Vector3(1.5f, 0, 1.5f);
-        colliderBottomPoint = bottomPoint + new Vector3(-1.5f, 0, -1.5f);
+        topPoint = new Vector3(22.05f, 0f, 33.16f);
+        bottomPoint = new Vector3(-7.78f, 0, -39f);
+        offsetPoint = new Vector3(7.78f, 0f, 39f);
+
+        colliderTopPoint = new Vector3(1.5f, 0, 0);
+        colliderBottomPoint = new Vector3(0, 0, -1.5f);
     }
 }

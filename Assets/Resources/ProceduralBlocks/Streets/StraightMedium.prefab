@@ -184,7 +184,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerPoint: {x: 0, y: 0, z: 0}
+  keepPosition: 0
   spawnStart: {x: 0, y: 0, z: 0}
   topPoint: {x: 0, y: 0, z: 30}
   type: straightstreet
-  colliderTopPoint: {x: 0, y: 0, z: 31.5}
+  colliderTopPoint: {x: 0, y: 0, z: 1.5}

@@ -11,13 +11,13 @@ public class SmallStraightStreet : GenericStreet {
 
     public SmallStraightStreet()
     {
-        colliderTopPoint = topPoint + new Vector3(0, 0, 1.5f);
+        colliderTopPoint = new Vector3(0, 0, 1.5f);
     }
 
     public override void SetAllowedPoints(List<string> allowedDirections = null)
     {
-        allowedPoints.Add(new KeyValuePair<string, Vector3>("straight", topPoint));
-        colliderAllowedPoints.Add(new KeyValuePair<string, Vector3>("straight", colliderTopPoint));
+		colliderAllowedPoints.Add("straight", topPoint);
+		centerOffset.Add("straight", colliderTopPoint);
     }
 
     public override string GetTypePoint() {

@@ -76,12 +76,17 @@ public class GenericStreet : MonoBehaviour
 			Vector3 localPos = newCollider.transform.localPosition;
 			newCollider.transform.localPosition = new Vector3(localPos.x, 0f, localPos.z);
             newCollider.name = colliderAllowedPoint.Key;
-			newCollider.GetComponent<BoxCollider>().center = centerOffset [colliderAllowedPoint.Key];
+			Vector3 centerOffsetPosition = centerOffset [colliderAllowedPoint.Key];
+			newCollider.GetComponent<BoxCollider>().center = centerOffsetPosition;
 
 			//Bepaal richting van de arrow
-			//double angle = Mathf.Rad2Deg * Math.Atan(colliderAllowedPoint.Value.x / colliderAllowedPoint.Value.y);
-			Vector3 centerOffsetPosition = centerOffset [colliderAllowedPoint.Key];
-			double angle = Mathf.Rad2Deg * Mathf.Atan((newCollider.transform.position.x - centerOffsetPosition.x) / (newCollider.transform.position.z - centerOffsetPosition.z));
+			Vector3 firstPoint = newCollider.transform.TransformPoint (centerOffsetPosition);
+			Vector3 secondPoint = newCollider.transform.position;
+			//Debug.LogError (colliderAllowedPoint.Key);
+			//Debug.LogError("TP: " + firstPoint);
+			//Debug.LogError ("TP2: " + secondPoint);
+
+			double angle = Mathf.Rad2Deg * Mathf.Atan((firstPoint.x - secondPoint.x) / (firstPoint.z - secondPoint.z));
 			GameObject spawnedArrow = GameObject.Instantiate (arrow);
 			spawnedArrow.transform.SetParent (newCollider.transform);
 			spawnedArrow.transform.localPosition = new Vector3 (centerOffsetPosition.x, 1f, centerOffsetPosition.z);

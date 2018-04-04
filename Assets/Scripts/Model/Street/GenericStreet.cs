@@ -54,6 +54,7 @@ public class GenericStreet : MonoBehaviour
 
         //Load streetCollider resource
         GameObject streetCollider = Resources.Load("ProceduralBlocks/StreetCollider") as GameObject;
+		GameObject arrow = Resources.Load ("ProceduralBlocks/Arrow") as GameObject;
 
         Transform colliderChild = this.transform.parent.Find("Colliders");
         GameObject colliders;
@@ -76,6 +77,15 @@ public class GenericStreet : MonoBehaviour
 			newCollider.transform.localPosition = new Vector3(localPos.x, 0f, localPos.z);
             newCollider.name = colliderAllowedPoint.Key;
 			newCollider.GetComponent<BoxCollider>().center = centerOffset [colliderAllowedPoint.Key];
+
+			//Bepaal richting van de arrow
+			//double angle = Mathf.Rad2Deg * Math.Atan(colliderAllowedPoint.Value.x / colliderAllowedPoint.Value.y);
+			Vector3 centerOffsetPosition = centerOffset [colliderAllowedPoint.Key];
+			double angle = Mathf.Rad2Deg * Mathf.Atan((newCollider.transform.position.x - centerOffsetPosition.x) / (newCollider.transform.position.z - centerOffsetPosition.z));
+			GameObject spawnedArrow = GameObject.Instantiate (arrow);
+			spawnedArrow.transform.SetParent (newCollider.transform);
+			spawnedArrow.transform.localPosition = new Vector3 (centerOffsetPosition.x, 1f, centerOffsetPosition.z);
+			spawnedArrow.transform.Rotate (new Vector3 (0, 1, 0) * (float) angle);
         }
     }
 

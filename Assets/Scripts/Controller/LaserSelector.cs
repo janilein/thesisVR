@@ -74,7 +74,8 @@ public class LaserSelector : MonoBehaviour {
                 } else
                 {
                     Debug.Log("Direction selected");
-                    hitObject.GetComponent<ColliderScript>().SelectedCollider();
+                    //hitObject.GetComponent<ColliderScript>().SelectedCollider();
+					OrientationManager.Instance.SetSelectedArrow (hitObject, true);
                 }
 
                 

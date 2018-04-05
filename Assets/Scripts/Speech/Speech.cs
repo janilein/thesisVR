@@ -35,8 +35,6 @@ public class Speech : MonoBehaviour {
 
     KeywordParser keywordParser;
 
-	WebClient wc;
-
     //Used to specify descriptions. E.g. first a house, then specify floor colours
     public static bool specifyDescription = false;
 
@@ -47,7 +45,6 @@ public class Speech : MonoBehaviour {
 
     private void Awake()
     {
-		wc = new WebClient();
 		GameObject canvasHolder = GameObject.Find ("TheRoom/Projector Screen/CanvasHolder");
 		if (canvasHolder) {
 			projectionText = canvasHolder.GetComponent<Text>();
@@ -229,6 +226,7 @@ public class Speech : MonoBehaviour {
             //}
 
             try {
+				WebClient wc = new WebClient();
                 wc.UploadStringCompleted += new UploadStringCompletedEventHandler(GoogleCallFinished);
                 wc.Headers["Content-Type"] = "application/json";
 
@@ -321,6 +319,7 @@ public class Speech : MonoBehaviour {
             try {
                 Debug.Log("Starting MeaningCloud Request");
                 //var httpResponse = (HttpWebResponse)req.GetResponse();
+				WebClient wc = new WebClient();
                 wc.UploadStringCompleted += new UploadStringCompletedEventHandler(MeaningCloudCallFinished);
                 wc.Headers["Content-Type"] = "application/x-www-form-urlencoded";
 

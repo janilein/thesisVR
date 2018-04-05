@@ -169,6 +169,10 @@ public class GenericStreet : MonoBehaviour
 
     }
 
+	public bool DirectionInAllowedPoints(string direction){
+		return colliderAllowedPoints.ContainsKey (direction);
+	}
+
     public Vector3 GetSpawnPoint()
     {
         return spawnStart;

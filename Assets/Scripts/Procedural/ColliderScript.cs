@@ -48,7 +48,7 @@ public class ColliderScript : MonoBehaviour
 		/* Layout:
 		 * 	Parent
 		 * 		Street with attached GenericStreet
-		 * 		Collider
+		 * 		Colliders
 		 * 			Left, Right, ... whatever exist, this script is attached at this point
 		 * 
 		 */

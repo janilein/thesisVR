@@ -12,7 +12,7 @@ public class Turn45 : GenericStreet {
 
     public Turn45()
     {
-        colliderTopPoint = new Vector3(-1.5f, 0, 0);
+        colliderTopPoint = new Vector3(-1.5f, 0, 1.5f);
         colliderBottomPoint = new Vector3(-1.5f, 0, 0);
     }
 
@@ -45,7 +45,7 @@ public class Turn45 : GenericStreet {
         bottomPoint = new Vector3(-7.78f, 0, -39f);
         offsetPoint = new Vector3(7.78f, 0f, 39f);
 
-        colliderTopPoint = new Vector3(1.5f, 0, 0);
+        colliderTopPoint = new Vector3(1.5f, 0, 1.5f);
         colliderBottomPoint = new Vector3(0, 0, -1.5f);
     }
 }

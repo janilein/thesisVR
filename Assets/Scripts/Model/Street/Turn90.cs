@@ -48,8 +48,8 @@ public class Turn90 : GenericStreet {
         bottomPoint = new Vector3(-14.8f, 0f, -36.5f);
         offsetPoint = new Vector3(14.8f, 0f, 36.5f);
 
-		colliderBottomPoint = new Vector3 (1.5f, 0, 0);
-		colliderTopPoint = new Vector3 (0, 0, -1.5f);
+		colliderBottomPoint = new Vector3 (0, 0, 1.5f);
+		colliderTopPoint = new Vector3 (1.5f, 0, 0);
     }
 
 }

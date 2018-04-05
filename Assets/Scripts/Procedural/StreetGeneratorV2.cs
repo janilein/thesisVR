@@ -338,6 +338,7 @@ public class StreetGeneratorV2 : Generator {
             //EditorGUIUtility.PingObject(parent);
 
             previousStreetScript = street.GetComponent<GenericStreet>();
+
         }
         else
         {
@@ -530,6 +531,21 @@ public class StreetGeneratorV2 : Generator {
             }
         }
     }
+
+	public void SelectDirectionArrow(string direction, bool selectCollider) {
+		if (previousStreetScript) {
+			if(previousStreetScript.DirectionInAllowedPoints(direction)){
+				//Find the arrow
+				Transform arrowParent = previousStreetScript.transform.parent.Find("Colliders/" + direction);
+				if(arrowParent){
+					Transform arrow = arrowParent.GetChild(0);
+					if (arrow) {
+						OrientationManager.Instance.SetSelectedArrow (arrow, selectCollider);
+					}
+				}
+			}
+		}
+	}
 
     private static bool InBounds(int i, int length)
     {

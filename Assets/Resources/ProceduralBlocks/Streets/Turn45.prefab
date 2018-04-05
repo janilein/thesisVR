@@ -180,7 +180,7 @@ MonoBehaviour:
   topPoint: {x: -22.08, y: 0, z: 33.1}
   bottomPoint: {x: 7.8, y: 0, z: -38.9}
   offsetPoint: {x: -7.8, y: 0, z: 38.9}
-  colliderTopPoint: {x: -1.5, y: 0, z: 0}
+  colliderTopPoint: {x: -1.5, y: 0, z: 1.5}
   colliderBottomPoint: {x: -1.5, y: 0, z: 0}
 --- !u!114 &114722343064054058
 MonoBehaviour:

@@ -7,7 +7,7 @@ public class GeneratorManager {
 
     private BuildingGenerator buildingGen;
     //private StreetGenerator streetGen;
-    private StreetGeneratorV2 streetGenV2;
+    private static StreetGeneratorV2 streetGenV2;
     //private Vector3 currentDirection;
     private static Vector2 currentDirection;
     private Vector3 currentPosition;
@@ -69,8 +69,11 @@ public class GeneratorManager {
             streetGenV2.GenerateWorldObject(obj, ref currentDirection, ref currentPosition, pointDirection);
             pointDirection = "straight";
 
+			//In street, also automatically arrow rotating
+			streetGenV2.SelectDirectionArrow(pointDirection, false);
+
         } else if (obj.GetObjectValue().Equals("orientation")) {
-            ChangeDirection((string)obj.directAttributes["direction"]);
+            ChangeDirection((string)obj.directAttributes["direction"], true);
             //Debug.Log("currentDir x: " + currentDirection.x);
             //Debug.Log("currentDir z: " + currentDirection.z);
         } else {
@@ -81,43 +84,50 @@ public class GeneratorManager {
         return;
     }
 
-    private static void ChangeDirection(string direction) {
+	private static void ChangeDirection(string direction, bool selectArrow) {
         Debug.Log("direction switch: " + direction);
 
         switch (direction)
         {
             case "left":
 				if(pointDirection.Equals("right")){
-					pointDirection = "straight";
-					currentDirection.x = (currentDirection.x - 90) % 360;
+					currentDirection.x = (currentDirection.x - 180) % 360;
 				} else if(pointDirection.Equals("straight"))  {
-					pointDirection = "left";
 					currentDirection.x = (currentDirection.x - 90) % 360;
 				}
+				pointDirection = "left";
 				Debug.Log("Point direction set to " + pointDirection);
                 break;
             case "right":
 				if(pointDirection.Equals("left")){
-					pointDirection = "straight";
-					currentDirection.x = (currentDirection.x + 90) % 360;
-				} else if(pointDirection.Equals("straight"))  {
-					pointDirection = "right";
+					currentDirection.x = (currentDirection.x + 180) % 360;
+				} else if(pointDirection.Equals("straight"))  {	
 					currentDirection.x = (currentDirection.x + 90) % 360;
 				}
+				pointDirection = "right";
 				Debug.Log("Point direction set to " + pointDirection);
 				break;
             case "straight":
-                //don't do anything
+				if(pointDirection.Equals("left")){
+					currentDirection.x = (currentDirection.x + 90) % 360;
+				} else if(pointDirection.Equals("right")){	
+					currentDirection.x = (currentDirection.x - 90) % 360;
+				}
+				pointDirection = "straight";
 				Debug.Log("Point direction set to " + pointDirection);
                 break;
         }
+
+		if (selectArrow) {
+			streetGenV2.SelectDirectionArrow (pointDirection, true);
+		}
     }
 
     public static void ChangeDirectionFromCollider(string direction, Vector2 dir)
     {
         GeneratorManager.currentDirection = dir;
 		GeneratorManager.pointDirection = "straight";	//Start from a 'default' straight direction again
-		GeneratorManager.ChangeDirection (direction);
+		GeneratorManager.ChangeDirection (direction, false);
     }
 
     public void SetActiveLot(GameObject newLot)

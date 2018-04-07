@@ -70,7 +70,7 @@ public class GeneratorManager {
             pointDirection = "straight";
 
 			//In street, also automatically arrow rotating
-			streetGenV2.SelectDirectionArrow(pointDirection, false);
+			streetGenV2.SelectDirectionArrow(pointDirection);
 
         } else if (obj.GetObjectValue().Equals("orientation")) {
             ChangeDirection((string)obj.directAttributes["direction"], true);
@@ -119,7 +119,7 @@ public class GeneratorManager {
         }
 
 		if (selectArrow) {
-			streetGenV2.SelectDirectionArrow (pointDirection, true);
+			streetGenV2.SelectDirectionArrow (pointDirection);
 		}
     }
 

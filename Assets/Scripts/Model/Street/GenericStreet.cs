@@ -12,8 +12,6 @@ public class GenericStreet : MonoBehaviour
 	public Dictionary<string, Vector3> colliderRotatedPoints = new Dictionary<string, Vector3>();
 	public Dictionary<string, Vector3> centerOffset = new Dictionary<string, Vector3>();
 
-	public bool keepPosition = false;
-
     public Vector3 spawnStart;
 
     public virtual void SetAllowedPoints(List<string> allowedDirections = null) { }
@@ -67,14 +65,15 @@ public class GenericStreet : MonoBehaviour
         else colliders = colliderChild.gameObject;
 
         //Alle colliders plaatsen
-		foreach (KeyValuePair<string, Vector3> colliderAllowedPoint in colliderAllowedPoints)
-        {
-            //Spawn a collider
-            GameObject newCollider = GameObject.Instantiate(streetCollider);
-            newCollider.transform.localPosition = colliderAllowedPoint.Value;
-			newCollider.transform.SetParent(colliders.transform, keepPosition);			//worldPosition to true so orientation of the street model does not change the position
-			Vector3 localPos = newCollider.transform.localPosition;
-			newCollider.transform.localPosition = new Vector3(localPos.x, 0f, localPos.z);
+		foreach (KeyValuePair<string, Vector3> colliderAllowedPoint in colliderAllowedPoints) {
+			//Spawn a collider
+			GameObject newCollider = GameObject.Instantiate (streetCollider);
+			//newCollider.transform.position = colliderAllowedPoint.Value;
+			newCollider.transform.localPosition = new Vector3(colliderAllowedPoint.Value.x, 0f, colliderAllowedPoint.Value.z);
+			newCollider.transform.SetParent(colliders.transform, false);			//worldPosition to true so orientation of the street model does not change 		the position
+			//newCollider.transform.localPosition = new Vector3(colliderAllowedPoint.Value.x, 0f, colliderAllowedPoint.Value.z);
+			//Vector3 localPos = newCollider.transform.localPosition;
+			//newCollider.transform.localPosition = new Vector3(localPos.x, 0f, localPos.z);
             newCollider.name = colliderAllowedPoint.Key;
 			Vector3 centerOffsetPosition = centerOffset [colliderAllowedPoint.Key];
 			newCollider.GetComponent<BoxCollider>().center = centerOffsetPosition;
@@ -88,9 +87,10 @@ public class GenericStreet : MonoBehaviour
 
 			double angle = Mathf.Rad2Deg * Mathf.Atan((firstPoint.x - secondPoint.x) / (firstPoint.z - secondPoint.z));
 			GameObject spawnedArrow = GameObject.Instantiate (arrow);
-			spawnedArrow.transform.SetParent (newCollider.transform);
+			spawnedArrow.transform.SetParent (newCollider.transform, false);
 			spawnedArrow.transform.localPosition = new Vector3 (centerOffsetPosition.x, 1f, centerOffsetPosition.z);
 			spawnedArrow.transform.Rotate (new Vector3 (0, 1, 0) * (float) angle);
+			//spawnedArrow.transform.localScale = new Vector3 (1, 1, 1);
         }
     }
 
@@ -149,6 +149,7 @@ public class GenericStreet : MonoBehaviour
 
     public void SetCorrectPoint(string pointDirection)
     {
+		Transform world = GameObject.Find ("World").transform;
 		//For all colliders, check their position
 		Transform colliderChild = this.transform.parent.Find("Colliders");
 		if (colliderChild != null) {
@@ -158,7 +159,22 @@ public class GenericStreet : MonoBehaviour
 				child = colliderChild.GetChild (i);
 				if (child.name.Equals (pointDirection)) {
 					spawnStart = child.position;
+					//Debug.LogError ("Pos: " + spawnStart.ToString ());
+					//spawnStart.y = 0f;
+					//spawnStart = world.TransformPoint(spawnStart);
+					//spawnStart.y = 0;
+					//spawnStart = world.TransformPoint(spawnStart);
+					//spawnStart.y = 0f;
+
+					//Debug.LogError("TP1: " + world.TransformPoint(spawnStart));
+					//Debug.LogError ("TP2: " + world.InverseTransformPoint (spawnStart));
+					//Debug.LogError("TP3: " + this.transform.TransformPoint(spawnStart));
+					//Debug.LogError ("TP4: " + this.transform.InverseTransformPoint (spawnStart));
+					//Debug.LogError("TP5: " + colliderChild.TransformPoint(spawnStart));
+					//Debug.LogError ("TP6: " + colliderChild.InverseTransformPoint (spawnStart));
+					spawnStart = world.InverseTransformPoint(spawnStart);
 					spawnStart.y = 0f;
+
 					return;
 				}
 			}

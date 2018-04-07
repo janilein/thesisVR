@@ -198,10 +198,11 @@ public class StreetGeneratorV2 : Generator {
         {
 			street = InstantiateStreet(street, spawnPosition, Quaternion.identity, parent);
 			//Rotate street to make it a right one
-			if (spawnAngle == 90)
-				parent.Rotate (new Vector3 (0, 1, 0), 270);
-			else if (spawnAngle == 45)
-				parent.Rotate (new Vector3 (0, 1, 0), 225);
+			//parent.Rotate (new Vector3 (0, 1, 0), 270);
+			street.transform.localScale = new Vector3 (-1, 1, 1);
+			Vector3 localEulerRotation = street.transform.localRotation.eulerAngles;
+			localEulerRotation.y = (localEulerRotation.y + spawnAngle) % 360;
+			street.transform.localRotation = Quaternion.Euler (localEulerRotation);
 
             street.GetComponent<GenericStreet>().SetRightTurn();
         } else
@@ -338,6 +339,7 @@ public class StreetGeneratorV2 : Generator {
             //EditorGUIUtility.PingObject(parent);
 
             previousStreetScript = street.GetComponent<GenericStreet>();
+			//parent.SetParent(worldTransform, false);
 
         }
         else
@@ -353,19 +355,30 @@ public class StreetGeneratorV2 : Generator {
                 return;
             }
 
-            Debug.Log("Previous turned point: " + previousStreetScript.GetSpawnPoint());
+            //Debug.LogError("Previous turned point: " + previousStreetScript.GetSpawnPoint());
 
             currentPosition = previousStreetScript.GetSpawnPoint();
-            Debug.Log("Currentposition set to: " + currentPosition.ToString());
+			//Debug.LogError("Currentposition set to: " + currentPosition.ToString());
 
-            Debug.Log("Offset point: " + street.GetComponent<GenericStreet>().GetOffsetPoint().ToString());
+            //Debug.Log("Offset point: " + street.GetComponent<GenericStreet>().GetOffsetPoint().ToString());
             Vector3 rotatedTopPoint = Quaternion.AngleAxis(currentDirection.x, Vector3.up) * street.GetComponent<GenericStreet>().GetOffsetPoint();
-            Debug.Log("Rotated offset point: " + rotatedTopPoint.ToString());
+			//Debug.LogError("Rotated offset point: " + rotatedTopPoint.ToString());
 
             currentPosition += rotatedTopPoint;
-            Debug.Log("Currentposition set to: " + currentPosition.ToString());
+			//Debug.LogError("Currentposition set to: " + currentPosition.ToString());
 
-            parent.localPosition = currentPosition + spawnPosition;
+
+			//parent.position = rotatedTopPoint;
+			parent.localPosition = currentPosition;// + rotatedTopPoint;
+			//Debug.LogError ("Parent position: " + parent.position.ToString ());
+			//Debug.LogError ("Parent localposition: " + parent.localPosition.ToString ());
+			//parent.SetParent(worldTransform, false);
+			//Debug.LogError ("Parent position 2: " + parent.position.ToString ());
+			//Debug.LogError ("Parent localposition 2: " + parent.localPosition.ToString ());
+			//parent.localPosition = parent.localPosition + currentPosition;
+			//Debug.LogError ("Parent position 3: " + parent.position.ToString ());
+			//Debug.LogError ("Parent localposition 3: " + parent.localPosition.ToString ());
+            //parent.localPosition = currentPosition + spawnPosition;
 
             //Remove collider from previous street on the end on which we spawned a new street
             previousStreetScript.RemoveCollider(pointDirection);
@@ -532,7 +545,7 @@ public class StreetGeneratorV2 : Generator {
         }
     }
 
-	public void SelectDirectionArrow(string direction, bool selectCollider) {
+	public void SelectDirectionArrow(string direction) {
 		if (previousStreetScript) {
 			if(previousStreetScript.DirectionInAllowedPoints(direction)){
 				//Find the arrow
@@ -540,7 +553,7 @@ public class StreetGeneratorV2 : Generator {
 				if(arrowParent){
 					Transform arrow = arrowParent.GetChild(0);
 					if (arrow) {
-						OrientationManager.Instance.SetSelectedArrow (arrow, selectCollider);
+						OrientationManager.Instance.SetSelectedArrow (arrow, false);
 					}
 				}
 			}
@@ -568,7 +581,5 @@ public class StreetGeneratorV2 : Generator {
     {
         previousStreetScript = script;
     }
-
-    private enum Orientation { left, right, straight};
 
 }

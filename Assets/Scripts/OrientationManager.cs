@@ -39,7 +39,7 @@ public class OrientationManager : MonoBehaviour {
 	}
 
 	public void SetSelectedArrow(Transform arrow, bool selectCollider){
-		if (arrow.gameObject.layer != LayerMask.NameToLayer ("CanSelect")) {
+		if (arrow.gameObject.layer != LayerMask.NameToLayer ("CanSelect") || !LegitOrientation(arrow.parent.name.ToLower())) {
 			//Debug.LogError ("Case 1");
 			return;
 		}
@@ -60,6 +60,10 @@ public class OrientationManager : MonoBehaviour {
 
 		if(selectCollider)
 			selectedArrow.parent.GetComponent<ColliderScript>().SelectedCollider();
+	}
+
+	private bool LegitOrientation(object orientationName){
+		return System.Enum.IsDefined (typeof(Orientation), orientationName);
 	}
 
 }

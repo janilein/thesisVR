@@ -42,7 +42,6 @@ public class Turn90 : GenericStreet {
 
     public override void SetRightTurn()
     {
-		keepPosition = true;
 
         topPoint = new Vector3(36.5f, 0f, 14.8f);
         bottomPoint = new Vector3(-14.8f, 0f, -36.5f);

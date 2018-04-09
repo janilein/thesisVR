@@ -33,8 +33,8 @@ public class TransitionScript : MonoBehaviour
         scalingFactor = 250;
         world = GameObject.Find("World").transform;
         room = GameObject.Find("TheRoom");
-        roomPosition = room.transform.Find("table1").transform.position + new Vector3(0.02f, tableOffset, 0.02f); //to get it just right
-        //roomPosition = room.transform.position + new Vector3(0.05f, 1.31f, 0.05f);
+        //roomPosition = room.transform.Find("table1").transform.position + new Vector3(0.02f, tableOffset, 0.02f); //to get it just right
+        roomPosition = room.transform.position + new Vector3(0.05f, 1.31f, 0.05f);
     }
 
     public void Teleport()

@@ -52,7 +52,8 @@ public class ColliderScript : MonoBehaviour
 		 * 			Left, Right, ... whatever exist, this script is attached at this point
 		 * 
 		 */
-        GeneratorManager.ChangeDirectionFromCollider(dir, direction);
+		Orientation orient = OrientationEnumFunctions.GetOrientationFromString (dir);
+        GeneratorManager.ChangeDirectionFromCollider(orient, direction);
     }
 
 }

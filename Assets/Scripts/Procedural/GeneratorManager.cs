@@ -11,7 +11,7 @@ public class GeneratorManager {
     //private Vector3 currentDirection;
     private static Vector2 currentDirection;
     private Vector3 currentPosition;
-    private static string pointDirection;
+	private static Orientation pointDirection;
 
     public GameObject previousObject = null;
 
@@ -29,7 +29,7 @@ public class GeneratorManager {
         currentDirection = new Vector2(0, 0);   //ALong positive Z-axis
         //currentPosition = Vector3.positiveInfinity;
         currentPosition = Vector3.zero;
-        pointDirection = "straight";
+		pointDirection = Orientation.straight;
 
         shaderScript = GameObject.Find("ObjectManager").GetComponent<InitializeShaders>();
     }
@@ -67,13 +67,14 @@ public class GeneratorManager {
             //StreetGenerator generator = new StreetGenerator(); //gaan veel van deze maken, misschien in een singleton steken die we gaan oproepen?
             //streetGen.GenerateWorldObject(obj, currentDirection, ref currentPosition, pointDirection);
             streetGenV2.GenerateWorldObject(obj, ref currentDirection, ref currentPosition, pointDirection);
-            pointDirection = "straight";
+			pointDirection = Orientation.straight;
 
 			//In street, also automatically arrow rotating
 			streetGenV2.SelectDirectionArrow(pointDirection);
 
         } else if (obj.GetObjectValue().Equals("orientation")) {
-            ChangeDirection((string)obj.directAttributes["direction"], true);
+			Orientation orient = OrientationEnumFunctions.GetOrientationFromString ((string)obj.directAttributes["direction"]);
+            ChangeDirection(orient, true);
             //Debug.Log("currentDir x: " + currentDirection.x);
             //Debug.Log("currentDir z: " + currentDirection.z);
         } else {
@@ -84,37 +85,37 @@ public class GeneratorManager {
         return;
     }
 
-	private static void ChangeDirection(string direction, bool selectArrow) {
-        Debug.Log("direction switch: " + direction);
+	private static void ChangeDirection(Orientation direction, bool selectArrow) {
+		Debug.Log("direction switch: " + direction.ToString());
 
         switch (direction)
         {
-            case "left":
-				if(pointDirection.Equals("right")){
+			case Orientation.left:
+				if(pointDirection == Orientation.right){
 					currentDirection.x = (currentDirection.x - 180) % 360;
-				} else if(pointDirection.Equals("straight"))  {
+				} else if(pointDirection == Orientation.straight)  {
 					currentDirection.x = (currentDirection.x - 90) % 360;
 				}
-				pointDirection = "left";
-				Debug.Log("Point direction set to " + pointDirection);
+				pointDirection = Orientation.left;
+				Debug.Log("Point direction set to " + pointDirection.ToString());
                 break;
-            case "right":
-				if(pointDirection.Equals("left")){
+			case Orientation.right:
+				if(pointDirection == Orientation.left){
 					currentDirection.x = (currentDirection.x + 180) % 360;
-				} else if(pointDirection.Equals("straight"))  {	
+				} else if(pointDirection == Orientation.straight)  {	
 					currentDirection.x = (currentDirection.x + 90) % 360;
 				}
-				pointDirection = "right";
-				Debug.Log("Point direction set to " + pointDirection);
+				pointDirection = Orientation.right;
+				Debug.Log("Point direction set to " + pointDirection.ToString());
 				break;
-            case "straight":
-				if(pointDirection.Equals("left")){
+			case Orientation.straight:
+				if(pointDirection == Orientation.left){
 					currentDirection.x = (currentDirection.x + 90) % 360;
-				} else if(pointDirection.Equals("right")){	
+				} else if(pointDirection == Orientation.right){	
 					currentDirection.x = (currentDirection.x - 90) % 360;
 				}
-				pointDirection = "straight";
-				Debug.Log("Point direction set to " + pointDirection);
+				pointDirection = Orientation.straight;
+				Debug.Log("Point direction set to " + pointDirection.ToString());
                 break;
         }
 
@@ -123,10 +124,10 @@ public class GeneratorManager {
 		}
     }
 
-    public static void ChangeDirectionFromCollider(string direction, Vector2 dir)
+	public static void ChangeDirectionFromCollider(Orientation direction, Vector2 dir)
     {
         GeneratorManager.currentDirection = dir;
-		GeneratorManager.pointDirection = "straight";	//Start from a 'default' straight direction again
+		GeneratorManager.pointDirection = Orientation.straight;	//Start from a 'default' straight direction again
 		GeneratorManager.ChangeDirection (direction, false);
     }
 

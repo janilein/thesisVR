@@ -43,7 +43,7 @@ public class IntersectionT : GenericStreet
     }
 
 	public void ChangeOrientation(string orientation){
-		Debug.LogError ("Chaning T orientation to " + orientation);
+		//Debug.LogError ("Chaning T orientation to " + orientation);
 		switch (orientation)
 		{
 		case "leftRight":

@@ -66,6 +66,7 @@ public class GenericStreet : MonoBehaviour
 
         //Alle colliders plaatsen
 		foreach (KeyValuePair<string, Vector3> colliderAllowedPoint in colliderAllowedPoints) {
+			//Debug.LogError ("Foreach, key: " + colliderAllowedPoint.Key + ", Value: " + colliderAllowedPoint.Value.ToString ());
 			//Spawn a collider
 			GameObject newCollider = GameObject.Instantiate (streetCollider);
 			//newCollider.transform.position = colliderAllowedPoint.Value;
@@ -79,13 +80,18 @@ public class GenericStreet : MonoBehaviour
 			newCollider.GetComponent<BoxCollider>().center = centerOffsetPosition;
 
 			//Bepaal richting van de arrow
-			Vector3 firstPoint = newCollider.transform.TransformPoint (centerOffsetPosition);
-			Vector3 secondPoint = newCollider.transform.position;
-			//Debug.LogError (colliderAllowedPoint.Key);
-			//Debug.LogError("TP: " + firstPoint);
-			//Debug.LogError ("TP2: " + secondPoint);
+			//Vector3 firstPoint = newCollider.transform.localPosition; //TransformPoint (centerOffsetPosition);
+			//Vector3 secondPoint = firstPoint + centerOffsetPosition;
+			Vector3 firstPoint = Vector3.zero;
+			Vector3 secondPoint = centerOffsetPosition;
+			//Debug.LogError ("Second point: " + secondPoint.ToString ());
 
-			double angle = Mathf.Rad2Deg * Mathf.Atan((firstPoint.x - secondPoint.x) / (firstPoint.z - secondPoint.z));
+			//Vector3 secondPoint = newCollider.transform.position;
+			//Debug.LogError (colliderAllowedPoint.Key);
+			//Debug.LogError("TP: " + firstPoint.ToString());
+			//Debug.LogError ("TP2: " + secondPoint.ToString());
+
+			double angle = Mathf.Rad2Deg * Mathf.Atan((secondPoint.x  - firstPoint.x) / (  secondPoint.z -  firstPoint.z));
 			GameObject spawnedArrow = GameObject.Instantiate (arrow);
 			spawnedArrow.transform.SetParent (newCollider.transform, false);
 			spawnedArrow.transform.localPosition = new Vector3 (centerOffsetPosition.x, 1f, centerOffsetPosition.z);

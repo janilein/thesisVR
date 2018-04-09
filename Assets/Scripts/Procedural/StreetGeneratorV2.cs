@@ -22,7 +22,7 @@ public class StreetGeneratorV2 : Generator {
     }
 
 
-    public override void GenerateWorldObject(WorldObject obj, ref Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection) {
+    public override void GenerateWorldObject(WorldObject obj, ref Vector2 currentDirection, ref Vector3 currentPosition, Orientation pointDirection) {
         float yOffset = 0.2f;
         //spawnPosition = worldTransform.position + new Vector3(-0.05f, yOffset, -0.05f);
 		spawnPosition = new Vector3(0f, yOffset, 0f);
@@ -78,7 +78,7 @@ public class StreetGeneratorV2 : Generator {
         //return newStreet;
     }
 
-    private void GenerateIntersectionX(WorldObject obj, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection)
+	private void GenerateIntersectionX(WorldObject obj, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, Orientation pointDirection)
     {
         Debug.Log("Generating Intersection-x");
         //Fetch the x intersection from resources
@@ -91,7 +91,7 @@ public class StreetGeneratorV2 : Generator {
         SpawnStreet(street, parent, currentDirection, ref currentPosition, "intersection-x", pointDirection);
     }
 
-    private void GenerateIntersectionT(WorldObject obj, Transform parent, Vector3 currentDirection, ref Vector3 currentPosition, string pointDirection)
+	private void GenerateIntersectionT(WorldObject obj, Transform parent, Vector3 currentDirection, ref Vector3 currentPosition, Orientation pointDirection)
     {
         Debug.Log("Generating Intersection-t");
         string straight = (string)obj.directAttributes["lotsStraight"];
@@ -149,7 +149,7 @@ public class StreetGeneratorV2 : Generator {
 
     }
 
-    private void UpdateOrientationIntersectionT(Transform parent, string orientation, string pointDirection)
+	private void UpdateOrientationIntersectionT(Transform parent, string orientation, Orientation pointDirection)
     {
         //int angle = 0;
         switch (orientation)
@@ -173,7 +173,7 @@ public class StreetGeneratorV2 : Generator {
         //return angle;
     }
 
-    private void GenerateTurn(WorldObject obj, Transform parent, ref Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection)
+	private void GenerateTurn(WorldObject obj, Transform parent, ref Vector2 currentDirection, ref Vector3 currentPosition, Orientation pointDirection)
     {
         string angle = (string)obj.directAttributes["angle"];
         GameObject street = Resources.Load("ProceduralBlocks/Streets/Turn" + angle) as GameObject;
@@ -239,7 +239,7 @@ public class StreetGeneratorV2 : Generator {
 
     }
 
-        private void GenerateStraightStreet(WorldObject obj, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string pointDirection)
+	private void GenerateStraightStreet(WorldObject obj, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, Orientation pointDirection)
     {
         Debug.Log("Generating straight street");
 
@@ -322,7 +322,7 @@ public class StreetGeneratorV2 : Generator {
         parent.transform.Rotate(new Vector3(0, 1, 0), currentDirection.x);
     }
 
-    private void SpawnStreet(GameObject street, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string typeOfStreet, string pointDirection)
+	private void SpawnStreet(GameObject street, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string typeOfStreet, Orientation pointDirection)
     {
         //street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
         street.GetComponent<GenericStreet>().SpawnColliders();
@@ -381,7 +381,7 @@ public class StreetGeneratorV2 : Generator {
             //parent.localPosition = currentPosition + spawnPosition;
 
             //Remove collider from previous street on the end on which we spawned a new street
-            previousStreetScript.RemoveCollider(pointDirection);
+			previousStreetScript.RemoveCollider(pointDirection.ToString());
 
             previousStreetScript = street.GetComponent<GenericStreet>();
 
@@ -545,11 +545,11 @@ public class StreetGeneratorV2 : Generator {
         }
     }
 
-	public void SelectDirectionArrow(string direction) {
+	public void SelectDirectionArrow(Orientation direction) {
 		if (previousStreetScript) {
-			if(previousStreetScript.DirectionInAllowedPoints(direction)){
+			if(previousStreetScript.DirectionInAllowedPoints(direction.ToString())){
 				//Find the arrow
-				Transform arrowParent = previousStreetScript.transform.parent.Find("Colliders/" + direction);
+				Transform arrowParent = previousStreetScript.transform.parent.Find("Colliders/" + direction.ToString());
 				if(arrowParent){
 					Transform arrow = arrowParent.GetChild(0);
 					if (arrow) {

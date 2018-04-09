@@ -153,7 +153,7 @@ public class GenericStreet : MonoBehaviour
     }
 
 
-    public void SetCorrectPoint(string pointDirection)
+	public void SetCorrectPoint(Orientation pointDirection)
     {
 		Transform world = GameObject.Find ("World").transform;
 		//For all colliders, check their position
@@ -163,7 +163,7 @@ public class GenericStreet : MonoBehaviour
 			Transform child;
 			for (int i = 0; i < nbChildren; i++) {
 				child = colliderChild.GetChild (i);
-				if (child.name.Equals (pointDirection)) {
+				if (child.name.Equals (pointDirection.ToString())) {
 					spawnStart = child.position;
 					//Debug.LogError ("Pos: " + spawnStart.ToString ());
 					//spawnStart.y = 0f;

@@ -8,6 +8,7 @@ public class IntersectionT : GenericStreet
     public Vector3 leftPoint = new Vector3(15f, 0, 0);
     public Vector3 rightPoint = new Vector3(-15f, 0, 0);
 	public Vector3 offsetPoint;
+    private bool backColliderLeft, backColliderRight, backColliderStraight;
 
     public Vector3 colliderTopPoint, colliderLeftPoint, colliderRightPoint;
 
@@ -26,23 +27,43 @@ public class IntersectionT : GenericStreet
         {
             switch (direction)
             {
-			case "left":
+			    case "left":
 					colliderAllowedPoints.Add(direction, leftPoint);
 					centerOffset.Add(direction, colliderLeftPoint);
+                    backColliderLeft = true;
                     break;
                 case "right":
 					colliderAllowedPoints.Add(direction, rightPoint);
 					centerOffset.Add(direction, colliderRightPoint);
+                    backColliderRight = true;
                     break;
                 case "straight":
 					colliderAllowedPoints.Add(direction, topPoint);
 					centerOffset.Add(direction, colliderTopPoint);
+                    backColliderStraight = true;
                     break;
             }
         }
     }
 
-	public void ChangeOrientation(string orientation){
+    public override void SetBackCollider()
+    {
+        if(backColliderLeft && backColliderRight)
+        {
+            colliderAllowedPoints.Add("back", topPoint);
+            centerOffset.Add("back", colliderTopPoint);
+        } else if(backColliderLeft && backColliderStraight)
+        {
+            colliderAllowedPoints.Add("back", rightPoint);
+            centerOffset.Add("back", colliderRightPoint);
+        } else if(backColliderRight && backColliderStraight)
+        {
+            colliderAllowedPoints.Add("back", topPoint);
+            centerOffset.Add("back", colliderLeftPoint);
+        }
+    }
+
+    public void ChangeOrientation(string orientation){
 		//Debug.LogError ("Chaning T orientation to " + orientation);
 		switch (orientation)
 		{

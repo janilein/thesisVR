@@ -25,6 +25,12 @@ public class Turn90 : GenericStreet {
 		centerOffset.Add ("straight", colliderTopPoint);
     }
 
+    public override void SetBackCollider()
+    {
+        colliderAllowedPoints.Add("back", bottomPoint);
+        centerOffset.Add("back", colliderBottomPoint);
+    }
+
     public override Vector3 GetTopPoint()
     {
         return topPoint;

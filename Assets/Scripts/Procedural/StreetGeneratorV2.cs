@@ -7,12 +7,14 @@ public class StreetGeneratorV2 : Generator {
 
     private Vector3 spawnPosition;
     private static GenericStreet previousStreetScript = null;
+    private bool firstSpawn;
     //private string newPointDirection = "";
 
     private static int streetID = 1;
 
     public StreetGeneratorV2()
     {
+        firstSpawn = true;
         //spawnPosition = new Vector3(0, 1.f, 0);
         if (worldTransform == null)
         {
@@ -325,6 +327,11 @@ public class StreetGeneratorV2 : Generator {
 	private void SpawnStreet(GameObject street, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string typeOfStreet, Orientation pointDirection)
     {
         //street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
+        if (firstSpawn)
+        {
+            street.GetComponent<GenericStreet>().SetBackCollider();
+            firstSpawn = false;
+        }
         street.GetComponent<GenericStreet>().SpawnColliders();
 
 		Debug.Log ("Rotate: " + currentDirection.ToString ());

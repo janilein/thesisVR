@@ -20,6 +20,12 @@ public class LongStraightStreet : GenericStreet {
 		centerOffset.Add ("straight", colliderTopPoint);
     }
 
+    public override void SetBackCollider()
+    {
+        colliderAllowedPoints.Add("back", -topPoint);
+        centerOffset.Add("back", -colliderTopPoint);
+    }
+
     public override string GetTypePoint()
     {
         return type;

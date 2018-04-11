@@ -7,7 +7,6 @@ public class GenericStreet : MonoBehaviour
 {
 
     public Vector3 centerPoint;
-
 	public Dictionary<string, Vector3> colliderAllowedPoints = new Dictionary<string, Vector3>();
 	public Dictionary<string, Vector3> colliderRotatedPoints = new Dictionary<string, Vector3>();
 	public Dictionary<string, Vector3> centerOffset = new Dictionary<string, Vector3>();
@@ -16,26 +15,28 @@ public class GenericStreet : MonoBehaviour
 
     public virtual void SetAllowedPoints(List<string> allowedDirections = null) { }
 
-//    public void RotateColliderPositions(int degrees)
-//    {
-//        Debug.Log("In call---------------");
-//        Vector3 point;
-//        Debug.Log("Allowed points length: " + colliderAllowedPoints.Count);
-//        foreach (KeyValuePair<string, Vector3> pair in colliderAllowedPoints)
-//            {
-//                point = pair.Value;
-//                Vector3 rotatedVector = Quaternion.AngleAxis(degrees, Vector3.up) * point;
-//                Debug.Log("Collider Rotated vector " + point.ToString() + " by " + degrees + " resulting in " + rotatedVector.ToString());
-//                point = rotatedVector;
-//                colliderRotatedPoints.Add(new KeyValuePair<string, Vector3>(pair.Key, point));
-//            }
-//        colliderAllowedPoints.Clear();
-//        foreach (KeyValuePair<string, Vector3> pair in colliderRotatedPoints)
-//        {
-//            colliderAllowedPoints.Add(new KeyValuePair<string, Vector3>(pair.Key, pair.Value));
-//        }
-//        colliderRotatedPoints.Clear();
-//    }
+    public virtual void SetBackCollider() { }
+
+    //    public void RotateColliderPositions(int degrees)
+    //    {
+    //        Debug.Log("In call---------------");
+    //        Vector3 point;
+    //        Debug.Log("Allowed points length: " + colliderAllowedPoints.Count);
+    //        foreach (KeyValuePair<string, Vector3> pair in colliderAllowedPoints)
+    //            {
+    //                point = pair.Value;
+    //                Vector3 rotatedVector = Quaternion.AngleAxis(degrees, Vector3.up) * point;
+    //                Debug.Log("Collider Rotated vector " + point.ToString() + " by " + degrees + " resulting in " + rotatedVector.ToString());
+    //                point = rotatedVector;
+    //                colliderRotatedPoints.Add(new KeyValuePair<string, Vector3>(pair.Key, point));
+    //            }
+    //        colliderAllowedPoints.Clear();
+    //        foreach (KeyValuePair<string, Vector3> pair in colliderRotatedPoints)
+    //        {
+    //            colliderAllowedPoints.Add(new KeyValuePair<string, Vector3>(pair.Key, pair.Value));
+    //        }
+    //        colliderRotatedPoints.Clear();
+    //    }
 
     public void SpawnColliders()
     {
@@ -92,6 +93,11 @@ public class GenericStreet : MonoBehaviour
 			//Debug.LogError ("TP2: " + secondPoint.ToString());
 
 			double angle = Mathf.Rad2Deg * Mathf.Atan((secondPoint.x  - firstPoint.x) / (  secondPoint.z -  firstPoint.z));
+            //Debug.Log("##########colliderAllowedpoint:" + colliderAllowedPoint.Key + " en de rico is " + Mathf.Atan((secondPoint.x - firstPoint.x) / (secondPoint.z - firstPoint.z)));
+            if (colliderAllowedPoint.Key.Equals("back") && colliderAllowedPoints.Count != 3)
+            {
+                angle = 180;
+            }
 			GameObject spawnedArrow = GameObject.Instantiate (arrow);
 			spawnedArrow.transform.SetParent (newCollider.transform, false);
 			spawnedArrow.transform.localPosition = new Vector3 (centerOffsetPosition.x, 1f, centerOffsetPosition.z);
@@ -224,5 +230,4 @@ public class GenericStreet : MonoBehaviour
     public virtual void SetRightPoint(Vector3 point) { }
 
     public virtual void SetRightTurn() { }
-
 }

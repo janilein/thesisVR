@@ -484,5 +484,6 @@ public class Speech : MonoBehaviour {
 			waveIn.Dispose ();
 			waveIn = null;
 		}
+		bwp.ClearBuffer ();
 	}
 }

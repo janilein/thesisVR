@@ -324,8 +324,7 @@ public class StreetGeneratorV2 : Generator {
 
 	private void SpawnStreet(GameObject street, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string typeOfStreet, Orientation pointDirection)
     {
-        //street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
-        street.GetComponent<GenericStreet>().SpawnColliders();
+        //street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent); 
 
 		Debug.Log ("Rotate: " + currentDirection.ToString ());
         RotateStreet(parent, currentDirection);
@@ -335,6 +334,7 @@ public class StreetGeneratorV2 : Generator {
         if (previousStreetScript == null)        //We have no previous street, so spawning is in currentPosition
         {
 			street.GetComponent<GenericStreet>().SetBackCollider();
+			street.GetComponent<GenericStreet>().SpawnColliders();
             Debug.Log("Spawning new first street");
             parent.localPosition = currentPosition + spawnPosition;
             //EditorGUIUtility.PingObject(parent);
@@ -355,6 +355,7 @@ public class StreetGeneratorV2 : Generator {
                 MonoBehaviour.Destroy(parent.gameObject);
                 return;
             }
+			street.GetComponent<GenericStreet>().SpawnColliders();
 
             //Debug.LogError("Previous turned point: " + previousStreetScript.GetSpawnPoint());
 

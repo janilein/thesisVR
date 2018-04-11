@@ -71,7 +71,7 @@ public class LaserSelector : MonoBehaviour {
                 {
                     Debug.Log("Lot selected");
                     SelectLot(hit);
-                } else
+                } else if (hitObject.name.ToLower().Contains("arrow"))
                 {
                     Debug.Log("Direction selected");
                     //hitObject.GetComponent<ColliderScript>().SelectedCollider();

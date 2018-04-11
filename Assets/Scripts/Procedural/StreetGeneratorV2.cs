@@ -13,6 +13,7 @@ public class StreetGeneratorV2 : Generator {
 
     public StreetGeneratorV2()
     {
+        firstSpawn = true;
         //spawnPosition = new Vector3(0, 1.f, 0);
         if (worldTransform == null)
         {
@@ -334,6 +335,7 @@ public class StreetGeneratorV2 : Generator {
         //Depending on whether or not we have a previous street, spawning happens in currentPosition or an updated currentPosition
         if (previousStreetScript == null)        //We have no previous street, so spawning is in currentPosition
         {
+			street.GetComponent<GenericStreet>().SetBackCollider();
             Debug.Log("Spawning new first street");
             parent.localPosition = currentPosition + spawnPosition;
             //EditorGUIUtility.PingObject(parent);

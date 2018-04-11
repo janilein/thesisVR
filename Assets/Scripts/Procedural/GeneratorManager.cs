@@ -117,6 +117,14 @@ public class GeneratorManager {
 				pointDirection = Orientation.straight;
 				Debug.Log("Point direction set to " + pointDirection.ToString());
                 break;
+            case Orientation.back:
+                if (pointDirection == Orientation.straight)
+                {
+                    currentDirection.x = (currentDirection.x + 180) % 360;
+                }
+                pointDirection = Orientation.back;
+                Debug.Log("Point direction set to " + pointDirection.ToString());
+                break;
         }
 
 		if (selectArrow) {
@@ -128,7 +136,7 @@ public class GeneratorManager {
     {
         GeneratorManager.currentDirection = dir;
 		GeneratorManager.pointDirection = Orientation.straight;	//Start from a 'default' straight direction again
-		GeneratorManager.ChangeDirection (direction, false);
+		GeneratorManager.ChangeDirection(direction, false);
     }
 
     public void SetActiveLot(GameObject newLot)

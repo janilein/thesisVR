@@ -365,6 +365,7 @@ public class StreetGeneratorV2 : Generator {
 			//Debug.LogError("Rotated offset point: " + rotatedTopPoint.ToString());
 
             currentPosition += rotatedTopPoint;
+			currentPosition += spawnPosition;
 			//Debug.LogError("Currentposition set to: " + currentPosition.ToString());
 
 

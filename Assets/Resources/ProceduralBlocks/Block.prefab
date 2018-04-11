@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4275765913923948}
   - component: {fileID: 33235486422841898}
   - component: {fileID: 23037003951620800}
+  - component: {fileID: 114634827920434512}
   m_Layer: 0
   m_Name: Block
   m_TagString: Untagged
@@ -35,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1788850952366132}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalPosition: {x: -15.449734, y: 19.813343, z: -26.380976}
   m_LocalScale: {x: 10, y: 5, z: 10}
   m_Children: []
   m_Father: {fileID: 0}
@@ -82,3 +83,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1788850952366132}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114634827920434512
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1788850952366132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5ac6d84dca7648fab1a3a905dbc55b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDeserializing: 0
+  _id: e589c617-f04f-4780-995a-cab8899f5c4c
+  classId: 667c4a79-4ce8-4f12-858b-9b8c7d91bd3e
+  StoreAllComponents: 1
+  Components: []

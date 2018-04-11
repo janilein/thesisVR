@@ -7,14 +7,12 @@ public class StreetGeneratorV2 : Generator {
 
     private Vector3 spawnPosition;
     private static GenericStreet previousStreetScript = null;
-    private bool firstSpawn;
     //private string newPointDirection = "";
 
     private static int streetID = 1;
 
     public StreetGeneratorV2()
     {
-        firstSpawn = true;
         //spawnPosition = new Vector3(0, 1.f, 0);
         if (worldTransform == null)
         {
@@ -326,13 +324,7 @@ public class StreetGeneratorV2 : Generator {
 
 	private void SpawnStreet(GameObject street, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string typeOfStreet, Orientation pointDirection)
     {
-        //street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent);
-        if (firstSpawn)
-        {
-            street.GetComponent<GenericStreet>().SetBackCollider();
-            firstSpawn = false;
-        }
-        street.GetComponent<GenericStreet>().SpawnColliders();
+        //street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent); 
 
 		Debug.Log ("Rotate: " + currentDirection.ToString ());
         RotateStreet(parent, currentDirection);
@@ -341,6 +333,8 @@ public class StreetGeneratorV2 : Generator {
         //Depending on whether or not we have a previous street, spawning happens in currentPosition or an updated currentPosition
         if (previousStreetScript == null)        //We have no previous street, so spawning is in currentPosition
         {
+			street.GetComponent<GenericStreet>().SetBackCollider();
+			street.GetComponent<GenericStreet>().SpawnColliders();
             Debug.Log("Spawning new first street");
             parent.localPosition = currentPosition + spawnPosition;
             //EditorGUIUtility.PingObject(parent);
@@ -361,6 +355,7 @@ public class StreetGeneratorV2 : Generator {
                 MonoBehaviour.Destroy(parent.gameObject);
                 return;
             }
+			street.GetComponent<GenericStreet>().SpawnColliders();
 
             //Debug.LogError("Previous turned point: " + previousStreetScript.GetSpawnPoint());
 
@@ -372,11 +367,12 @@ public class StreetGeneratorV2 : Generator {
 			//Debug.LogError("Rotated offset point: " + rotatedTopPoint.ToString());
 
             currentPosition += rotatedTopPoint;
+			currentPosition += spawnPosition;
 			//Debug.LogError("Currentposition set to: " + currentPosition.ToString());
 
 
 			//parent.position = rotatedTopPoint;
-			parent.localPosition = currentPosition;// + rotatedTopPoint;
+			parent.localPosition = currentPosition + spawnPosition;// + rotatedTopPoint;
 			//Debug.LogError ("Parent position: " + parent.position.ToString ());
 			//Debug.LogError ("Parent localposition: " + parent.localPosition.ToString ());
 			//parent.SetParent(worldTransform, false);

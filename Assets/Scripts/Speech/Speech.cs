@@ -93,6 +93,11 @@ public class Speech : MonoBehaviour {
     }
 
     public void BtnRecordVoice_Click() {
+		if (NAudio.Wave.WaveIn.DeviceCount < 1) {
+			Console.WriteLine("No microphone!");
+			return;
+		}
+
         if(waveIn == null)
         {
             //waveOut = new WaveOut();
@@ -100,12 +105,7 @@ public class Speech : MonoBehaviour {
             waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(WaveIn_DataAvailable);
             waveIn.WaveFormat = new NAudio.Wave.WaveFormat(16000, 1);
         }
-
-        if (NAudio.Wave.WaveIn.DeviceCount < 1) {
-            Console.WriteLine("No microphone!");
-            return;
-        }
-
+			
         waveIn.StartRecording();
 
         //btnRecordVoice.Enabled = false;
@@ -119,8 +119,7 @@ public class Speech : MonoBehaviour {
         waveIn.StopRecording();
 
         if (File.Exists("audio.raw"))
-        {
-            
+        {            
             File.Delete("audio.raw");
         }
 
@@ -226,11 +225,12 @@ public class Speech : MonoBehaviour {
             //}
 
             try {
-				WebClient wc = new WebClient();
-                wc.UploadStringCompleted += new UploadStringCompletedEventHandler(GoogleCallFinished);
-                wc.Headers["Content-Type"] = "application/json";
+				using(WebClient wc = new WebClient()){;
+	                wc.UploadStringCompleted += new UploadStringCompletedEventHandler(GoogleCallFinished);
+	                wc.Headers["Content-Type"] = "application/json";
 
-                wc.UploadStringAsync(new Uri("https://speech.googleapis.com/v1/speech:recognize?key=" + apiKeyGoogle), "POST", jsonString);
+	                wc.UploadStringAsync(new Uri("https://speech.googleapis.com/v1/speech:recognize?key=" + apiKeyGoogle), "POST", jsonString);
+				}
 
                 //var httpResponse = (HttpWebResponse)req.GetResponse();
                 //using (var streamReader = new StreamReader(httpResponse.GetResponseStream())) {
@@ -319,13 +319,14 @@ public class Speech : MonoBehaviour {
             try {
                 Debug.Log("Starting MeaningCloud Request");
                 //var httpResponse = (HttpWebResponse)req.GetResponse();
-				WebClient wc = new WebClient();
-                wc.UploadStringCompleted += new UploadStringCompletedEventHandler(MeaningCloudCallFinished);
-                wc.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+				using(WebClient wc = new WebClient()){
+				//WebClient wc = new WebClient();
+	                wc.UploadStringCompleted += new UploadStringCompletedEventHandler(MeaningCloudCallFinished);
+	                wc.Headers["Content-Type"] = "application/x-www-form-urlencoded";
 
 
-                wc.UploadStringAsync(new Uri("http://api.meaningcloud.com/topics-2.0"), "POST", body);
-
+	                wc.UploadStringAsync(new Uri("http://api.meaningcloud.com/topics-2.0"), "POST", body);
+				}
 
                 //using (var streamReader = new StreamReader(httpResponse.GetResponseStream())) {
                 //    meaningCloudOutput = streamReader.ReadToEnd();
@@ -477,4 +478,12 @@ public class Speech : MonoBehaviour {
         }
         return null;
     }
+
+	private void OnApplicationQuit(){
+		if (waveIn != null) {
+			waveIn.Dispose ();
+			waveIn = null;
+		}
+		bwp.ClearBuffer ();
+	}
 }

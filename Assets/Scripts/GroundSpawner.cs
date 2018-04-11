@@ -12,8 +12,8 @@ public class GroundSpawner : MonoBehaviour{
         GameObject parent = new GameObject("FloorParent");
         parent.transform.parent = GameObject.Find("World").transform;
 
-        int nbOfX = 40;
-        int nbOfY = 40;
+        int nbOfX = 20;
+        int nbOfY = 20;
         float totalWidth = nbOfX * ground.GetComponent<Renderer>().bounds.size.x;
         float totalLength = nbOfY * ground.GetComponent<Renderer>().bounds.size.z;
         float widthOffset = -totalWidth / 2;

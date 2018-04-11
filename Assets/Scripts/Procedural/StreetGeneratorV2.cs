@@ -13,7 +13,6 @@ public class StreetGeneratorV2 : Generator {
 
     public StreetGeneratorV2()
     {
-        firstSpawn = true;
         //spawnPosition = new Vector3(0, 1.f, 0);
         if (worldTransform == null)
         {

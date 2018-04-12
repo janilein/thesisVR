@@ -1,7 +1,1 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 {"status":{"code":"0","msg":"OK","credits":"1","remaining_credits":"19376"},"entity_list":[{"form":"large","dictionary":"ThesisVR","id":"5a8577651ce16","sementity":{"class":"instance","type":"Top>length"},"variant_list":[{"form":"long","inip":"12","endp":"15"}],"relevance":"100"},{"form":"straight street","dictionary":"ThesisVR","id":"5a85773746732","sementity":{"class":"instance","type":"Top>StreetType"},"variant_list":[{"form":"street","inip":"17","endp":"22"}],"relevance":"100"}],"concept_list":[],"quantity_expression_list":[],"relation_list":[{"form":"there was a long street","inip":"0","endp":"22","verb":{"form":"there was","lemma_list":["there was"]},"complement_list":[{"form":"a long","type":"isDirectObject"},{"form":"street","type":"isDirectObject"}],"degree":"1"}]}
-=======
->>>>>>> 88f16a2d0af44d7c43fe0844f8aaae72244de3c3
-=======
->>>>>>> 88f16a2d0af44d7c43fe0844f8aaae72244de3c3

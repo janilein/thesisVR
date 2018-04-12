@@ -23,7 +23,7 @@ public class StreetGeneratorV2 : Generator {
 
 
     public override void GenerateWorldObject(WorldObject obj, ref Vector2 currentDirection, ref Vector3 currentPosition, Orientation pointDirection) {
-        float yOffset = 0.2f;
+        float yOffset = 0.01f;
         //spawnPosition = worldTransform.position + new Vector3(-0.05f, yOffset, -0.05f);
 		spawnPosition = new Vector3(0f, yOffset, 0f);
 
@@ -368,11 +368,11 @@ public class StreetGeneratorV2 : Generator {
 
             currentPosition += rotatedTopPoint;
 			currentPosition += spawnPosition;
-			//Debug.LogError("Currentposition set to: " + currentPosition.ToString());
+            //Debug.LogError("Currentposition set to: " + currentPosition.ToString());
 
 
-			//parent.position = rotatedTopPoint;
-			parent.localPosition = currentPosition + spawnPosition;// + rotatedTopPoint;
+            //parent.position = rotatedTopPoint;
+            parent.localPosition = currentPosition;// + rotatedTopPoint;
 			//Debug.LogError ("Parent position: " + parent.position.ToString ());
 			//Debug.LogError ("Parent localposition: " + parent.localPosition.ToString ());
 			//parent.SetParent(worldTransform, false);

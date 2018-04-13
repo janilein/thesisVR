@@ -72,6 +72,18 @@
 
             InitializeShaders shaderScript = GameObject.Find("ObjectManager").gameObject.GetComponent<InitializeShaders>();
             shaderScript.UpdateShaders();
+			
+			//Are we spawning a building? If so, set the position and orientation on a lot (if selected)
+			if(activePart.ToLower().Contains("buildings")){
+				//Building
+				GameObject lot = LotManager.getLot();
+				if(lot){
+					instance.transform.position = Vector3.zero;
+					instance.transform.SetParent(lot.transform, false);
+					instance.transform.rotation = lot.transform.parent.transform.localRotation;
+				}
+			}
+			
             instance.transform.parent = GameObject.Find("World").transform;
 
             ObjectManager.SetAndLockGameObject(instance);

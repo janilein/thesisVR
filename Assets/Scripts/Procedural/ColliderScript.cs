@@ -54,6 +54,8 @@ public class ColliderScript : MonoBehaviour
 		 */
 		Orientation orient = OrientationEnumFunctions.GetOrientationFromString (dir);
         GeneratorManager.ChangeDirectionFromCollider(orient, direction);
+
+
     }
 
 }

@@ -6,10 +6,11 @@ using UnityEngine;
 public class StreetGeneratorV2 : Generator {
 
     private Vector3 spawnPosition;
-    private static GenericStreet previousStreetScript = null;
+    public static GenericStreet previousStreetScript = null;
     //private string newPointDirection = "";
 
-    private static int streetID = 1;
+    public static int streetID = 1;
+    public static int lotID = 1;
 
     public StreetGeneratorV2()
     {
@@ -22,7 +23,7 @@ public class StreetGeneratorV2 : Generator {
     }
 
 
-    public override void GenerateWorldObject(WorldObject obj, ref Vector2 currentDirection, ref Vector3 currentPosition, Orientation pointDirection) {
+    public override void GenerateWorldObject(WorldObject obj, ref Vector2 currentDirection, Orientation pointDirection) {
         float yOffset = 0.01f;
         //spawnPosition = worldTransform.position + new Vector3(-0.05f, yOffset, -0.05f);
 		spawnPosition = new Vector3(0f, yOffset, 0f);
@@ -41,19 +42,19 @@ public class StreetGeneratorV2 : Generator {
         switch (type)
         {
             case "straight":
-                GenerateStraightStreet(obj, parent, currentDirection, ref currentPosition, pointDirection);
+                GenerateStraightStreet(obj, parent, currentDirection, pointDirection);
                 break;
             case "intersection-t":
-                GenerateIntersectionT(obj, parent, currentDirection, ref currentPosition, pointDirection);
+                GenerateIntersectionT(obj, parent, currentDirection, pointDirection);
                 break;
             case "intersection-x":
-                GenerateIntersectionX(obj, parent, currentDirection, ref currentPosition, pointDirection);
+                GenerateIntersectionX(obj, parent, currentDirection, pointDirection);
                 break;
             case "roundabout":
                 //GenerateRoundabout(obj, parent, currentDirection);
                 break;
             case "turn":
-                GenerateTurn(obj, parent, ref currentDirection, ref currentPosition, pointDirection);
+                GenerateTurn(obj, parent, ref currentDirection, pointDirection);
                 break;
         }
         //previousStreet = parent.transform;
@@ -78,7 +79,7 @@ public class StreetGeneratorV2 : Generator {
         //return newStreet;
     }
 
-	private void GenerateIntersectionX(WorldObject obj, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, Orientation pointDirection)
+	private void GenerateIntersectionX(WorldObject obj, Transform parent, Vector2 currentDirection, Orientation pointDirection)
     {
         Debug.Log("Generating Intersection-x");
         //Fetch the x intersection from resources
@@ -88,10 +89,10 @@ public class StreetGeneratorV2 : Generator {
 
 
         UpdateAllowedPointsIntersectionX(street);
-        SpawnStreet(street, parent, currentDirection, ref currentPosition, "intersection-x", pointDirection);
+        SpawnStreet(street, parent, currentDirection, "intersection-x", pointDirection);
     }
 
-	private void GenerateIntersectionT(WorldObject obj, Transform parent, Vector3 currentDirection, ref Vector3 currentPosition, Orientation pointDirection)
+	private void GenerateIntersectionT(WorldObject obj, Transform parent, Vector3 currentDirection, Orientation pointDirection)
     {
         Debug.Log("Generating Intersection-t");
         string straight = (string)obj.directAttributes["lotsStraight"];
@@ -145,7 +146,7 @@ public class StreetGeneratorV2 : Generator {
 		street.GetComponent<IntersectionT> ().ChangeOrientation (orientation);
 
         UpdateAllowedPointsIntersectionT(street, orientation);
-        SpawnStreet(street, parent, currentDirection, ref currentPosition, "intersection-t", pointDirection);
+        SpawnStreet(street, parent, currentDirection, "intersection-t", pointDirection);
 
     }
 
@@ -173,7 +174,7 @@ public class StreetGeneratorV2 : Generator {
         //return angle;
     }
 
-	private void GenerateTurn(WorldObject obj, Transform parent, ref Vector2 currentDirection, ref Vector3 currentPosition, Orientation pointDirection)
+	private void GenerateTurn(WorldObject obj, Transform parent, ref Vector2 currentDirection, Orientation pointDirection)
     {
         string angle = (string)obj.directAttributes["angle"];
         GameObject street = Resources.Load("ProceduralBlocks/Streets/Turn" + angle) as GameObject;
@@ -211,7 +212,7 @@ public class StreetGeneratorV2 : Generator {
         }
         UpdateAllowedPointsStraightStreet(street);
 
-        SpawnStreet(street, parent, currentDirection, ref currentPosition, "turn", pointDirection);
+        SpawnStreet(street, parent, currentDirection, "turn", pointDirection);
 
         int sign = 1;
         if (direction.ToLower().Equals("left"))
@@ -239,7 +240,7 @@ public class StreetGeneratorV2 : Generator {
 
     }
 
-	private void GenerateStraightStreet(WorldObject obj, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, Orientation pointDirection)
+	private void GenerateStraightStreet(WorldObject obj, Transform parent, Vector2 currentDirection, Orientation pointDirection)
     {
         Debug.Log("Generating straight street");
 
@@ -314,7 +315,7 @@ public class StreetGeneratorV2 : Generator {
         street = InstantiateStreet(street, spawnPosition, Quaternion.identity, parent);
         UpdateAllowedPointsStraightStreet(street);
 
-        SpawnStreet(street, parent, currentDirection, ref currentPosition, "straight", pointDirection);
+        SpawnStreet(street, parent, currentDirection, "straight", pointDirection);
     }
 
     private void RotateStreet(Transform parent, Vector2 currentDirection)
@@ -322,7 +323,7 @@ public class StreetGeneratorV2 : Generator {
         parent.transform.Rotate(new Vector3(0, 1, 0), currentDirection.x);
     }
 
-	private void SpawnStreet(GameObject street, Transform parent, Vector2 currentDirection, ref Vector3 currentPosition, string typeOfStreet, Orientation pointDirection)
+	private void SpawnStreet(GameObject street, Transform parent, Vector2 currentDirection, string typeOfStreet, Orientation pointDirection)
     {
         //street = GameObject.Instantiate(street, spawnPosition, Quaternion.identity, parent); 
 
@@ -336,7 +337,7 @@ public class StreetGeneratorV2 : Generator {
 			street.GetComponent<GenericStreet>().SetBackCollider();
 			street.GetComponent<GenericStreet>().SpawnColliders();
             Debug.Log("Spawning new first street");
-            parent.localPosition = currentPosition + spawnPosition;
+            parent.localPosition = spawnPosition;
             //EditorGUIUtility.PingObject(parent);
 
             previousStreetScript = street.GetComponent<GenericStreet>();
@@ -359,7 +360,7 @@ public class StreetGeneratorV2 : Generator {
 
             //Debug.LogError("Previous turned point: " + previousStreetScript.GetSpawnPoint());
 
-            currentPosition = previousStreetScript.GetSpawnPoint();
+            Vector3 currentPosition = previousStreetScript.GetSpawnPoint();
 			//Debug.LogError("Currentposition set to: " + currentPosition.ToString());
 
             //Debug.Log("Offset point: " + street.GetComponent<GenericStreet>().GetOffsetPoint().ToString());
@@ -500,7 +501,8 @@ public class StreetGeneratorV2 : Generator {
 			lot.transform.SetParent (parent, false);
             lot.transform.localPosition = spawnPointLot;
             //Debug.Log("Spawned lot at position: " + spawnPointLot.ToString());
-            lot.transform.rotation = Quaternion.identity; 
+            lot.transform.rotation = Quaternion.identity;
+            lot.transform.name = "lotID:" + lotID++;
 
             //Set the collider from the lot
             BoxCollider coll = lot.transform.GetComponent<BoxCollider>();
@@ -562,6 +564,15 @@ public class StreetGeneratorV2 : Generator {
 			}
 		}
 	}
+
+    public bool DirectionAllowed(Orientation direction)
+    {
+        if (previousStreetScript)
+        {
+            return previousStreetScript.DirectionInAllowedPoints(direction.ToString());
+        }
+        return false;
+    }
 
     private static bool InBounds(int i, int length)
     {

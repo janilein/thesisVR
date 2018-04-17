@@ -23,7 +23,6 @@ GameObject:
   - component: {fileID: 114975659790238200}
   - component: {fileID: 54960615424943032}
   - component: {fileID: 114454867596697772}
-  - component: {fileID: 114977598871166736}
   m_Layer: 9
   m_Name: Lot
   m_TagString: Highlightable
@@ -100,19 +99,3 @@ MonoBehaviour:
   lotLength: 0
   currentLength: 0
   currentWidth: 9.1
---- !u!114 &114977598871166736
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1177569953214924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5ac6d84dca7648fab1a3a905dbc55b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsDeserializing: 0
-  _id: caf09c02-c649-43a7-a143-f02242f945bb
-  classId: 68df3ce4-c06e-465b-a101-7cde628cb962
-  StoreAllComponents: 1
-  Components: []

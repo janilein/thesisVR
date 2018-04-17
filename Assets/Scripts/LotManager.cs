@@ -44,6 +44,18 @@ public class LotManager : MonoBehaviour
 
             instance.lot = lot;
             lot.GetComponent<SelectableObject>().HighlightObject();
+
+            if (!SaveManager.loadingGame)
+            {   
+                string lotFullName = lot.transform.name;
+                Transform parent = lot.transform.parent;
+                while (parent != null)
+                {
+                    lotFullName = parent.name + "/" + lotFullName;
+                    parent = parent.parent;
+                }
+                SaveManager.CreateSelectLotCommand(lotFullName);
+            }
             
             
         }

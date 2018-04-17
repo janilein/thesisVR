@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4475176511956714}
   - component: {fileID: 65437194519126310}
   - component: {fileID: 114351098466375998}
-  - component: {fileID: 114161624769148462}
   m_Layer: 0
   m_Name: StreetCollider
   m_TagString: Untagged
@@ -54,22 +53,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.3, y: 0.3, z: 0.3}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114161624769148462
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1162040809210722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5ac6d84dca7648fab1a3a905dbc55b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsDeserializing: 0
-  _id: 8e72633f-740c-499e-be61-71f8f1a7ae7d
-  classId: 906f4792-f047-4128-9a83-4462e6f3a6f7
-  StoreAllComponents: 1
-  Components: []
 --- !u!114 &114351098466375998
 MonoBehaviour:
   m_ObjectHideFlags: 1

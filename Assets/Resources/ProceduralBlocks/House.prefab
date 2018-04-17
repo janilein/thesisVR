@@ -23,7 +23,6 @@ GameObject:
   - component: {fileID: 65671368062890186}
   - component: {fileID: 122366417390221024}
   - component: {fileID: 114259515297918908}
-  - component: {fileID: 114952645407339570}
   m_Layer: 0
   m_Name: House
   m_TagString: Highlightable
@@ -82,22 +81,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d78b98a9031b8d24eb05fa908babb77e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114952645407339570
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1298227441682842}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5ac6d84dca7648fab1a3a905dbc55b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsDeserializing: 0
-  _id: c5d46bf6-0671-4e47-870a-45a2127b40a5
-  classId: 265c3598-3cbd-4520-bc4a-db6ea85c3a71
-  StoreAllComponents: 1
-  Components: []
 --- !u!122 &122366417390221024
 Halo:
   m_ObjectHideFlags: 1

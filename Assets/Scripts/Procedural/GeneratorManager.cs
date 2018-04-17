@@ -9,9 +9,9 @@ public class GeneratorManager {
     //private StreetGenerator streetGen;
     private static StreetGeneratorV2 streetGenV2;
     //private Vector3 currentDirection;
-    private static Vector2 currentDirection;
+    public static Vector2 currentDirection;
     private Vector3 currentPosition;
-	private static Orientation pointDirection;
+	public static Orientation pointDirection;
 
     public GameObject previousObject = null;
 
@@ -54,6 +54,11 @@ public class GeneratorManager {
                 }
 
                 previousObject = buildingGen.GenerateWorldObject(obj, currentDirection, JSON); //Obj, niet child.getChildren()[0], want generator moet aan het 'lot' kunnen
+                if (SaveManager.loadingGame)
+                {
+                    Speech.SetSpecification(false);
+                    LotManager.DeselectLot();
+                }
             } else if (child.GetObjectValue().Equals("gardens")) {
                 Debug.Log("parent is garden");
                 //BuildingGenerator generator = new BuildingGenerator();
@@ -66,7 +71,7 @@ public class GeneratorManager {
             Debug.Log("parent is streets");
             //StreetGenerator generator = new StreetGenerator(); //gaan veel van deze maken, misschien in een singleton steken die we gaan oproepen?
             //streetGen.GenerateWorldObject(obj, currentDirection, ref currentPosition, pointDirection);
-            streetGenV2.GenerateWorldObject(obj, ref currentDirection, ref currentPosition, pointDirection);
+            streetGenV2.GenerateWorldObject(obj, ref currentDirection, pointDirection);
 			pointDirection = Orientation.straight;
 
 			//In street, also automatically arrow rotating
@@ -87,6 +92,10 @@ public class GeneratorManager {
 
 	private static void ChangeDirection(Orientation direction, bool selectArrow) {
 		Debug.Log("direction switch: " + direction.ToString());
+        if (!streetGenV2.DirectionAllowed(direction)) {
+            Debug.Log("Orienation change not allowed");
+            return;
+        }
 
         switch (direction)
         {
@@ -158,6 +167,7 @@ public class GeneratorManager {
                 Debug.Log("No house found in lot");
             }
             LotManager.DeselectLot();
+            SaveManager.AddJSON(previousObject.GetComponent<JSONHolder>().JSON);
             previousObject = null;
         }
     }

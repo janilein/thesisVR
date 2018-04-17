@@ -10,6 +10,7 @@ public class GenericStreet : MonoBehaviour
 	public Dictionary<string, Vector3> colliderAllowedPoints = new Dictionary<string, Vector3>();
 	public Dictionary<string, Vector3> colliderRotatedPoints = new Dictionary<string, Vector3>();
 	public Dictionary<string, Vector3> centerOffset = new Dictionary<string, Vector3>();
+    public static int arrowID = 1;
 
     public Vector3 spawnStart;
 
@@ -102,6 +103,7 @@ public class GenericStreet : MonoBehaviour
 			spawnedArrow.transform.SetParent (newCollider.transform, false);
 			spawnedArrow.transform.localPosition = new Vector3 (centerOffsetPosition.x, 1f, centerOffsetPosition.z);
 			spawnedArrow.transform.Rotate (new Vector3 (0, 1, 0) * (float) angle);
+            spawnedArrow.transform.name = "arrowID:" + arrowID++;
 			//spawnedArrow.transform.localScale = new Vector3 (1, 1, 1);
         }
     }

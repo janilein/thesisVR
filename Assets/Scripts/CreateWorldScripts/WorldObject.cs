@@ -375,4 +375,14 @@ public class WorldObject{
     private bool HasChildren() {
         return this.children.Count != 0;
     }
+
+    public WorldObject GetChildWithTypeValue(string value)
+    {
+        foreach(WorldObject child in children)
+        {
+            if (child.GetObjectValue().Equals(value))
+                return child;
+        }
+        return null;
+    }
 }

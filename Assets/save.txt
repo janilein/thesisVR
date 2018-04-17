@@ -1,0 +1,5 @@
+{"type":"streets","attr":[{"streetID":"1"},{"type":"intersection-x","attr":[{}]}]}
+{"type":"orientation","attr":[{"direction":"left"}]}
+{"type":"streets","attr":[{"streetID":"1"},{"type":"turn","attr":[{"direction":"right","angle":"90"}]}]}
+{"type":"command","attr":[{"type":"selectarrow","attr":[{"arrowid":"World/streetID:1/Colliders/straight/arrowID:3"}]}]}
+{"type":"streets","attr":[{"streetID":"1"},{"type":"intersection-t","attr":[{"orientation":"rightStraight"}]}]}

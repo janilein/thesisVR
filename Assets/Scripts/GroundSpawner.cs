@@ -8,9 +8,14 @@ public class GroundSpawner : MonoBehaviour{
 
 	// Use this for initialization
 	void Awake () {
+        SpawnGround();
+    }
+
+    public void SpawnGround()
+    {
         //Parent Gameobject
-        GameObject parent = new GameObject("FloorParent");
-        parent.transform.parent = GameObject.Find("World").transform;
+        Transform parent = new GameObject("FloorParent").transform;
+        parent.SetParent(GameObject.Find("World").transform, false);
 
         int nbOfX = 20;
         int nbOfY = 20;
@@ -18,18 +23,15 @@ public class GroundSpawner : MonoBehaviour{
         float totalLength = nbOfY * ground.GetComponent<Renderer>().bounds.size.z;
         float widthOffset = -totalWidth / 2;
         float lengthOffset = -totalLength / 2;
-        for (int x = 0; x < nbOfX; x++) {
-            for (int y = 0; y < nbOfY; y++) {
+        for (int x = 0; x < nbOfX; x++)
+        {
+            for (int y = 0; y < nbOfY; y++)
+            {
                 GameObject groundObject = Instantiate(ground, new Vector3(widthOffset + x * ground.GetComponent<Renderer>().bounds.size.x, 0f, lengthOffset + y * ground.GetComponent<Renderer>().bounds.size.z), Quaternion.identity);
-                groundObject.transform.parent = parent.transform;
+                groundObject.transform.SetParent(parent, false);
             }
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 
 }

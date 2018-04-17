@@ -1,0 +1,4 @@
+selectarrow
+selectlot
+transform
+delete

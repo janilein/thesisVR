@@ -58,8 +58,21 @@ public class OrientationManager : MonoBehaviour {
 			selectedArrow = arrow.transform;
 		}
 
-		if(selectCollider)
-			selectedArrow.parent.GetComponent<ColliderScript>().SelectedCollider();
+        if (selectCollider)
+        {
+            if (!SaveManager.loadingGame)
+            {
+                string arrowFullName = selectedArrow.transform.name;
+                Transform parent = selectedArrow.parent;
+                while (parent != null)
+                {
+                    arrowFullName = parent.name + "/" + arrowFullName;
+                    parent = parent.parent;
+                }
+                SaveManager.CreateSelectArrowCommand(arrowFullName);
+            }
+            selectedArrow.parent.GetComponent<ColliderScript>().SelectedCollider();
+        }
 	}
 
 	private bool LegitOrientation(object orientationName){

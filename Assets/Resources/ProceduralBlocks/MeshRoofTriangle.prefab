@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4337356023883030}
   - component: {fileID: 23484924109476700}
   - component: {fileID: 33193124091424300}
-  - component: {fileID: 114919874788726254}
   m_Layer: 0
   m_Name: MeshRoofTriangle
   m_TagString: Untagged
@@ -83,19 +82,3 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1655333782461526}
   m_Mesh: {fileID: 0}
---- !u!114 &114919874788726254
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1655333782461526}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5ac6d84dca7648fab1a3a905dbc55b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsDeserializing: 0
-  _id: b8ec0834-a7f4-435c-8c61-5cd11f3924d3
-  classId: 749bd9f1-903c-4ed6-80de-c9e9e0627e0e
-  StoreAllComponents: 1
-  Components: []

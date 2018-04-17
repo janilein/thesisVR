@@ -9,7 +9,7 @@ public class BuildingGenerator : Generator {
     Hashtable bounds;
     string typeOfBuilding;
 
-    private static int lotID = 1;
+    public static int lotID = 1;
  
     public BuildingGenerator() {
         bounds = new Hashtable();
@@ -168,7 +168,7 @@ public class BuildingGenerator : Generator {
             //Debug.Log("Street euler: " + lotToSpawn.transform.parent.transform.localEulerAngles.ToString());
         } else
         {
-			lot.transform.SetParent(worldTransform);
+			lot.transform.SetParent(worldTransform, false);
         }
 
         return lot;

@@ -56,6 +56,10 @@ public class ObjectManager : MonoBehaviour {
         //RelationManager.Delete(instance.lockedObject);
         instance.lockedObject = null;
         instance.lockedObjectDeleted = true;
+
+        //Set name of copy to original (get rid of the clone part)
+        string name = instance.originalLockedObject.name;
+        instance.originalLockedObject.name = name.Substring(0, name.Length - 7);
     }
 
     public static void SetAndLockGameObject(GameObject newObject) {
@@ -120,6 +124,17 @@ public class ObjectManager : MonoBehaviour {
             if (instance.lockedObject && instance.lockedObject.tag.Equals("Highlightable")) {
                 instance.lockedObject.GetComponent<SelectableObject>().RemoveHighlight();
             }
+
+            //SaveManager stuff
+            if (instance.lockedObjectDeleted) {                     //Object deleted, get name of original
+                string objectFullName = GetFullName(instance.originalLockedObject.transform);
+                SaveManager.CreateDeleteObjectCommand(objectFullName);
+            } else                                                 //Update transform of locked object
+            {
+                string objectFullName = GetFullName(instance.lockedObject.transform);
+                SaveManager.CreateTransformCommand(objectFullName, instance.lockedObject.transform.localPosition, instance.lockedObject.transform.localRotation);
+            }
+
             //instance.lockedObject.GetComponent<ObjectRelation>().ApplyChanges();
             instance.lockedObject = null;
             //instance.originalLockedObject.GetComponent<ObjectRelation>().DeleteOther();
@@ -140,7 +155,7 @@ public class ObjectManager : MonoBehaviour {
         
         movement= instance.headRotation * Vector3.forward * x + instance.headRotation * Vector3.left * z;
         movement.y = y;
-        instance.lockedObject.transform.position = instance.lockedObject.transform.position + movement;
+        instance.lockedObject.transform.localPosition = instance.lockedObject.transform.localPosition + movement;
         //RelationManager.MoveObject(movement, instance.lockedObject);
     }
 
@@ -165,8 +180,8 @@ public class ObjectManager : MonoBehaviour {
 
             //instance.lockedObject.GetComponent<ObjectRelation>().ActivateOther();
 
-            string name = instance.originalLockedObject.name;
-            instance.lockedObject.name = name.Substring(0, name.Length - 7);
+            //string name = instance.originalLockedObject.name;
+            //instance.lockedObject.name = name.Substring(0, name.Length - 7);
 
             InstantiateCopy();
 
@@ -185,6 +200,18 @@ public class ObjectManager : MonoBehaviour {
 
         //instance.originalLockedObject.GetComponent<ObjectRelation>().CreateOther(instance.lockedObject);
         //RelationManager.InstantiateCopy(instance.lockedObject);
+    }
+
+    public static string GetFullName(Transform objectToFind)
+    {
+        string objectFullName = objectToFind.name;
+        Transform parent = instance.originalLockedObject.transform.parent;
+        while (parent != null)
+        {
+            objectFullName = parent.name + "/" + objectFullName;
+            parent = parent.parent;
+        }
+        return objectFullName;
     }
 
     

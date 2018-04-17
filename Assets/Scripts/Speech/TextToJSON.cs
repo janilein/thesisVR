@@ -32,6 +32,9 @@ public class TextToJSON
         hashParser.PrintHashTable(o);     //Convert the hashtable to WorldObjects
         WorldObject root = hashParser.getRootObject();
         manager.GenerateWorldObject(root);
+
+        //Save string to SaveManager
+        SaveManager.AddJSON(rss.ToString());
     }
 
     public void CreateStreetJSON(List<Entity> entities, List<Quantity> quantities)
@@ -221,6 +224,9 @@ public class TextToJSON
         hashParser.PrintHashTable(o);     //Convert the hashtable to WorldObjects
         WorldObject root = hashParser.getRootObject();
         manager.GenerateWorldObject(root);
+
+        //Save string to SaveManager
+        SaveManager.AddJSON(rss.ToString());
     }
 
     public void CreateHouseJSON(List<Entity> entityList, List<Quantity> quantityList, List<Relation> relationList)

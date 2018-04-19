@@ -7,6 +7,8 @@ using Newtonsoft.Json.Linq;
 using System.Globalization;
 using SFB;
 using UnityEngine.SceneManagement;
+using System;
+using UnityEngine.UI;
 
 public class SaveManager : MonoBehaviour
 {
@@ -17,7 +19,12 @@ public class SaveManager : MonoBehaviour
     private static string path;
     private static bool setDontDestroy = false;
     private static string loadPath = "";
-
+    public GameObject floppy;
+    public Transform floppies;
+    public Transform room;
+    Vector2 xRange = new Vector2(0.065f, 0.839f);
+    Vector2 yRange = new Vector2(-0.6f, 0.75f);
+    float zValue = 0.5f; 
     private void Awake()
     {
         if (!Instance)
@@ -31,7 +38,28 @@ public class SaveManager : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
             SceneManager.sceneLoaded += OnLevelFinishedLoading;
         }
-        path = Application.dataPath;        
+        path = Application.dataPath + "/Savegames";
+        InitializeFloppies();
+    }
+
+    private void InitializeFloppies()
+    {
+        DirectoryInfo dir = new DirectoryInfo(path);
+        FileInfo[] info = dir.GetFiles("*.txt");
+        //Debug.Log(info.Length);
+        foreach (FileInfo f in info)
+        {
+            GameObject spawnedFloppy = Instantiate(floppy);
+            Vector3 scale = spawnedFloppy.transform.localScale;
+            spawnedFloppy.transform.SetParent(floppies);
+            spawnedFloppy.transform.localPosition = new Vector3(UnityEngine.Random.Range(xRange.x, xRange.y), UnityEngine.Random.Range(yRange.x, yRange.y), zValue);
+            spawnedFloppy.transform.SetParent(room, true);
+            spawnedFloppy.transform.localScale = scale;
+
+            spawnedFloppy.transform.GetComponentInChildren<Text>().text = f.Name.Substring(0, f.Name.Length - 4);
+
+            zValue += 0.05f;
+        }
     }
 
     public static void AddJSON(string s)
@@ -167,6 +195,20 @@ public class SaveManager : MonoBehaviour
                         ))))));
 
         AddCommand(command.ToString());
+    }
+
+    public static void LoadSaveGame(string saveGameName)
+    {
+        Debug.LogError("Load save game");
+        loadPath = path + "/" + saveGameName;
+        Debug.LogError(loadPath);
+        if (File.Exists(loadPath))
+        {
+            Debug.LogError("Loading: " + loadPath);
+            loadingGame = true;
+            //SceneManager.LoadScene("TestScene", LoadSceneMode.Single);
+            Instance.ResetGame();
+        }
     }
 
     public void LoadGame()

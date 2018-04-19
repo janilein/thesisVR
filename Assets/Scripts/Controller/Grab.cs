@@ -4,7 +4,8 @@ using UnityEngine;
 
 //From https://www.raywenderlich.com/149239/htc-vive-tutorial-unity
 
-public class Grab : MonoBehaviour {
+public class Grab : MonoBehaviour
+{
 
     private SteamVR_TrackedObject trackedObj;
     private GameObject grabbedObject;
@@ -31,13 +32,15 @@ public class Grab : MonoBehaviour {
                 if (collidedObject.transform.name.ToLower().Contains("doorhandle"))
                 {
                     transitionScript.OpenDoor();
-                } else
+                }
+                else
                 {
                     GrabObject(collidedObject);
                 }
             }
         }
-        else if (Controller.GetHairTriggerUp()) {
+        else if (Controller.GetHairTriggerUp())
+        {
             Debug.Log("Released trigger");
             if (grabbedObject)
             {
@@ -89,6 +92,13 @@ public class Grab : MonoBehaviour {
             grabbedObject.GetComponent<Rigidbody>().angularVelocity = Controller.angularVelocity;
             grabbedObject.GetComponent<Rigidbody>().useGravity = true;
         }
+
+        if (grabbedObject.transform.name.Contains("floppy"))
+        {
+            Debug.LogError("release floppy");
+            grabbedObject.transform.GetComponent<FloppyDisk>().OnRelease();
+        }
+
         grabbedObject = null;
     }
 

@@ -13,7 +13,7 @@ public class FloppyDisk : MonoBehaviour {
 	//Enter with collider of PC
     private void OnTriggerExit(Collider other)
     {
-        if (other.transform.name.Equals("PC"))
+        if (other.transform.name.Equals("Computer"))
         {
             inComputerRange = false;
         }
@@ -21,9 +21,9 @@ public class FloppyDisk : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-		if (other.transform.name.Equals("PC"))
+        if (other.transform.name.Equals("Computer"))
         {
-            inComputerRange = false;
+            inComputerRange = true;
         }
 	}
 	

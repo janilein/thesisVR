@@ -156,7 +156,7 @@ public class BuildingGenerator : Generator {
         {
             Debug.Log("Lot to spawn position: " + lotToSpawn.transform.position.ToString());
             //lot.transform.localPosition = lotToSpawn.transform.position;
-            lot.transform.rotation = lotToSpawn.transform.parent.transform.localRotation; 
+            lot.transform.rotation = lotToSpawn.transform.parent.transform.rotation; 
 
             //Set the LotToSpawn as the lot's parent
 			lot.transform.SetParent(lotToSpawn.transform, false);

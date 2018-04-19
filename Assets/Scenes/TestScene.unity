@@ -18578,9 +18578,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf23276a4ce7a544bb7a052be1f1131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  APIKeyMeaningCloud: c521da89bfba7e84830f8ecdfba3b1d6
+  APIKeyMeaningCloud: 
   googleOutputText: a long street
-  apiKeyGoogle: AIzaSyDPiVkoE4oz1T55TNYpFb8d0DT7keDF3nc
+  apiKeyGoogle: 
 --- !u!4 &878281317 stripped
 Transform:
   m_PrefabParentObject: {fileID: 480344, guid: 737b901aecdb514459be83a6eb717f65, type: 2}

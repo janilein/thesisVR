@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Hover.Core.Items.Types;
+using Hover.InterfaceModules.Key;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +9,9 @@ public class PCScript : MonoBehaviour
 
     public Transform firstMovePoint;
     public Transform secondMovePoint;
+    public Text visibleText;
+    public HoverItemDataSelector ejectButton, loadButton, saveButton, okButton;
+    public HoverkeyTextInput hoverTextInput;
 
     private bool floppyInserted;
     private Transform floppy;
@@ -17,12 +22,119 @@ public class PCScript : MonoBehaviour
 
     private bool rotationFinished;
     private bool movingFinished;
+    private string textCommand;
+    private bool saving;
+
+    private FloppyEnum insertedFloppyState;
 
     private void Awake()
     {
         floppyInserted = false;
         rotationFinished = false;
         movingFinished = false;
+        textCommand = "Insert a floppy";
+        visibleText.text = textCommand;
+        saving = false;
+    }
+
+    //Listener for hoverkey events
+    public void KeyPressed()
+    {
+        //In coroutine so it can wait 1 frame, otherwise reading happens too soon
+        StartCoroutine(ReadHoverText());
+    }
+
+    private IEnumerator ReadHoverText()
+    {
+        yield return new WaitForEndOfFrame();
+        visibleText.text = textCommand + hoverTextInput.TextInput;
+        yield break;
+    }
+
+    public void EjectFloppy()
+    {
+        if (floppyInserted)
+        {
+            floppyInserted = false;
+
+            floppy.GetComponent<Rigidbody>().velocity = new Vector3(-2f, 0, -2f);
+            floppy.GetComponent<BoxCollider>().enabled = true;
+            floppy.GetComponent<Rigidbody>().useGravity = true;
+            floppy = null;
+
+            DisableSpecialButtons();
+
+            textCommand = "Insert a floppy";
+            visibleText.text = textCommand;
+        }
+    }
+
+    public void LoadFloppy()
+    {
+        if (floppyInserted)
+        {
+            SaveManager.LoadSaveGame(floppy.GetComponentInChildren<Text>().text + ".txt");
+            EjectFloppy();
+        }
+    }
+
+    public void SaveFloppy()
+    {
+        if (floppyInserted)
+        {
+            //New save floppy or existing overwrite?
+            if (insertedFloppyState == FloppyEnum.newsave)
+            {
+                //New save, first enter a name
+                visibleText.text = "Enter save name \n";
+                hoverTextInput.TextInput = "";
+                okButton.IsEnabled = true;
+            }
+            else
+            {
+                //Overwrite older
+                SaveManager.SaveGameFloppy(floppy.GetComponentInChildren<Text>().text);
+                EjectFloppy();
+            }
+        }
+    }
+
+    public void OkButtonPressed()
+    {
+        //Only allow save if text input is not empty
+        if(hoverTextInput.TextInput.Length > 0)
+        {
+            //Save to new file
+            SaveManager.SaveGameFloppy(hoverTextInput.TextInput);
+            floppy.GetComponentInChildren<Text>().text = hoverTextInput.TextInput;
+            EjectFloppy();
+        } else
+        {
+            textCommand = "Enter a valid save name \n";
+            visibleText.text = textCommand;
+        }
+    }
+
+    private void CheckInsertedFloppy()
+    {
+        insertedFloppyState = floppy.GetComponent<FloppyDisk>().GetState();
+        if (insertedFloppyState == FloppyEnum.newsave)
+        {
+            //Debug.LogError("New save inserted");
+            //Inserted a new save floppy: disable load
+            loadButton.IsEnabled = false;
+        } else
+        {
+            //Debug.LogError("Old save inserted");
+            loadButton.IsEnabled = true;
+        }
+
+        okButton.IsEnabled = false;
+        ejectButton.IsEnabled = true;
+        saveButton.IsEnabled = true;
+
+        textCommand = "Select a command \n";
+        visibleText.text = textCommand;
     }
 
     public void InsertFloppy(Transform floppy)
@@ -45,8 +157,6 @@ public class PCScript : MonoBehaviour
 
         //Rotating to normal stuff
         StartCoroutine(RotateFloppy());
-
-        //SaveManager.LoadSaveGame(floppy.GetComponentInChildren<Text>().text + ".txt");
     }
 
     private IEnumerator RotateFloppy()
@@ -101,11 +211,18 @@ public class PCScript : MonoBehaviour
         movingFinished = false;
         rotationFinished = false;
         string saveGameName = floppy.name;
-        SaveManager.LoadSaveGame(floppy.GetComponentInChildren<Text>().text + ".txt");
-        floppyInserted = false;
 
-        floppy.GetComponent<Rigidbody>().velocity = new Vector3(-1f, 0, -1f);
-        floppy.GetComponent<BoxCollider>().enabled = true;
-        floppy.GetComponent<Rigidbody>().useGravity = true;
+        CheckInsertedFloppy();
+    }
+
+    private void DisableSpecialButtons()
+    {
+        ejectButton.IsEnabled = false;
+        loadButton.IsEnabled = false;
+        okButton.IsEnabled = false;
+        saveButton.IsEnabled = false;
+        hoverTextInput.TextInput = "";
+        visibleText.text = "";
+        hoverTextInput.CursorIndex = 0;
     }
 }

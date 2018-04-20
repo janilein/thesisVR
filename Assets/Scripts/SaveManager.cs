@@ -22,10 +22,10 @@ public class SaveManager : MonoBehaviour
     public GameObject floppy;
     public Transform floppies;
     public Transform room;
-	public spawning.SpawningManager spawningManager;
-    Vector2 xRange = new Vector2(0.065f, 0.839f);
-    Vector2 yRange = new Vector2(-0.6f, 0.75f);
-    float zValue = 0.5f; 
+    public spawning.SpawningManager spawningManager;
+    private static Vector2 xRange = new Vector2(0.065f, 0.839f);
+    private static Vector2 yRange = new Vector2(-0.6f, 0.75f);
+    private static float zValue = 0.5f; 
     private void Awake()
     {
         if (!Instance)
@@ -50,17 +50,33 @@ public class SaveManager : MonoBehaviour
         //Debug.Log(info.Length);
         foreach (FileInfo f in info)
         {
-            GameObject spawnedFloppy = Instantiate(floppy);
-            Vector3 scale = spawnedFloppy.transform.localScale;
-            spawnedFloppy.transform.SetParent(floppies);
-            spawnedFloppy.transform.localPosition = new Vector3(UnityEngine.Random.Range(xRange.x, xRange.y), UnityEngine.Random.Range(yRange.x, yRange.y), zValue);
-            spawnedFloppy.transform.SetParent(room, true);
-            spawnedFloppy.transform.localScale = scale;
-
-            spawnedFloppy.transform.GetComponentInChildren<Text>().text = f.Name.Substring(0, f.Name.Length - 4);
-
-            zValue += 0.05f;
+            SpawnFloppy(f.Name);
         }
+
+        //Spawn some empty floppies as well
+        SpawnFloppy();
+    }
+
+    public static void SpawnFloppy(string text = null)
+    {
+        GameObject spawnedFloppy = Instantiate(Instance.floppy);
+        Vector3 scale = spawnedFloppy.transform.localScale;
+        spawnedFloppy.transform.SetParent(Instance.floppies);
+        spawnedFloppy.transform.localPosition = new Vector3(UnityEngine.Random.Range(xRange.x, xRange.y), UnityEngine.Random.Range(yRange.x, yRange.y), zValue);
+        spawnedFloppy.transform.SetParent(Instance.room, true);
+        spawnedFloppy.transform.localScale = scale;
+
+        if (text != null)
+        {
+            spawnedFloppy.transform.GetComponentInChildren<Text>().text = text.Substring(0, text.Length - 4);
+            spawnedFloppy.transform.GetComponent<FloppyDisk>().SetState(FloppyEnum.usedsave);
+        } else
+        {
+            spawnedFloppy.transform.GetComponentInChildren<Text>().text = "New save";
+            spawnedFloppy.transform.GetComponent<FloppyDisk>().SetState(FloppyEnum.newsave);
+        }
+
+        zValue += 0.05f;
     }
 
     public static void AddJSON(string s)
@@ -81,23 +97,36 @@ public class SaveManager : MonoBehaviour
     public void SaveGame()
     {
         string newPath = StandaloneFileBrowser.SaveFilePanel("Save File", path, "", "txt");
+        SaveToFile(newPath);  
+    }
 
-        Debug.LogError("Saving...");
+    public static void SaveGameFloppy(string floppyName)
+    {
+        //Debug.LogError("SaveGameFloppy: " + floppyName);
+        Instance.SaveToFile(path + "/" + floppyName + ".txt");
+    }
+
+    private void SaveToFile(string path) {
+        //Debug.LogError("Saving...");
         //Save all commands to a file
-        if (File.Exists(newPath))
+        if (File.Exists(path))
         {
-            File.Delete(newPath);
+            File.Delete(path);
+        } else
+        {
+            //If file didn't exist, spawn new empty floppy
+            SpawnFloppy();
         }
 
         // Create a file to write to.
-        using (StreamWriter sw = File.CreateText(newPath))
+        using (StreamWriter sw = File.CreateText(path))
         {
             foreach (string s in Instance.commandList)
             {
                 sw.WriteLine(s);
             }
         }
-        Debug.LogError("Done saving");
+        //Debug.LogError("Done saving");
     }
 
     public static void CreateSelectArrowCommand(string arrowID)
@@ -231,12 +260,12 @@ public class SaveManager : MonoBehaviour
 
     public static void LoadSaveGame(string saveGameName)
     {
-        Debug.LogError("Load save game");
+        //Debug.LogError("Load save game");
         loadPath = path + "/" + saveGameName;
-        Debug.LogError(loadPath);
+        //Debug.LogError(loadPath);
         if (File.Exists(loadPath))
         {
-            Debug.LogError("Loading: " + loadPath);
+            //Debug.LogError("Loading: " + loadPath);
             loadingGame = true;
             //SceneManager.LoadScene("TestScene", LoadSceneMode.Single);
             Instance.ResetGame();
@@ -246,7 +275,7 @@ public class SaveManager : MonoBehaviour
     public void LoadGame()
     {
         //Read file & execute all commands
-        Debug.LogError("Loading...");
+        //Debug.LogError("Loading...");
 
         if (!loadingGame)
         {
@@ -373,7 +402,7 @@ public class SaveManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         loadingGame = false;
-        Debug.LogError("Done loading");
+        //Debug.LogError("Done loading");
     }
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)

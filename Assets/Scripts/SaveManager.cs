@@ -22,6 +22,7 @@ public class SaveManager : MonoBehaviour
     public GameObject floppy;
     public Transform floppies;
     public Transform room;
+	public spawning.SpawningManager spawningManager;
     Vector2 xRange = new Vector2(0.065f, 0.839f);
     Vector2 yRange = new Vector2(-0.6f, 0.75f);
     float zValue = 0.5f; 
@@ -155,6 +156,37 @@ public class SaveManager : MonoBehaviour
 
         AddCommand(command.ToString());
     }
+		
+	public static void SpawnObjectHoverPanel(string activeParent, string resourceName, string usedName, Vector3 position){
+		Debug.Log("Called SpawnObjectHoverPanel, activeParent: " + activeParent + " , resourceName: " + resourceName);
+		
+		JObject command = new JObject(
+            new JObject(
+                    new JProperty("type", "command"),
+                    new JProperty("attr", new JArray(
+                        new JObject(
+                            new JProperty("type", "hoverspawn"),
+                            new JProperty("attr", new JArray(
+                                new JObject(
+                                    new JProperty("activeparent", activeParent),
+									new JProperty("resourcename", resourceName),
+									new JProperty("usedname", usedName)
+                                    ),
+								new JObject(
+									new JProperty("type", "position"),
+									new JProperty("attr", new JArray(
+										new JObject(
+											new JProperty("x", position.x.ToString("G9")),
+                                            new JProperty("y", position.y.ToString("G9")),
+                                            new JProperty("z", position.z.ToString("G9"))
+										)
+									))
+								)
+                                )
+                        ))))));
+
+        AddCommand(command.ToString());
+	}
 
     public static void CreateTransformCommand(string objectID, Vector3 localPosition, Quaternion localRotation)
     {
@@ -272,6 +304,7 @@ public class SaveManager : MonoBehaviour
         GeneratorManager.currentDirection = new Vector2(0, 0);
         GeneratorManager.pointDirection = Orientation.straight;
         GenericStreet.arrowID = 1;
+		spawning.SpawningManager.hoverpanelCounter = 1;
         Speech.specifyDescription = false;
 
         //Reset shaders
@@ -325,9 +358,15 @@ public class SaveManager : MonoBehaviour
                         objectToSet.localPosition = localPosition;
                         objectToSet.localRotation = Quaternion.Euler(localRotation.x, localRotation.y, localRotation.z);
                         break;
+					case "hoverspawn":
+						string resourceName = (string)root.directAttributes["resourcename"];
+						string usedName = (string)root.directAttributes["usedname"];
+						string activeParent = (string)root.directAttributes["activeparent"];
+						Vector3 position = GetVector(root.GetChildWithTypeValue("position"));
+                        spawningManager.SpawnFromSaveFile(resourceName, activeParent, usedName, position);
+						break;
                 }
-            }
-            else
+            } else
             {
                 manager.GenerateWorldObject(root);
             }

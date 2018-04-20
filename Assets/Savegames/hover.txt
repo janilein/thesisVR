@@ -1,0 +1,2 @@
+{"type":"command","attr":[{"type":"hoverspawn","attr":[{"activeparent":"SpawnResources/Buildings","resourcename":"building_010","usedname":"building_010(Clone)1"},{"type":"position","attr":[{"x":"0","y":"0","z":"10"}]}]}]}
+{"type":"command","attr":[{"type":"transform","attr":[{"objectid":"World/building_010(Clone)1"},{"type":"position","attr":[{"x":"0","y":"0","z":"10"}]},{"type":"rotation","attr":[{"x":"0","y":"0","z":"0"}]}]}]}

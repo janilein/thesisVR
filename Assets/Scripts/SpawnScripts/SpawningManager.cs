@@ -21,6 +21,7 @@
         protected string activeParent;
         protected string[] resourceFolders;
         protected bool generatedFileInfo = false;
+		public static int hoverpanelCounter = 1;
 
 
     protected void InstantiateSpawnButtons() {
@@ -61,6 +62,7 @@
 
         protected void SpawnObject(int index) {
             //GameObject objectToInstantiate = Resources.Load(activePart + "/" + name, typeof(GameObject)) as GameObject;
+			/*
             GameObject parent = GameObject.Find(activeParent);
             if (!parent) {
                 Debug.Log("Parent was null");
@@ -68,8 +70,22 @@
             } else {
                 Debug.Log("Parent was not null");
             }
-            GameObject instance = Instantiate(activeObjects[index], cameraRig.transform.position + cameraRig.transform.forward * 10, Quaternion.identity, GameObject.Find(activeParent).transform) as GameObject;
-
+			*/
+            //GameObject instance = Instantiate(activeObjects[index], cameraRig.transform.position + cameraRig.transform.forward * 10, Quaternion.identity, GameObject.Find(activeParent).transform) as GameObject;
+			
+			//Full name of object to spawn (starting from SpawnResources) = activeParent + resourceFolders[index];
+			Object objectToSpawn = activeObjects[index];
+            Vector3 position = cameraRig.transform.position + cameraRig.transform.forward * 10;
+            string usedName = SpawnObject(objectToSpawn, position);
+		
+			//Send info to SaveManager
+			SaveManager.SpawnObjectHoverPanel(activePart, objectToSpawn.name, usedName, position);
+		
+        }
+		
+		public string SpawnObject(Object obj, Vector3 position, string name = null){
+			GameObject instance = Instantiate(obj, position, Quaternion.identity) as GameObject;
+			
             InitializeShaders shaderScript = GameObject.Find("ObjectManager").gameObject.GetComponent<InitializeShaders>();
             shaderScript.UpdateShaders();
 			
@@ -81,14 +97,34 @@
 					instance.transform.position = Vector3.zero;
 					instance.transform.SetParent(lot.transform, false);
 					instance.transform.rotation = lot.transform.parent.transform.localRotation;
+				} else {
+					instance.transform.SetParent(GameObject.Find("World").transform, false);
 				}
+			} else {
+				instance.transform.SetParent(GameObject.Find("World").transform, false);
 			}
 			
-            instance.transform.parent = GameObject.Find("World").transform;
+            //instance.transform.parent = GameObject.Find("World").transform;
+			//If given name, use it, else use counter
+			if(name == null){
+				instance.transform.name = instance.transform.name + hoverpanelCounter++;
+			} else {
+				instance.transform.name = name;
+			}
 
             ObjectManager.SetAndLockGameObject(instance);
+			return instance.transform.name;
+		}
+		
+		public void SpawnFromSaveFile(string objectName, string loadedActivePart, string name, Vector3 position){
+			activePart = loadedActivePart;
+            string loadPath = loadedActivePart + "/" + objectName;
+            Object loadedObject = Resources.Load(loadPath, typeof(GameObject));
 
-        }
+			SpawnObject(loadedObject, position, name);
+			activePart = "SpawnResources/";
+			
+		}
 
         
 

@@ -113,6 +113,9 @@ public class BuildingGenerator : Generator {
 				}
 			}
 
+            //When we get to the roof, delete color attribute from specifiedDefaults so roof doesn't get this color
+            specifiedDefaults.Remove("color");
+
 			if (generateRoof) {
 				//Generate the roof
 				foreach (WorldObject child in obj.GetChildren()) {

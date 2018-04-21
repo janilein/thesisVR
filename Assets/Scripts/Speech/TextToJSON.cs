@@ -267,23 +267,51 @@ public class TextToJSON
                 nbFloors = floors.amount;
             }
 
+            //------------------------------ Get the specification for 'all floors color'  ------------------------------
+            Entity allFloors = null;
+            Entity color = null;
+            foreach(Entity entity in entityList)
+            {
+                if (entity.type.ToLower().Equals("color"))
+                    color = entity;
+                else if (entity.form.ToLower().Equals("all floors"))
+                    allFloors = entity;
+            }
+
+
             //------------------------------ Generate the JSON string ------------------------------
 
             JObject buildingObj = new JObject(
                 new JProperty("type", typeOfBuilding)
                 );
 
-            if (nbFloors > 0)
+            List<JProperty> properties = new List<JProperty>();
+            if(nbFloors > 0)
             {
+                properties.Add(new JProperty("floors", nbFloors.ToString()));
+            }
+            if(color != null && allFloors != null)
+            {
+                properties.Add(new JProperty("color", color.form.ToLower().ToString()));
+            }
+
+            if (properties.Count > 0)   //Do we have a property to add?
+            {
+                JObject obj = new JObject();
+                foreach(JProperty prop in properties)
+                {
+                    obj.Add(prop);
+                }
+
                 JProperty attr = new JProperty("attr", new JArray(
-                    new JObject(
-                        new JProperty("floors", nbFloors.ToString())
-                        )
+                    obj
                     )
                     );
 
                 buildingObj.Add(attr);
             }
+
+            //If both 'all floors' and a color are specified, add them as well
 
             specifiedDescription = new JObject(
                 new JObject(
@@ -345,6 +373,9 @@ public class TextToJSON
                         }
                     }
                     break;
+                } else if (entity.form.ToLower().Equals("all floors"))  //Set color for all floors?
+                {
+                    SpecifyFloorColors(ref entityList);
                 }
             }
 
@@ -402,6 +433,57 @@ public class TextToJSON
 
         //                ))))
         //);
+    }
+
+    private void SpecifyFloorColors(ref List<Entity> entityList) {
+        Entity colorEntity = null;
+        foreach(Entity entity in entityList)
+        {
+            if (entity.type.ToLower().Equals("color"))
+            {
+                colorEntity = entity;
+                break;
+            }
+        }
+
+        //Is floor color given?
+        if(colorEntity == null)
+        {
+            Debug.Log("No floor color given");
+            return;
+        }
+
+        //Add all floor color to floors
+
+        //Als de first key net type is, dan weet ge dat er al een specification is toegevoegd
+
+        JArray array3 = GetAttrArray();
+        bool addedFloorsColor = false;
+
+        foreach(JObject jsonObject in array3)
+        {
+            JProperty first = (JProperty)jsonObject.First;
+            string key = (string)first.Name;
+
+            if (key.Equals("type"))
+                continue;
+            else
+            {
+                //Dit is het JObject waarin ge de specification wilt toevoegen
+                addedFloorsColor = true;
+                jsonObject.Remove("color");
+                jsonObject.Add("color", colorEntity.form.ToLower());
+            }
+        }
+
+        if (!addedFloorsColor)
+        {
+            JObject floorObject = new JObject();
+            floorObject.Add(new JProperty("color", colorEntity.form.ToLower()));
+            array3.Add(floorObject);
+            Debug.Log("Added new floorcolorobject");
+        }
+
     }
 
     private void SpecifyRoof(ref Entity roofEntity, ref List<Entity> entityList)
@@ -504,21 +586,19 @@ public class TextToJSON
         foreach (JObject jsonObject in array3)
         {
             JProperty first = (JProperty)jsonObject.First;
-            Debug.Log("First: " + first);
             string key = (string)first.Name;
-            Debug.Log("Key: " + key);
 
-            if(key.Equals("floors"))
+            if (key.Equals("type"))
+                continue;
+            else
             {
-                //Set the value to the new floor value
-                first.Value = nbFloors.ToString();
+                //Dit is het JObject waarin ge de specification wilt toevoegen
                 addedFloors = true;
-                Debug.Log("Changed amount of floors");
-                break;
+                jsonObject.Remove("floors");
+                jsonObject.Add("floors", nbFloors.ToString());
             }
         }
 
-        //Check if we added new floor, if not, add new JObject to array3
         if (!addedFloors)
         {
             JObject floorObject = new JObject();
@@ -526,6 +606,7 @@ public class TextToJSON
             array3.Add(floorObject);
             Debug.Log("Added new floorobject");
         }
+
     }
 
     private void SpecifyFloor(ref Entity floorEntity, ref List<Entity> entityList, ref List<Relation> relationList)

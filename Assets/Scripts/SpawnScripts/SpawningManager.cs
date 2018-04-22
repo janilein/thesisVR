@@ -100,6 +100,10 @@
 				} else {
 					instance.transform.SetParent(GameObject.Find("World").transform, false);
 				}
+				
+				//Automatically deselect the lot
+				LotManager.DeselectLot();
+				
 			} else {
 				instance.transform.SetParent(GameObject.Find("World").transform, false);
 			}

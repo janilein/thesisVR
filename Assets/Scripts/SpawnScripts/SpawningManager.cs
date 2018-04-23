@@ -95,9 +95,11 @@
 				GameObject lot = LotManager.getLot();
 				if(lot){
 					instance.transform.position = Vector3.zero;
+                    //Quaternion rotation = instance.transform.rotation;
 					instance.transform.SetParent(lot.transform, false);
-					instance.transform.rotation = lot.transform.parent.transform.localRotation;
-				} else {
+                    //instance.transform.rotation = rotation;
+                    instance.transform.localRotation = Quaternion.Euler(0, LotManager.GetDirection(), 0);
+                } else {
 					instance.transform.SetParent(GameObject.Find("World").transform, false);
 				}
 				
@@ -108,15 +110,15 @@
 				instance.transform.SetParent(GameObject.Find("World").transform, false);
 			}
 			
-            //instance.transform.parent = GameObject.Find("World").transform;
 			//If given name, use it, else use counter
+            //Given name also means we are loading. In this case, do not set and lock object in objectmanager
 			if(name == null){
 				instance.transform.name = instance.transform.name + hoverpanelCounter++;
-			} else {
+                ObjectManager.SetAndLockGameObject(instance);
+            } else {
 				instance.transform.name = name;
 			}
 
-            ObjectManager.SetAndLockGameObject(instance);
 			return instance.transform.name;
 		}
 		

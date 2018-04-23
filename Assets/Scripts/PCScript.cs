@@ -23,7 +23,7 @@ public class PCScript : MonoBehaviour
     private bool rotationFinished;
     private bool movingFinished;
     private string textCommand;
-    private bool saving;
+    //private bool saving;
 
     private FloppyEnum insertedFloppyState;
 
@@ -34,7 +34,7 @@ public class PCScript : MonoBehaviour
         movingFinished = false;
         textCommand = "Insert a floppy";
         visibleText.text = textCommand;
-        saving = false;
+        //saving = false;
     }
 
     //Listener for hoverkey events
@@ -107,6 +107,7 @@ public class PCScript : MonoBehaviour
             //Save to new file
             SaveManager.SaveGameFloppy(hoverTextInput.TextInput);
             floppy.GetComponentInChildren<Text>().text = hoverTextInput.TextInput;
+            floppy.GetComponent<FloppyDisk>().SetState(FloppyEnum.usedsave);
             EjectFloppy();
         } else
         {
@@ -166,7 +167,7 @@ public class PCScript : MonoBehaviour
         float i = 0;
         while (i < 1)
         {
-            i += Time.deltaTime * positionSpeed;
+            i += Time.deltaTime * rotationSpeed;
             floppy.rotation = Quaternion.Lerp(originalRotation, wantedRotation, i);
             yield return null;
         }

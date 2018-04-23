@@ -65,6 +65,7 @@ public class SaveManager : MonoBehaviour
         spawnedFloppy.transform.localPosition = new Vector3(UnityEngine.Random.Range(xRange.x, xRange.y), UnityEngine.Random.Range(yRange.x, yRange.y), zValue);
         spawnedFloppy.transform.SetParent(Instance.room, true);
         spawnedFloppy.transform.localScale = scale;
+        spawnedFloppy.transform.localRotation = UnityEngine.Random.rotation;
 
         if (text != null)
         {
@@ -126,6 +127,7 @@ public class SaveManager : MonoBehaviour
                 sw.WriteLine(s);
             }
         }
+        Instance.commandList.Clear();
         //Debug.LogError("Done saving");
     }
 
@@ -366,6 +368,7 @@ public class SaveManager : MonoBehaviour
             Hashtable ht = (Hashtable)JSON.JsonDecode(commands[i], ref successParse);
             hashParser.PrintHashTable(ht);     //Convert the hashtable to WorldObjects
             WorldObject root = hashParser.getRootObject();
+
             if (root.GetObjectValue().Equals("command"))
             {
                 root = root.GetChildren()[0];

@@ -7,10 +7,10 @@ public class OrientationManager : MonoBehaviour {
 	public static OrientationManager Instance{ get; set;}
 
 	[Range(1, 300)]
-	float rotationSpeed = 100f;
+	public float rotationSpeed = 100f;
 
 	public Transform selectedArrow = null;
-	public Transform draggedArrowInEditor = null;
+	//public Transform draggedArrowInEditor = null;
 
 	public void Awake(){
 		if (!Instance)
@@ -27,10 +27,12 @@ public class OrientationManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        /*
 		if (draggedArrowInEditor) {
 			Instance.SetSelectedArrow (draggedArrowInEditor, true);
 			draggedArrowInEditor = null;
 		}
+        */
 
 		if (Instance.selectedArrow) {
 			//Rotate the chosen arrow around it's Z-axis

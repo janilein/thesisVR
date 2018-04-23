@@ -10,7 +10,7 @@ public class GeneratorManager {
     private static StreetGeneratorV2 streetGenV2;
     //private Vector3 currentDirection;
     public static Vector2 currentDirection;
-    private Vector3 currentPosition;
+    //private Vector3 currentPosition;
 	public static Orientation pointDirection;
 
     public GameObject previousObject = null;
@@ -28,7 +28,7 @@ public class GeneratorManager {
         //currentDirection = new Vector3(0, 0, 1);
         currentDirection = new Vector2(0, 0);   //ALong positive Z-axis
         //currentPosition = Vector3.positiveInfinity;
-        currentPosition = Vector3.zero;
+        //currentPosition = Vector3.zero;
 		pointDirection = Orientation.straight;
 
         shaderScript = GameObject.Find("ObjectManager").GetComponent<InitializeShaders>();

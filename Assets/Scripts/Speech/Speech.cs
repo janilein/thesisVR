@@ -38,7 +38,6 @@ public class Speech : MonoBehaviour {
     //Used to specify descriptions. E.g. first a house, then specify floor colours
     public static bool specifyDescription = false;
 
-    bool threadRunning = false;
     bool workDone = false;
     private bool automateProcess = false;
     private bool updateProjectorText = false;
@@ -376,7 +375,7 @@ public class Speech : MonoBehaviour {
         if (e.Error != null)
         {
             googleOutputText = null;
-            Debug.Log("Error: " + e.Error.Message);
+            Debug.LogError("Error: " + e.Error.Message);
             return;
         }
 

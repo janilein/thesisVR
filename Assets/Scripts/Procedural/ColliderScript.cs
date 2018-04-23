@@ -8,7 +8,6 @@ public class ColliderScript : MonoBehaviour
 {
     private bool collidedWithStreet = false;
     private Transform collidedStreet;
-    private Vector3 position = Vector3.zero;
     private Vector2 direction = Vector2.zero;
 
     private void OnTriggerEnter(Collider other)

@@ -7,7 +7,7 @@ public class LaserSelector : MonoBehaviour {
 
     public LayerMask mask;
     private SteamVR_TrackedObject trackedObj;
-    private Vector3 hitPoint;
+    //private Vector3 hitPoint;
     private LineRenderer lineRenderer;
     private Material laserMaterial;
     private bool pointerEnabled = true;
@@ -51,7 +51,7 @@ public class LaserSelector : MonoBehaviour {
                 RaycastHit hit;
                 if (Physics.Raycast(trackedObj.transform.position, transform.forward, out hit, lookDistance, mask))
                 {
-                    hitPoint = hit.point;
+                    //hitPoint = hit.point;
                     ShowLaser(hit);
                     shouldSelect = true;
                     this.hit = hit;

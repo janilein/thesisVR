@@ -316,7 +316,8 @@ public class SaveManager : MonoBehaviour
 
     private void ResetGame()
     {
-        //Reload Scene
+        //Disable edit mode in ObjectManager
+		ObjectManager.DisableEditMode();
 
 
         //Destroy everything in World

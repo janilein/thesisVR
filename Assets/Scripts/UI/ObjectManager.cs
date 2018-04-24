@@ -44,6 +44,13 @@ public class ObjectManager : MonoBehaviour {
         }
         Debug.Log("Done with toggle mode");
     }
+	
+	public static void DisableEditMode(){
+		if(instance.editMode){
+			instance.editMode = false;
+			UnlockCurrentObject());
+		}
+	}
 
     public static bool GetMode() {
         return instance.editMode;

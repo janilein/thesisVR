@@ -48,7 +48,7 @@ public class ObjectManager : MonoBehaviour {
 	public static void DisableEditMode(){
 		if(instance.editMode){
 			instance.editMode = false;
-			UnlockCurrentObject());
+			UnlockCurrentObject();
 		}
 	}
 

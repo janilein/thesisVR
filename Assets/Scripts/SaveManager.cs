@@ -127,7 +127,6 @@ public class SaveManager : MonoBehaviour
                 sw.WriteLine(s);
             }
         }
-        Instance.commandList.Clear();
         //Debug.LogError("Done saving");
     }
 
@@ -347,6 +346,8 @@ public class SaveManager : MonoBehaviour
 
         //Go to room
         GameObject.Find("TransitionManager").GetComponent<TransitionScript>().GoToRoom();
+		
+		Instance.commandList.Clear();
 
         StartCoroutine(ExecuteSaveFile());
 

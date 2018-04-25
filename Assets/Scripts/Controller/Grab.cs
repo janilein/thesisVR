@@ -95,7 +95,7 @@ public class Grab : MonoBehaviour
 
         if (grabbedObject.transform.name.Contains("floppy"))
         {
-            Debug.LogError("release floppy");
+            //Debug.LogError("release floppy");
             grabbedObject.transform.GetComponent<FloppyDisk>().OnRelease();
         }
 

@@ -140,7 +140,7 @@ public class PCScript : MonoBehaviour
 
     public void InsertFloppy(Transform floppy)
     {
-        Debug.LogError("Insert floppy");
+        //Debug.LogError("Insert floppy");
         if (floppyInserted)
             return;
 
@@ -173,7 +173,7 @@ public class PCScript : MonoBehaviour
         }
         if (movingFinished)
         {
-            Debug.LogError("go to second, from rotate");
+            //Debug.LogError("go to second, from rotate");
             StartCoroutine(MoveFloppyToSecondPoint());
         }
         rotationFinished = true;
@@ -192,7 +192,7 @@ public class PCScript : MonoBehaviour
         }
         if (rotationFinished)
         {
-            Debug.LogError("go to second, from move");
+            //Debug.LogError("go to second, from move");
             StartCoroutine(MoveFloppyToSecondPoint());
         }
         movingFinished = true;

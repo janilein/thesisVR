@@ -98,7 +98,8 @@
                     //Quaternion rotation = instance.transform.rotation;
 					instance.transform.SetParent(lot.transform, false);
                     //instance.transform.rotation = rotation;
-                    instance.transform.localRotation = Quaternion.Euler(0, LotManager.GetDirection(), 0);
+
+                    instance.transform.localRotation = Quaternion.identity;//Quaternion.Euler(0, LotManager.GetDirection(), 0);
                 } else {
 					instance.transform.SetParent(GameObject.Find("World").transform, false);
 				}

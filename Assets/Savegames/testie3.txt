@@ -31,15 +31,3 @@
 {"type":"orientation","attr":[{"direction":"left"}]}
 {"type":"streets","attr":[{"streetID":"1"},{"type":"intersection-t","attr":[{"orientation":"leftStraight"}]}]}
 {"type":"streets","attr":[{"streetID":"1"},{"type":"turn","attr":[{"direction":"right","angle":"45"}]}]}
-{"type":"streets","attr":[{"streetID":"1"},{"type":"intersection-t","attr":[{"orientation":"leftStraight"}]}]}
-{"type":"streets","attr":[{"streetID":"1"},{"type":"straight","attr":[{}]}]}
-{"type":"command","attr":[{"type":"selectlot","attr":[{"lotid":"World/streetID:16/lotID:32"}]}]}
-{"type":"lots","attr":[{"lotID":"1"},{"type":"buildings","attr":[{"type":"house","attr":[{"floors":"7","color":"yellow"}]}]}]}
-{"type":"command","attr":[{"type":"transform","attr":[{"objectid":"World/streetID:16/lotID:32/lotID:2/Building"},{"type":"position","attr":[{"x":"0","y":"0","z":"0"}]},{"type":"rotation","attr":[{"x":"1.06721707E-07","y":"33.3522072","z":"354.957977"}]}]}]}
-{"type":"command","attr":[{"type":"selectlot","attr":[{"lotid":"World/streetID:16/lotID:31"}]}]}
-{"type":"command","attr":[{"type":"selectlot","attr":[{"lotid":"World/streetID:16/lotID:30"}]}]}
-{"type":"command","attr":[{"type":"selectlot","attr":[{"lotid":"World/streetID:16/lotID:31"}]}]}
-{"type":"command","attr":[{"type":"hoverspawn","attr":[{"activeparent":"SpawnResources/Buildings","resourcename":"custom_building_001","usedname":"custom_building_001(Clone)1"},{"type":"position","attr":[{"x":"-77.3083267","y":"-1.89058912","z":"97.8225174"}]}]}]}
-{"type":"command","attr":[{"type":"transform","attr":[{"objectid":"World/streetID:16/lotID:31/custom_building_001(Clone)1"},{"type":"position","attr":[{"x":"0","y":"0","z":"0"}]},{"type":"rotation","attr":[{"x":"0","y":"0","z":"0"}]}]}]}
-{"type":"command","attr":[{"type":"selectarrow","attr":[{"arrowid":"World/streetID:15/Colliders/left/arrowID:23"}]}]}
-{"type":"streets","attr":[{"streetID":"1"},{"type":"intersection-x","attr":[{}]}]}

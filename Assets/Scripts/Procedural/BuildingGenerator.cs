@@ -164,11 +164,8 @@ public class BuildingGenerator : Generator {
             //Set the LotToSpawn as the lot's parent
 			lot.transform.SetParent(lotToSpawn.transform, false);
 
-            //The lots rotation
-            //Debug.Log("Lot euler: " + lotToSpawn.transform.localEulerAngles.ToString());
-
-            //The street rotation: 
-            //Debug.Log("Street euler: " + lotToSpawn.transform.parent.transform.localEulerAngles.ToString());
+            //Set rotation of the building
+            lot.transform.localRotation = Quaternion.identity;
         } else
         {
 			lot.transform.SetParent(worldTransform, false);

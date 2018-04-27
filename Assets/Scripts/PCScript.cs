@@ -116,6 +116,11 @@ public class PCScript : MonoBehaviour
         }
     }
 
+    public void NewWorld()
+    {
+        SaveManager.NewWorld();
+    }
+
     private void CheckInsertedFloppy()
     {
         insertedFloppyState = floppy.GetComponent<FloppyDisk>().GetState();

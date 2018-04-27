@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FloppyDisk : MonoBehaviour {
 	
 	private bool inComputerRange;
+    private bool inTrashCanRange;
     private FloppyEnum state;
 	
 	private void Awake(){
 		inComputerRange = false;
+        inTrashCanRange = false;
     }
 
 
@@ -25,6 +28,12 @@ public class FloppyDisk : MonoBehaviour {
         if (other.transform.name.Equals("Computer"))
         {
             inComputerRange = true;
+        }
+        if (other.transform.name.Equals("trash_can"))
+        {
+            SaveManager.DeleteSave(this.transform.GetComponentInChildren<Text>().text);
+            SetState(FloppyEnum.newsave);
+            this.transform.GetComponentInChildren<Text>().text = "New save";
         }
 	}
 

@@ -40,17 +40,26 @@ public class SaveManager : MonoBehaviour
             SceneManager.sceneLoaded += OnLevelFinishedLoading;
         }
         path = Application.dataPath + "/Savegames";
+        if (!Directory.Exists(path))
+            Directory.CreateDirectory(path);
+
         InitializeFloppies();
     }
 
     private void InitializeFloppies()
     {
         DirectoryInfo dir = new DirectoryInfo(path);
-        FileInfo[] info = dir.GetFiles("*.txt");
-        //Debug.Log(info.Length);
-        foreach (FileInfo f in info)
+        try
         {
-            SpawnFloppy(f.Name);
+            FileInfo[] info = dir.GetFiles("*.txt");
+            //Debug.Log(info.Length);
+            foreach (FileInfo f in info)
+            {
+                SpawnFloppy(f.Name);
+            }
+        } catch(DirectoryNotFoundException exc)
+        {
+            Debug.LogError(exc.Message);
         }
 
         //Spawn some empty floppies as well
@@ -107,6 +116,16 @@ public class SaveManager : MonoBehaviour
         Instance.SaveToFile(path + "/" + floppyName + ".txt");
     }
 
+    public static void DeleteSave(string floppyName)
+    {
+        Instance.DeleteSaveFile(path + "/" + floppyName + ".txt");
+    }
+
+    public static void NewWorld()
+    {
+        Instance.ResetGame();
+    }
+
     private void SaveToFile(string path) {
         //Debug.LogError("Saving...");
         //Save all commands to a file
@@ -128,6 +147,14 @@ public class SaveManager : MonoBehaviour
             }
         }
         //Debug.LogError("Done saving");
+    }
+
+    private void DeleteSaveFile(string path)
+    {
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
     }
 
     public static void CreateSelectArrowCommand(string arrowID)
@@ -270,6 +297,7 @@ public class SaveManager : MonoBehaviour
             loadingGame = true;
             //SceneManager.LoadScene("TestScene", LoadSceneMode.Single);
             Instance.ResetGame();
+            Instance.StartCoroutine(Instance.ExecuteSaveFile());
         }
     }
 
@@ -288,6 +316,7 @@ public class SaveManager : MonoBehaviour
                 loadingGame = true;
                 //SceneManager.LoadScene("TestScene", LoadSceneMode.Single);
                 ResetGame();
+                StartCoroutine(ExecuteSaveFile());
             }
         } else
         {
@@ -348,9 +377,6 @@ public class SaveManager : MonoBehaviour
         GameObject.Find("TransitionManager").GetComponent<TransitionScript>().GoToRoom();
 		
 		Instance.commandList.Clear();
-
-        StartCoroutine(ExecuteSaveFile());
-
     }
 
     IEnumerator ExecuteSaveFile()

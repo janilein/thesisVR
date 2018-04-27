@@ -1,0 +1,17 @@
+{"type":"streets","attr":[{"streetID":"1"},{"type":"straight","attr":[{}]}]}
+{"type":"streets","attr":[{"streetID":"1"},{"type":"intersection-t","attr":[{"orientation":"rightStraight"}]}]}
+{"type":"orientation","attr":[{"direction":"right"}]}
+{"type":"streets","attr":[{"streetID":"1"},{"type":"straight","attr":[{"length":"large"}]}]}
+{"type":"streets","attr":[{"streetID":"1"},{"type":"turn","attr":[{"direction":"right"}]}]}
+{"type":"streets","attr":[{"streetID":"1"},{"type":"straight","attr":[{"length":"small"}]}]}
+{"type":"streets","attr":[{"streetID":"1"},{"type":"turn","attr":[{"direction":"right"}]}]}
+{"type":"orientation","attr":[{"direction":"straight"}]}
+{"type":"streets","attr":[{"streetID":"1"},{"type":"intersection-x","attr":[{}]}]}
+{"type":"command","attr":[{"type":"selectlot","attr":[{"lotid":"World/streetID:3/lotID:13"}]}]}
+{"type":"lots","attr":[{"lotID":"1"},{"type":"buildings","attr":[{"type":"apartment","attr":[{"floors":"6"}]}]}]}
+{"type":"command","attr":[{"type":"selectlot","attr":[{"lotid":"World/streetID:3/lotID:9"}]}]}
+{"type":"command","attr":[{"type":"selectlot","attr":[{"lotid":"World/streetID:1/lotID:4"}]}]}
+{"type":"command","attr":[{"type":"selectlot","attr":[{"lotid":"World/streetID:3/lotID:9"}]}]}
+{"type":"lots","attr":[{"lotID":"1"},{"type":"buildings","attr":[{"type":"apartment","attr":[{"floors":"8","color":"yellow"}]}]}]}
+{"type":"command","attr":[{"type":"selectlot","attr":[{"lotid":"World/streetID:1/lotID:4"}]}]}
+{"type":"lots","attr":[{"lotID":"1"},{"type":"buildings","attr":[{"type":"house","attr":[{"color":"blue"},{"type":"roof","attr":[{"color":"red"}]}]}]}]}

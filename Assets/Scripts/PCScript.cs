@@ -86,7 +86,8 @@ public class PCScript : MonoBehaviour
             if (insertedFloppyState == FloppyEnum.newsave)
             {
                 //New save, first enter a name
-                visibleText.text = "Enter save name \n";
+                textCommand = "Enter save name \n";
+                visibleText.text = textCommand;
                 hoverTextInput.TextInput = "";
                 okButton.IsEnabled = true;
             }

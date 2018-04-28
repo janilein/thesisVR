@@ -209,14 +209,14 @@ public class TextToJSON
 
         obj.Add(new JProperty("attr", new JArray(obj2)));
 
-        JObject rss = new JObject(
+        JObject rss =
             new JObject(
                     new JProperty("type", "streets"),
                     new JProperty("attr", new JArray(
                         new JObject(
                             new JProperty("streetID", "1")),
                         obj
-                        ))));
+                        )));
 
         Debug.Log(rss.ToString());
         bool successParse = true;
@@ -313,7 +313,7 @@ public class TextToJSON
 
             //If both 'all floors' and a color are specified, add them as well
 
-            specifiedDescription = new JObject(
+            specifiedDescription =
                 new JObject(
                     new JProperty("type", "lots"),
                     new JProperty("attr", new JArray(
@@ -326,7 +326,7 @@ public class TextToJSON
                                 buildingObj
                                ))
                             )
-                        ))
+                        )
                     )
                 );
 

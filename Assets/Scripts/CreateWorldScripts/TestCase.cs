@@ -123,10 +123,8 @@ public class TestCase : MonoBehaviour {
 
         //                ))))
         //);
-
-
-
-        JObject rss = new JObject(
+									
+		JObject rss = 
             new JObject(
                     new JProperty("type", "streets"),
                     new JProperty("attr", new JArray(
@@ -140,7 +138,7 @@ public class TestCase : MonoBehaviour {
                                     new JProperty("lotsLeft", "2"),
                                     new JProperty("lotsRight", "6"),
                                     new JProperty("orientation", "rightStraight")
-                                    ))))))));
+                                    )))))));
 
         bool successParse = true;
         Hashtable o = (Hashtable)JSON.JsonDecode(rss.ToString(), ref successParse);
@@ -152,7 +150,7 @@ public class TestCase : MonoBehaviour {
         WorldObject root = hashParser.getRootObject();
         //Debug.Log("Starting to generate");
 
-        JObject rss2 = new JObject(
+        JObject rss2 = 
             new JObject(
                     new JProperty("type", "streets"),
                     new JProperty("attr", new JArray(
@@ -166,25 +164,25 @@ public class TestCase : MonoBehaviour {
                                     new JProperty("lotsLeft", "2"),
                                     new JProperty("lotsRight", "6"),
                                     new JProperty("orientation", "rightStraight")
-                                    ))))))));
+                                    )))))));
 
         Hashtable o2 = (Hashtable)JSON.JsonDecode(rss2.ToString(), ref successParse);
         hashParser.PrintHashTable(o2);     //Convert the hashtable to WorldObjects
         WorldObject root2 = hashParser.getRootObject();
 
-        JObject rss3 = new JObject(
+        JObject rss3 = 
             new JObject(
                     new JProperty("type", "orientation"),
                     new JProperty("attr", new JArray(
                         new JObject(
                             new JProperty("direction", "left"))
-                        ))));
+                        )));
 
         Hashtable o3 = (Hashtable)JSON.JsonDecode(rss3.ToString(), ref successParse);
         hashParser.PrintHashTable(o3);     //Convert the hashtable to WorldObjects
         WorldObject root3 = hashParser.getRootObject();
 
-        JObject rss4 = new JObject(
+        JObject rss4 = 
             new JObject(
                     new JProperty("type", "streets"),
                     new JProperty("attr", new JArray(
@@ -198,17 +196,17 @@ public class TestCase : MonoBehaviour {
                                     new JProperty("lotsLeft", "2"),
                                     new JProperty("lotsRight", "6"),
                                     new JProperty("orientation", "rightStraight")
-                                    ))))))));
+                                    )))))));
 
-        JObject rss5 = new JObject(
+        JObject rss5 =
             new JObject(
                     new JProperty("type", "orientation"),
                     new JProperty("attr", new JArray(
                         new JObject(
                             new JProperty("direction", "right"))
-                        ))));
+                        )));
 
-        JObject rss6 = new JObject(
+        JObject rss6 =
          new JObject(
                  new JProperty("type", "streets"),
                  new JProperty("attr", new JArray(
@@ -222,9 +220,9 @@ public class TestCase : MonoBehaviour {
                                  new JProperty("lotsLeft", "2"),
                                  new JProperty("lotsRight", "6"),
                                  new JProperty("orientation", "leftRight")
-                                 ))))))));
+                                 )))))));
 
-        JObject rss7 = new JObject(
+        JObject rss7 =
          new JObject(
                  new JProperty("type", "streets"),
                  new JProperty("attr", new JArray(
@@ -238,17 +236,17 @@ public class TestCase : MonoBehaviour {
                                  new JProperty("lotsLeft", "2"),
                                  new JProperty("lotsRight", "6"),
                                  new JProperty("orientation", "leftStraight")
-                                 ))))))));
+                                 )))))));
 
-        JObject rss8 = new JObject(
+        JObject rss8 =
             new JObject(
                     new JProperty("type", "orientation"),
                     new JProperty("attr", new JArray(
                         new JObject(
                             new JProperty("direction", "straight"))
-                        ))));
+                        )));
 
-        JObject rss9 = new JObject(
+        JObject rss9  =
          new JObject(
                  new JProperty("type", "streets"),
                  new JProperty("attr", new JArray(
@@ -262,9 +260,9 @@ public class TestCase : MonoBehaviour {
                                  new JProperty("lotsLeft", "2"),
                                  new JProperty("lotsRight", "6"),
                                  new JProperty("orientation", "rightStraight")
-                                 ))))))));
+                                 )))))));
 
-        JObject rss10 = new JObject(
+        JObject rss10 =
          new JObject(
                  new JProperty("type", "streets"),
                  new JProperty("attr", new JArray(
@@ -276,9 +274,9 @@ public class TestCase : MonoBehaviour {
                              new JObject(
                                  new JProperty("angle", "90"),
                                  new JProperty("direction", "left")
-                                 ))))))));
+                                 )))))));
 
-        JObject rss11 = new JObject(
+        JObject rss11 =
          new JObject(
                  new JProperty("type", "streets"),
                  new JProperty("attr", new JArray(
@@ -290,9 +288,9 @@ public class TestCase : MonoBehaviour {
                              new JObject(
                                  new JProperty("angle", "90"),
                                  new JProperty("direction", "right")
-                                 ))))))));
+                                 )))))));
 
-        JObject rss12 = new JObject(
+        JObject rss12 = 
          new JObject(
                  new JProperty("type", "streets"),
                  new JProperty("attr", new JArray(
@@ -304,9 +302,9 @@ public class TestCase : MonoBehaviour {
                              new JObject(
                                  new JProperty("angle", "45"),
                                  new JProperty("direction", "left")
-                                 ))))))));
+                                 )))))));
 
-        JObject rss13 = new JObject(
+        JObject rss13 =
          new JObject(
                  new JProperty("type", "streets"),
                  new JProperty("attr", new JArray(
@@ -318,7 +316,7 @@ public class TestCase : MonoBehaviour {
                              new JObject(
                                  new JProperty("angle", "45"),
                                  new JProperty("direction", "right")
-                                 ))))))));
+                                 )))))));
 
         Hashtable o5 = (Hashtable)JSON.JsonDecode(rss5.ToString(), ref successParse);
         hashParser.PrintHashTable(o5);     //Convert the hashtable to WorldObjects

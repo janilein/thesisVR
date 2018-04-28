@@ -159,8 +159,8 @@ public class SaveManager : MonoBehaviour
 
     public static void CreateSelectArrowCommand(string arrowID)
     {
-        Debug.LogError("CreateSelectArrowCommand called");
-        JObject command = new JObject(
+        //Debug.LogError("CreateSelectArrowCommand called");
+        JObject command = 
             new JObject(
                     new JProperty("type", "command"),
                     new JProperty("attr", new JArray(
@@ -171,15 +171,15 @@ public class SaveManager : MonoBehaviour
                                     new JProperty("arrowid", arrowID)
                                     )
                                 )
-                        ))))));
+                        )))));
 
         AddCommand(command.ToString());
     }
 
     public static void CreateSelectLotCommand(string lotID)
     {
-        Debug.LogError("CreateSelectLotCommand called");
-        JObject command = new JObject(
+        //Debug.LogError("CreateSelectLotCommand called");
+        JObject command = 
             new JObject(
                     new JProperty("type", "command"),
                     new JProperty("attr", new JArray(
@@ -190,15 +190,15 @@ public class SaveManager : MonoBehaviour
                                     new JProperty("lotid", lotID)
                                     )
                                 )
-                        ))))));
+                        )))));
 
         AddCommand(command.ToString());
     }
 
     public static void CreateDeleteObjectCommand(string objectID)
     {
-        Debug.LogError("CreateDeleteObjectCommand called");
-        JObject command = new JObject(
+        //Debug.LogError("CreateDeleteObjectCommand called");
+        JObject command =
             new JObject(
                     new JProperty("type", "command"),
                     new JProperty("attr", new JArray(
@@ -209,15 +209,15 @@ public class SaveManager : MonoBehaviour
                                     new JProperty("objectid", objectID)
                                     )
                                 )
-                        ))))));
+                        )))));
 
         AddCommand(command.ToString());
     }
 		
 	public static void SpawnObjectHoverPanel(string activeParent, string resourceName, string usedName, Vector3 position){
-		Debug.Log("Called SpawnObjectHoverPanel, activeParent: " + activeParent + " , resourceName: " + resourceName);
+		//Debug.Log("Called SpawnObjectHoverPanel, activeParent: " + activeParent + " , resourceName: " + resourceName);
 		
-		JObject command = new JObject(
+		JObject command =
             new JObject(
                     new JProperty("type", "command"),
                     new JProperty("attr", new JArray(
@@ -240,7 +240,7 @@ public class SaveManager : MonoBehaviour
 									))
 								)
                                 )
-                        ))))));
+                        )))));
 
         AddCommand(command.ToString());
 	}
@@ -249,8 +249,8 @@ public class SaveManager : MonoBehaviour
     {
         Vector3 rotation = localRotation.eulerAngles;
 
-        Debug.LogError("CreateTransformCommand called");
-        JObject command = new JObject(
+        //Debug.LogError("CreateTransformCommand called");
+        JObject command = 
             new JObject(
                     new JProperty("type", "command"),
                     new JProperty("attr", new JArray(
@@ -281,7 +281,7 @@ public class SaveManager : MonoBehaviour
                                         ))
                                     )
                                 )
-                        ))))));
+                        )))));
 
         AddCommand(command.ToString());
     }

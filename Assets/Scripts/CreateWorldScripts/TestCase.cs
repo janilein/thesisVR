@@ -162,8 +162,7 @@ public class TestCase : MonoBehaviour {
                                 new JObject(
                                     new JProperty("length", "long"),
                                     new JProperty("lotsLeft", "2"),
-                                    new JProperty("lotsRight", "6"),
-                                    new JProperty("orientation", "rightStraight")
+                                    new JProperty("lotsRight", "6")
                                     )))))));
 
         Hashtable o2 = (Hashtable)JSON.JsonDecode(rss2.ToString(), ref successParse);

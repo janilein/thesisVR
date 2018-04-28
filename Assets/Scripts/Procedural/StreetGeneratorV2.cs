@@ -28,7 +28,12 @@ public class StreetGeneratorV2 : Generator {
         //spawnPosition = worldTransform.position + new Vector3(-0.05f, yOffset, -0.05f);
 		spawnPosition = new Vector3(0f, yOffset, 0f);
 
-        obj = obj.GetChildren()[0];
+		try{
+			obj = obj.GetChildren()[0];
+		} catch(Exception e){
+			Debug.LogError(e.Message);
+			return;
+		}
 
         //Only 5 types of streets allowed, so switch case them all
         string type = obj.GetObjectValue();

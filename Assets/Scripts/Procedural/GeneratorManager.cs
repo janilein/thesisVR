@@ -53,8 +53,11 @@ public class GeneratorManager {
                     previousObject = null;
                 }
 
-                previousObject = buildingGen.GenerateWorldObject(obj, currentDirection, JSON); //Obj, niet child.getChildren()[0], want generator moet aan het 'lot' kunnen
-                if (SaveManager.loadingGame)
+				GameObject newPreviousObject = buildingGen.GenerateWorldObject(obj, currentDirection, JSON); //Obj, niet child.getChildren()[0], want generator moet aan het 'lot' kunnen
+                if(newPreviousObject != null)
+					previousObject = newPreviousObject;
+				
+				if (SaveManager.loadingGame)
                 {
                     Speech.SetSpecification(false);
                     LotManager.DeselectLot();

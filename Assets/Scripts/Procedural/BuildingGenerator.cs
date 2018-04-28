@@ -35,7 +35,12 @@ public class BuildingGenerator : Generator {
         lot.AddComponent<JSONHolder>();
         lot.GetComponent<JSONHolder>().JSON = JSON;
         //Now go to the children
-        obj = obj.GetChildren()[0].GetChildren()[0];
+		try{
+			obj = obj.GetChildren()[0].GetChildren()[0];
+		} catch(Exception e){
+			Debug.LogError(e.Message);
+			return null;
+		}
 
         //Spawning appartment or house or ...? (For defaults)
         typeOfBuilding = obj.GetObjectValue();

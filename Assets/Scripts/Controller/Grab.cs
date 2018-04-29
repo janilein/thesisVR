@@ -109,4 +109,13 @@ public class Grab : MonoBehaviour
         fx.breakTorque = 20000;
         return fx;
     }
+
+    //Gets called automatically when the joint breaks
+    private void OnJointBreak(float breakForce)
+    {
+        grabbedObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        grabbedObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        grabbedObject.GetComponent<Rigidbody>().useGravity = true;
+        grabbedObject = null;
+    }
 }

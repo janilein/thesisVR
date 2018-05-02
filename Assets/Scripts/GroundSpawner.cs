@@ -23,12 +23,17 @@ public class GroundSpawner : MonoBehaviour{
         float totalLength = nbOfY * ground.GetComponent<Renderer>().bounds.size.z;
         float widthOffset = -totalWidth / 2;
         float lengthOffset = -totalLength / 2;
+		
+		//Counter for saves
+		int count = 1;
+		
         for (int x = 0; x < nbOfX; x++)
         {
             for (int y = 0; y < nbOfY; y++)
             {
                 GameObject groundObject = Instantiate(ground, new Vector3(widthOffset + x * ground.GetComponent<Renderer>().bounds.size.x, 0f, lengthOffset + y * ground.GetComponent<Renderer>().bounds.size.z), Quaternion.identity);
                 groundObject.transform.SetParent(parent, false);
+				groundObject.transform.name = "Plane " + count++;
             }
         }
     }

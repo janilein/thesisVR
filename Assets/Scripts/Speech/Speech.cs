@@ -380,6 +380,10 @@ public class Speech : MonoBehaviour {
         }
 
         googleOutputText = e.Result.ToString();
+		
+		//Check if it contains "one" and convert it to "1"
+		googleOutputText.Replace(" one ", "1");
+		
         bool successParse = false;
         Hashtable o = (Hashtable)JSON.JsonDecode(googleOutputText, ref successParse);
         googleOutputText = GetTranscript(o).ToLower();

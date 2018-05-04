@@ -162,7 +162,8 @@ public class ObjectManager : MonoBehaviour {
         
         movement= instance.headRotation * Vector3.forward * x + instance.headRotation * Vector3.left * z;
         movement.y = y;
-        instance.lockedObject.transform.localPosition = instance.lockedObject.transform.localPosition + movement;
+        //instance.lockedObject.transform.localPosition = instance.lockedObject.transform.localPosition + movement;
+        instance.lockedObject.transform.position = instance.lockedObject.transform.position + movement;
         //RelationManager.MoveObject(movement, instance.lockedObject);
     }
 

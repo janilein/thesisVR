@@ -227,8 +227,8 @@ public class Speech : MonoBehaviour {
 				using(WebClient wc = new WebClient()){;
 	                wc.UploadStringCompleted += new UploadStringCompletedEventHandler(GoogleCallFinished);
 	                wc.Headers["Content-Type"] = "application/json";
-
 	                wc.UploadStringAsync(new Uri("https://speech.googleapis.com/v1/speech:recognize?key=" + apiKeyGoogle), "POST", jsonString);
+                    
 				}
 
                 //var httpResponse = (HttpWebResponse)req.GetResponse();
@@ -380,13 +380,14 @@ public class Speech : MonoBehaviour {
         }
 
         googleOutputText = e.Result.ToString();
-		
-		//Check if it contains "one" and convert it to "1"
-		googleOutputText.Replace(" one ", "1");
-		
+
+        //Debug.LogError("Net na call");
         bool successParse = false;
         Hashtable o = (Hashtable)JSON.JsonDecode(googleOutputText, ref successParse);
         googleOutputText = GetTranscript(o).ToLower();
+
+        //Check if it contains "one" and convert it to "1"
+        googleOutputText = googleOutputText.Replace("one", "1");
 
         Debug.Log("Result");
         Debug.Log(googleOutputText);

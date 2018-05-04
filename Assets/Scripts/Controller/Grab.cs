@@ -33,6 +33,10 @@ public class Grab : MonoBehaviour
                 {
                     transitionScript.OpenDoor();
                 }
+                else if (collidedObject.transform.name.ToLower().Contains("okean"))
+                {
+                    collidedObject.GetComponent<Radio>().ToggleRadio();
+                }
                 else
                 {
                     GrabObject(collidedObject);
@@ -70,6 +74,9 @@ public class Grab : MonoBehaviour
             {
                 collidedObject = other.gameObject;
             }
+        } else if (other.transform.name.Equals("okean"))
+        {
+            collidedObject = other.gameObject;
         }
     }
 

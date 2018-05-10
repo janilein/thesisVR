@@ -1,0 +1,1 @@
+{"type":"streets","attr":[{"streetID":"1"},{"type":"straight","attr":[{"length":"large"}]}]}

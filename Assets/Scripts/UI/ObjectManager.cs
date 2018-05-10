@@ -8,6 +8,8 @@ public class ObjectManager : MonoBehaviour {
 
     public Transform headTransform;
 
+    public GameObject world;
+    public GameObject rightController;
     public GameObject previousObject;
     public GameObject currentObject;
     public GameObject lockedObject;
@@ -17,7 +19,7 @@ public class ObjectManager : MonoBehaviour {
     public bool editMode = false;
 
     private bool lockedObjectDeleted = false;
-
+    private List<GameObject> canSelects = new List<GameObject>();
     
 
     private static ObjectManager objectManager;
@@ -41,6 +43,10 @@ public class ObjectManager : MonoBehaviour {
         instance.editMode = !instance.editMode;
         if (instance.editMode == false) {
             UnlockCurrentObject();
+            RemoveCanSelects();
+        } else
+        {
+            ShowCanSelects();
         }
         Debug.Log("Done with toggle mode");
     }
@@ -49,8 +55,56 @@ public class ObjectManager : MonoBehaviour {
 		if(instance.editMode){
 			instance.editMode = false;
 			UnlockCurrentObject();
+            RemoveCanSelects();
 		}
-	}
+    }
+
+    public static void ShowCanSelects()
+    {
+        foreach (GameObject obj in instance.canSelects)
+        {
+            if (obj.transform.name.ToLower().Contains("lotid"))
+            {
+                obj.GetComponentInChildren<MeshRenderer>().enabled = true;
+            }
+            else
+            {
+                obj.SetActive(true);
+            }
+        }
+        instance.rightController.GetComponent<VoiceController>().SetEnabled(instance.editMode);
+    }
+
+    public static void RemoveCanSelects()
+    {
+        foreach (Transform child in instance.world.transform)
+        {
+            if (child.name.ToLower().Contains("streetid"))
+            {
+                foreach (Transform children in child)
+                {
+                    if (children.name.ToLower().Contains("lotid") || children.name.ToLower().Equals("colliders"))
+                    {
+                        Debug.Log("added a gameobject");
+                        instance.canSelects.Add(children.gameObject);
+                    }
+                }
+            }
+        }
+        Debug.Log("number of gameobjects:" + instance.canSelects.Count);
+        foreach(GameObject obj in instance.canSelects)
+        {
+            if (obj.transform.name.ToLower().Contains("lotid"))
+            {
+                obj.GetComponentInChildren<MeshRenderer>().enabled = false;
+            }
+            else
+            {
+                obj.SetActive(false);
+            }
+        }
+        instance.rightController.GetComponent<VoiceController>().SetEnabled(instance.editMode);
+    }
 
     public static bool GetMode() {
         return instance.editMode;

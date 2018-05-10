@@ -145,6 +145,7 @@ public class SaveManager : MonoBehaviour
             {
                 sw.WriteLine(s);
             }
+            sw.Close();
         }
         //Debug.LogError("Done saving");
     }

@@ -69,7 +69,7 @@
         private IEnumerator Roll() {
             while (true) {
                 //Debug.Log("Rotate degrees: " + slider.SnappedRangeValue * Time.deltaTime);
-                ObjectManager.RotateObject(new Vector3(slider.SnappedRangeValue, 0f, 0f) * Time.deltaTime);
+                ObjectManager.RotateObject(new Vector3(0f, 0f, slider.SnappedRangeValue) * Time.deltaTime);
                 yield return null;
             }
         }
@@ -77,7 +77,7 @@
         private IEnumerator Pitch() {
             while (true) {
                 //Debug.Log("Rotate degrees: " + slider.SnappedRangeValue * Time.deltaTime);
-                ObjectManager.RotateObject(new Vector3(0f, slider.SnappedRangeValue, 0f) * Time.deltaTime);
+                ObjectManager.RotateObject(new Vector3(slider.SnappedRangeValue, 0f, 0f) * Time.deltaTime);
                 yield return null;
             }
         }
@@ -85,7 +85,7 @@
         private IEnumerator Yaw() {
             while (true) {
                 //Debug.Log("Rotate degrees: " + slider.SnappedRangeValue * Time.deltaTime);
-                ObjectManager.RotateObject(new Vector3(0f, 0f, slider.SnappedRangeValue) * Time.deltaTime);
+                ObjectManager.RotateObject(new Vector3(0f, slider.SnappedRangeValue, 0f) * Time.deltaTime);
                 yield return null;
             }
         }

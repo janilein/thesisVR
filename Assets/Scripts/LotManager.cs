@@ -40,6 +40,7 @@ public class LotManager : MonoBehaviour
             if (instance.lot)
             {
                 instance.lot.GetComponent<SelectableObject>().RemoveHighlight();
+                Speech.SetSpecification(false); //Automatically move to new description
             }
 
             instance.lot = lot;

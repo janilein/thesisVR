@@ -153,10 +153,7 @@ public class PCScript : MonoBehaviour
         this.floppy = floppy;
         floppyInserted = true;
 
-        floppy.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        floppy.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-        floppy.GetComponent<Rigidbody>().useGravity = false;
-        floppy.GetComponent<BoxCollider>().enabled = false;
+        FloppySettings();
         //Start coroutine which moves & rotates the floppy disk
 
         //Moving to center of pc, whatever
@@ -164,6 +161,14 @@ public class PCScript : MonoBehaviour
 
         //Rotating to normal stuff
         StartCoroutine(RotateFloppy());
+    }
+
+    private void FloppySettings()
+    {
+        floppy.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        floppy.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        floppy.GetComponent<Rigidbody>().useGravity = false;
+        floppy.GetComponent<BoxCollider>().enabled = false;
     }
 
     private IEnumerator RotateFloppy()
@@ -218,6 +223,9 @@ public class PCScript : MonoBehaviour
         movingFinished = false;
         rotationFinished = false;
         string saveGameName = floppy.name;
+
+        floppy.rotation = wantedRotation; //In case user started rotating the floppy
+        FloppySettings();
 
         CheckInsertedFloppy();
     }

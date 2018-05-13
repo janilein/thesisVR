@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Turn45 : GenericStreet {
 
-    public Vector3 topPoint = new Vector3(-22.08f, 0, 33.1f);
-    public Vector3 bottomPoint = new Vector3(7.8f, 0, -38.9f);
-    public Vector3 offsetPoint = new Vector3(-7.8f, 0f, 38.9f);
+    //public Vector3 topPoint = new Vector3(-22.19535f, 0, 32.8234f);
+    public Vector3 topPoint = new Vector3(-22.05f, 0, 33f);
+    public Vector3 bottomPoint = new Vector3(7.75f, 0, -38.965f);
+    public Vector3 offsetPoint = new Vector3(-7.75f, 0f, 38.965f);
 
     public Vector3 colliderTopPoint, colliderBottomPoint;
 
@@ -46,9 +47,10 @@ public class Turn45 : GenericStreet {
     public override void SetRightTurn()
     {
 
-		topPoint = new Vector3(22.08f, 0, 33.1f);
-		bottomPoint = new Vector3(-7.8f, 0, -38.9f);
-		offsetPoint = new Vector3(7.8f, 0f, 38.9f);
+        //topPoint = new Vector3(22.19535f, 0, 32.8234f);
+        topPoint = new Vector3(22.05f, 0, 33f);
+        bottomPoint = new Vector3(-7.75f, 0, -38.965f);
+		offsetPoint = new Vector3(7.75f, 0f, 38.965f);
 
 		colliderTopPoint = new Vector3(1.5f, 0, 1.5f);
 		colliderBottomPoint = new Vector3(1.5f, 0, 0);

@@ -99,12 +99,13 @@ public class TransitionScript : MonoBehaviour
         {
             world.localScale = world.localScale / scalingFactor;
             world.localPosition = roomPosition;
-
+            ObjectManager.ShowCanSelects();
         }
         else
         {
             world.localScale = world.localScale * scalingFactor;
             world.localPosition = Vector3.zero;
+            ObjectManager.RemoveCanSelects();
         }
         cameraRig.position = Vector3.zero;
         SteamVR_Fade.Start(Color.white, 0f);

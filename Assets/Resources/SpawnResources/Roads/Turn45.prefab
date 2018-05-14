@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 114722343064054058}
   m_Layer: 8
   m_Name: Turn45
-  m_TagString: Highlightable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -178,6 +178,9 @@ MonoBehaviour:
   spawnStart: {x: 0, y: 0, z: 0}
   topPoint: {x: -22.08, y: 0, z: 33.1}
   bottomPoint: {x: 7.8, y: 0, z: -38.9}
+  offsetPoint: {x: -7.75, y: 0, z: 38.965}
+  colliderTopPoint: {x: -1.5, y: 0, z: 1.5}
+  colliderBottomPoint: {x: -1.5, y: 0, z: 0}
 --- !u!114 &114722343064054058
 MonoBehaviour:
   m_ObjectHideFlags: 1

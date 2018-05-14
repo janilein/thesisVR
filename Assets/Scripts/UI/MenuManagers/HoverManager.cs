@@ -109,6 +109,11 @@
                 //Debug.Log("Set hovercast active");
             }
         }
-    }
 
+        public bool GetStatus()
+        {
+            return hoverCast.activeSelf;
+        }
+
+    }
 }

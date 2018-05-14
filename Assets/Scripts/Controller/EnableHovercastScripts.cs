@@ -34,6 +34,13 @@ public class EnableHovercastScripts : MonoBehaviour {
         }
     }
 
+    public void DisableHoverMenu()
+    {
+        if (((HoverManager)hoverManager).GetStatus()) {
+            ChangeHoverStatus();
+        }
+    }
+
     private void ChangeHoverStatus() {
 
         hoverManager.ChangeStatus();

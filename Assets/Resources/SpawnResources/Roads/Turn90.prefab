@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114629400406761834}
   m_Layer: 8
   m_Name: Turn90
-  m_TagString: Highlightable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -189,3 +189,6 @@ MonoBehaviour:
   spawnStart: {x: 0, y: 0, z: 0}
   topPoint: {x: -36.5, y: 0, z: 14.8}
   bottomPoint: {x: 14.8, y: 0, z: -36.5}
+  offsetPoint: {x: -14.92, y: 0, z: 36}
+  colliderTopPoint: {x: -1.5, y: 0, z: 0}
+  colliderBottomPoint: {x: 0, y: 0, z: -1.5}

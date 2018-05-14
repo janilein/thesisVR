@@ -59,7 +59,7 @@ public class GeneratorManager {
 				
 				if (SaveManager.loadingGame)
                 {
-                    Speech.SetSpecification(false);
+                    //Speech.SetSpecification(false);
                     LotManager.DeselectLot();
                 }
             } else if (child.GetObjectValue().Equals("gardens")) {
@@ -161,21 +161,17 @@ public class GeneratorManager {
         if(previousObject != null)
         {
             //Previous object is the lot, get the house in the lot
-            Transform house = previousObject.transform.Find("Building");
-            if(house != null)
-            {
-                house.tag = "Highlightable";
-            } else
-            {
-                Debug.Log("No house found in lot");
-            }
+            //Transform house = previousObject.transform.Find("Building");
+            //if(house != null)
+            //{
+            //    house.tag = "Highlightable";
+            //} else
+            //{
+            //    Debug.Log("No house found in lot");
+            //}
             LotManager.DeselectLot();
-            previousObject = null;
-        }
-		
-		if (!SaveManager.loadingGame)
-        {
             SaveManager.AddJSON(previousObject.GetComponent<JSONHolder>().JSON);
+            previousObject = null;
         }
 		
     }

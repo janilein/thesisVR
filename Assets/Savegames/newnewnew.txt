@@ -1,0 +1,1 @@
+{"type":"lots","attr":[{"lotID":"1"},{"type":"buildings","attr":[{"type":"house"}]}]}

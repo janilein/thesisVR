@@ -72,7 +72,7 @@ public class ObjectManager : MonoBehaviour {
                 obj.SetActive(true);
             }
         }
-        instance.rightController.GetComponent<VoiceController>().SetEnabled(instance.editMode);
+        instance.rightController.GetComponent<VoiceController>().SetEnabled(true);
     }
 
     public static void RemoveCanSelects()
@@ -103,7 +103,7 @@ public class ObjectManager : MonoBehaviour {
                 obj.SetActive(false);
             }
         }
-        instance.rightController.GetComponent<VoiceController>().SetEnabled(instance.editMode);
+        instance.rightController.GetComponent<VoiceController>().SetEnabled(false);
     }
 
     public static bool GetMode() {

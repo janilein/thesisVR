@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114629400406761834}
   m_Layer: 8
   m_Name: Turn90
-  m_TagString: Highlightable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

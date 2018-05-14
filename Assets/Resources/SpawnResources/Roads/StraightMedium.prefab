@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 114747968609681048}
   m_Layer: 8
   m_Name: StraightMedium
-  m_TagString: Highlightable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -187,3 +187,4 @@ MonoBehaviour:
   spawnStart: {x: 0, y: 0, z: 0}
   topPoint: {x: 0, y: 0, z: 30}
   type: straightstreet
+  colliderTopPoint: {x: 0, y: 0, z: 1.5}

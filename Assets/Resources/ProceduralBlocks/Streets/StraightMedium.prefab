@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 114747968609681048}
   m_Layer: 8
   m_Name: StraightMedium
-  m_TagString: Highlightable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

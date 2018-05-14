@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: t_002_b001-2
-  m_Shader: {fileID: 4800000, guid: 787d7485aa6482341a9f55fa37fb84f1, type: 3}
+  m_Shader: {fileID: 4800000, guid: 7a8c897ec1557fc45bc3020cff6d70f8, type: 3}
   m_ShaderKeywords: _METALLICGLOSSMAP _NORMALMAP
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0

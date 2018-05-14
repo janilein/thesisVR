@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class TransitionScript : MonoBehaviour
 {
-
+    public EnableHovercastScripts hoverCastScript;
     public Transform cameraRig;
     private GameObject room;
     private bool isInRoom = true;
@@ -63,6 +63,8 @@ public class TransitionScript : MonoBehaviour
             SteamVR_Fade.Start(Color.white, transitionTime);
             StartCoroutine(Teleport(true));
             isInRoom = true;
+
+            hoverCastScript.DisableHoverMenu();
         }
 
     }

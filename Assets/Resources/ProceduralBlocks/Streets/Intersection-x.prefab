@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114947184437220070}
   m_Layer: 8
   m_Name: Intersection-x
-  m_TagString: Highlightable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

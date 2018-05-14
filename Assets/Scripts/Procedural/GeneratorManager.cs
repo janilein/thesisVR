@@ -170,8 +170,13 @@ public class GeneratorManager {
                 Debug.Log("No house found in lot");
             }
             LotManager.DeselectLot();
-            SaveManager.AddJSON(previousObject.GetComponent<JSONHolder>().JSON);
             previousObject = null;
         }
+		
+		if (!SaveManager.loadingGame)
+        {
+            SaveManager.AddJSON(previousObject.GetComponent<JSONHolder>().JSON);
+        }
+		
     }
 }

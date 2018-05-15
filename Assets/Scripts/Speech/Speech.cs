@@ -26,6 +26,7 @@ public class Speech : MonoBehaviour {
     public string apiKeyGoogle;
 
     private Text projectionText;
+	private InputField menuText;
 
     WaveIn waveIn;
     //WaveOut waveOut;
@@ -54,6 +55,13 @@ public class Speech : MonoBehaviour {
 		} else {
 			Debug.LogError ("No Canvasholder found in TheRoom!");
 		}
+		
+		GameObject textGameObject = GameObject.Find("GUI/Canvas/SpeechButtons/InputText");
+		if(textGameObject){
+			menuText = textGameObject.GetComponent<InputField>();
+		} else {
+			Debug.LogError("No InputField element found in Speech Buttons!");
+		}
     }
 
     // Use this for initialization
@@ -80,9 +88,15 @@ public class Speech : MonoBehaviour {
         }
         if (updateProjectorText)
         {
+			Debug.LogError("Update");
             updateProjectorText = false;
             if (projectionText)
                 projectionText.text = googleOutputText;
+			
+			if(menuText){
+				Debug.LogError("update text");
+				menuText.text = googleOutputText;
+			}
         }
     }
 
@@ -441,7 +455,7 @@ public class Speech : MonoBehaviour {
 
     public void ToggleSpecification()
     {
-        GameObject specifyButton = GameObject.Find("GUI/Canvas/TestButtons/SpecifyButton").gameObject;
+        GameObject specifyButton = GameObject.Find("GUI/Canvas/SpeechButtons/SpecifyButton").gameObject;
         specifyDescription = specifyButton.GetComponent<Toggle>().isOn;
         Debug.Log("Toggled specification");
 
@@ -454,7 +468,7 @@ public class Speech : MonoBehaviour {
 
     public static void SetSpecification(bool value)
     {
-        GameObject specifyButton = GameObject.Find("GUI/Canvas/TestButtons/SpecifyButton").gameObject;
+        GameObject specifyButton = GameObject.Find("GUI/Canvas/SpeechButtons/SpecifyButton").gameObject;
         specifyButton.GetComponent<Toggle>().isOn = value;
     }
 
@@ -482,6 +496,10 @@ public class Speech : MonoBehaviour {
         }
         return null;
     }
+	
+	public void MenuTextChanged(){
+		googleOutputText = menuText.text;
+	}
 
 	private void OnApplicationQuit(){
 		if (waveIn != null) {

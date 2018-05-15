@@ -67,11 +67,11 @@
             Manager.ToggleObjectActive("GUI/Canvas/SpawnButtons", true);
         }
 
-        public void Test()
+        public void Speech()
         {
-            Debug.Log("Test functions");
+            //Debug.Log("Test functions");
             Manager.ToggleObjectActive("GUI/Canvas/DefaultButtons", false);
-            Manager.ToggleObjectActive("GUI/Canvas/TestButtons", true);
+            Manager.ToggleObjectActive("GUI/Canvas/SpeechButtons", true);
         }
     }
 

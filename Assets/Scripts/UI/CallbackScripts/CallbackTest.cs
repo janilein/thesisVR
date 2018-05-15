@@ -14,7 +14,7 @@
 
         public void Back()
         {
-            Manager.ToggleObjectActive("GUI/Canvas/TestButtons", false);
+            Manager.ToggleObjectActive("GUI/Canvas/SpeechButtons", false);
             Manager.ToggleObjectActive("GUI/Canvas/DefaultButtons", true);
         }
     }

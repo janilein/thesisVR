@@ -88,13 +88,12 @@ public class Speech : MonoBehaviour {
         }
         if (updateProjectorText)
         {
-			Debug.LogError("Update");
+			
             updateProjectorText = false;
             if (projectionText)
                 projectionText.text = googleOutputText;
 			
 			if(menuText){
-				Debug.LogError("update text");
 				menuText.text = googleOutputText;
 			}
         }
@@ -365,6 +364,7 @@ public class Speech : MonoBehaviour {
 
     public void MeaningCloudCallFinished(object sender, UploadStringCompletedEventArgs e)
     {
+		
         Debug.Log("Meaningcloud call finished!");
         if (e.Error != null)
         {

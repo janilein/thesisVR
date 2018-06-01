@@ -11,6 +11,6 @@
 {"type":"command","attr":[{"type":"selectarrow","attr":[{"arrowid":"World/streetID:1/Colliders/back/arrowID:2"}]}]}
 {"type":"streets","attr":[{"streetID":"1"},{"type":"turn","attr":[{"direction":"left","angle":"45"}]}]}
 {"type":"streets","attr":[{"streetID":"1"},{"type":"turn","attr":[{"direction":"right"}]}]}
-{"type":"command","attr":[{"type":"selectarrow","attr":[{"arrowid":"World/streetID:7/Colliders/straight/arrowID:11"}]}]}
+{"type":"command","attr":[{"type":"selectarrow","attr":[{"arrowid":"World/streetID:7/Colliders/straight/arrowID:16"}]}]}
 {"type":"streets","attr":[{"streetID":"1"},{"type":"intersection-t","attr":[{"orientation":"leftStraight"}]}]}
 {"type":"streets","attr":[{"streetID":"1"},{"type":"intersection-t","attr":[{"orientation":"rightStraight"}]}]}

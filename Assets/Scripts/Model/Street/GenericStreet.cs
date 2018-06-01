@@ -13,7 +13,11 @@ public class GenericStreet : MonoBehaviour
     public static int arrowID = 1;
 
     public Vector3 spawnStart;
-
+	private Dictionary<string, string> connectedStreets = new Dictionary<string, string>();	//Dictionary that contains all other streets connected to this one along with the direction
+	//First string is name of the direction, second one is the other street
+	
+	private List<GenericStreet> connectedGenericStreetScripts = new List<GenericStreet>();
+	
     public virtual void SetAllowedPoints(List<string> allowedDirections = null) { }
 
     public virtual void SetBackCollider() { }
@@ -38,6 +42,63 @@ public class GenericStreet : MonoBehaviour
     //        }
     //        colliderRotatedPoints.Clear();
     //    }
+	
+	public void AddConnectedStreet(string direction, string name){
+		//Debug.LogError("Add to " + gameObject.transform.parent.name + " : Name = " + name + " Direction = " + direction);
+		connectedStreets.Add(direction, name);	//other is connected to this street at "direction" point
+	}
+	
+	public void AddConnectedStreetScript(GenericStreet other){
+		//Debug.LogError("Add CSC to " + gameObject.transform.parent.name + ": " + other.transform.parent.name); 
+		connectedGenericStreetScripts.Add(other);
+	}
+	
+	public void ConnectedStreetDestroyed(string otherStreetName){
+		//Get the direction of the arrow this street should respawn
+		string direction = null;
+		foreach(KeyValuePair<string, string> connectedStreet in connectedStreets){
+			if(connectedStreet.Value.Equals(otherStreetName)){
+				direction = connectedStreet.Key;
+				break;
+			}
+		}
+		
+		if(direction == null){
+			//Debug.LogError("Direction for " + otherStreetName + " in + " + gameObject.transform.parent.name + " not found");
+			return;
+		}
+		
+		connectedStreets.Remove(otherStreetName);
+		
+		//Copy all colliderAllowedPoint values to a backup
+		Dictionary<string, Vector3> backup = new Dictionary<string, Vector3>();
+		foreach (KeyValuePair<string, Vector3> colliderAllowedPoint in colliderAllowedPoints) {
+			backup.Add(colliderAllowedPoint.Key, colliderAllowedPoint.Value);
+		}
+		
+		//Clear the dictionary, only leaving the direction that is given
+		colliderAllowedPoints.Clear();
+		foreach (KeyValuePair<string, Vector3> backupPoint in backup) {
+			if(backupPoint.Key.Equals(direction)){
+				colliderAllowedPoints.Add(backupPoint.Key, backupPoint.Value);
+			}
+		}
+		
+		//Now do spawnColliders()
+		/*Debug.LogError("Spawning colliders, dictionary entries: ");
+		foreach (KeyValuePair<string, Vector3> colliderAllowedPoint in colliderAllowedPoints) {
+			Debug.LogError(colliderAllowedPoint.Key);
+		}
+		*/
+		
+		SpawnColliders();
+		
+		//Put all values back in colliderAllowedPoints
+		colliderAllowedPoints.Clear();
+		foreach (KeyValuePair<string, Vector3> backupPoint in backup) {
+			colliderAllowedPoints.Add(backupPoint.Key, backupPoint.Value);
+		}
+	}
 
     public void SpawnColliders()
     {
@@ -112,8 +173,8 @@ public class GenericStreet : MonoBehaviour
     {
         //Debug.LogError("Remove collider: " + direction);
         //Remove collider from this specific direction
-		colliderAllowedPoints.Remove(direction);
-		centerOffset.Remove (direction);
+		//colliderAllowedPoints.Remove(direction);
+		//centerOffset.Remove (direction);
 
         Transform colliderChild = this.transform.parent.Find("Colliders");
         if(colliderChild != null)
@@ -144,6 +205,10 @@ public class GenericStreet : MonoBehaviour
                 if (colliderScript.CheckCollision())
                 {
                     childrenToDestroy.Add(colliderTransform);
+					
+					//Debug.LogError("Add 2 to " + gameObject.transform.parent.name + " : Name = " + colliderScript.GetNameCollidedStreet() + " Direction = " + colliderTransform.name); 
+					connectedStreets.Add(colliderScript.GetNameCollidedStreet(), colliderTransform.name);
+					colliderScript.SetConnectedStreet(this);
                 }
             }
 
@@ -217,6 +282,18 @@ public class GenericStreet : MonoBehaviour
     {
         centerPoint = newCenterPoint;
     }
+	
+	private void OnDestroy(){	//When this street gets destroyed, the streets it is connected to should re-allow this direction 
+		//Debug.LogError("Called OnDestroy on street: " + gameObject.transform.name);
+		//Debug.LogError("Size: " + connectedStreets.Count);
+		foreach (GenericStreet connectedGenericStreet in connectedGenericStreetScripts) {
+				//Inform this GenericStreet that this street has been deleted, respawn this arrow
+				if(connectedGenericStreet != null){
+					//Debug.LogError("Not null");
+					connectedGenericStreet.ConnectedStreetDestroyed(this.gameObject.transform.parent.name);
+				}
+		}
+	}
 
     public virtual Vector3 GetTopPoint() { return Vector3.zero; }
     public virtual Vector3 GetBottomPoint() { return Vector3.zero; }

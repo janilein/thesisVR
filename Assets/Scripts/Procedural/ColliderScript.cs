@@ -9,6 +9,7 @@ public class ColliderScript : MonoBehaviour
     private bool collidedWithStreet = false;
     private Transform collidedStreet;
     private Vector2 direction = Vector2.zero;
+	private string nameCollidedStreet = "";
 
     private void OnTriggerEnter(Collider other)
     {
@@ -17,6 +18,7 @@ public class ColliderScript : MonoBehaviour
         {
             collidedWithStreet = true;
             collidedStreet = other.transform;
+			nameCollidedStreet = other.transform.parent.name;
 
             //We collided with a street, so make parent do the CheckColliders()
 			this.transform.parent.parent.GetComponentInChildren<GenericStreet>().CheckColliders(true);
@@ -27,6 +29,10 @@ public class ColliderScript : MonoBehaviour
     {
         return collidedWithStreet;
     }
+	
+	public string GetNameCollidedStreet(){
+		return nameCollidedStreet;
+	}
 
     public void CheckOtherStreet()
     {
@@ -37,6 +43,10 @@ public class ColliderScript : MonoBehaviour
     {
         direction = dir;
     }
+	
+	public void SetConnectedStreet(GenericStreet street){
+		collidedStreet.GetComponent<GenericStreet>().AddConnectedStreetScript(street);
+	}
 
     public void SelectedCollider()
     {

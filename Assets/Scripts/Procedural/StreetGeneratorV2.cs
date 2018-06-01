@@ -7,6 +7,7 @@ public class StreetGeneratorV2 : Generator {
 
     private Vector3 spawnPosition;
     public static GenericStreet previousStreetScript = null;
+	private bool spawnedStreet = false;
     //private string newPointDirection = "";
 
     public static int streetID = 1;
@@ -334,20 +335,21 @@ public class StreetGeneratorV2 : Generator {
 
 		Debug.Log ("Rotate: " + currentDirection.ToString ());
         RotateStreet(parent, currentDirection);
+		
+		street.GetComponent<GenericStreet>().SetBackCollider();
 
         //Street is rotated, now update it's position
         //Depending on whether or not we have a previous street, spawning happens in currentPosition or an updated currentPosition
-        if (previousStreetScript == null)        //We have no previous street, so spawning is in currentPosition
+        if (spawnedStreet == false)        //We have no previous street, so spawning is in currentPosition
         {
-			street.GetComponent<GenericStreet>().SetBackCollider();
 			street.GetComponent<GenericStreet>().SpawnColliders();
             Debug.Log("Spawning new first street");
             parent.localPosition = spawnPosition;
             //EditorGUIUtility.PingObject(parent);
 
             previousStreetScript = street.GetComponent<GenericStreet>();
-			//parent.SetParent(worldTransform, false);
-
+			
+			spawnedStreet = true;
         }
         else
         {
@@ -379,22 +381,19 @@ public class StreetGeneratorV2 : Generator {
 
             //parent.position = rotatedTopPoint;
             parent.localPosition = currentPosition;// + rotatedTopPoint;
-			//Debug.LogError ("Parent position: " + parent.position.ToString ());
-			//Debug.LogError ("Parent localposition: " + parent.localPosition.ToString ());
-			//parent.SetParent(worldTransform, false);
-			//Debug.LogError ("Parent position 2: " + parent.position.ToString ());
-			//Debug.LogError ("Parent localposition 2: " + parent.localPosition.ToString ());
-			//parent.localPosition = parent.localPosition + currentPosition;
-			//Debug.LogError ("Parent position 3: " + parent.position.ToString ());
-			//Debug.LogError ("Parent localposition 3: " + parent.localPosition.ToString ());
-            //parent.localPosition = currentPosition + spawnPosition;
 
             //Remove collider from previous street on the end on which we spawned a new street
 			previousStreetScript.RemoveCollider(pointDirection.ToString());
+			street.GetComponent<GenericStreet>().RemoveCollider("back");
+			
+			
+			//In both street scripts, add these to each other so they know they're connected
+			previousStreetScript.AddConnectedStreet(pointDirection.ToString(), street.transform.parent.name);
+			street.GetComponent<GenericStreet>().AddConnectedStreet("back", previousStreetScript.transform.parent.name);
+			previousStreetScript.AddConnectedStreetScript(street.GetComponent<GenericStreet>());
+			street.GetComponent<GenericStreet>().AddConnectedStreetScript(previousStreetScript);
 
             previousStreetScript = street.GetComponent<GenericStreet>();
-
-            //Debug.Log("Spawning new street, previous street exists");
 
         }
 

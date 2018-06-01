@@ -14,5 +14,5 @@
 {"type":"streets","attr":[{"streetID":"1"},{"type":"straight","attr":[{"length":"small"}]}]}
 {"type":"command","attr":[{"type":"selectarrow","attr":[{"arrowid":"World/streetID:2/Colliders/straight/arrowID:5"}]}]}
 {"type":"streets","attr":[{"streetID":"1"},{"type":"intersection-x","attr":[{}]}]}
-{"type":"command","attr":[{"type":"selectarrow","attr":[{"arrowid":"World/streetID:10/Colliders/left/arrowID:13"}]}]}
+{"type":"command","attr":[{"type":"selectarrow","attr":[{"arrowid":"World/streetID:10/Colliders/left/arrowID:21"}]}]}
 {"type":"streets","attr":[{"streetID":"1"},{"type":"intersection-t","attr":[{}]}]}

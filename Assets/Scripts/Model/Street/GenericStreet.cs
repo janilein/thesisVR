@@ -16,6 +16,8 @@ public class GenericStreet : MonoBehaviour
 	private Dictionary<string, string> connectedStreets = new Dictionary<string, string>();	//Dictionary that contains all other streets connected to this one along with the direction
 	//First string is name of the direction, second one is the other street
 	
+	private static bool quitting = false;
+	
 	private List<GenericStreet> connectedGenericStreetScripts = new List<GenericStreet>();
 	
     public virtual void SetAllowedPoints(List<string> allowedDirections = null) { }
@@ -313,8 +315,10 @@ public class GenericStreet : MonoBehaviour
     }
 	
 	private void OnDestroy(){	//When this street gets destroyed, the streets it is connected to should re-allow this direction 
-		//Debug.LogError("Called OnDestroy on street: " + gameObject.transform.name);
-		//Debug.LogError("Size: " + connectedStreets.Count);
+		//Since this will spawn stuff @ OnDestroy, which is also called when the application quits, we should check if the application is quitting when this gets called
+		if(quitting)
+			return;
+		
 		foreach (GenericStreet connectedGenericStreet in connectedGenericStreetScripts) {
 				//Inform this GenericStreet that this street has been deleted, respawn this arrow
 				if(connectedGenericStreet != null){
@@ -322,6 +326,10 @@ public class GenericStreet : MonoBehaviour
 					connectedGenericStreet.ConnectedStreetDestroyed(this.gameObject.transform.parent.name);
 				}
 		}
+	}
+	
+	private void OnApplicationQuit(){
+		quitting = true;
 	}
 
     public virtual Vector3 GetTopPoint() { return Vector3.zero; }

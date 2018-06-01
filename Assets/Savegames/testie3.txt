@@ -16,7 +16,7 @@
 {"type":"command","attr":[{"type":"selectlot","attr":[{"lotid":"World/streetID:1/lotID:4"}]}]}
 {"type":"command","attr":[{"type":"hoverspawn","attr":[{"activeparent":"SpawnResources/Buildings","resourcename":"custom_building_001","usedname":"custom_building_001(Clone)3"},{"type":"position","attr":[{"x":"-2.45379496","y":"-4.23808765","z":"6.37241888"}]}]}]}
 {"type":"command","attr":[{"type":"selectlot","attr":[{"lotid":"World/streetID:1/lotID:3"}]}]}
-{"type":"command","attr":[{"type":"selectarrow","attr":[{"arrowid":"World/streetID:5/Colliders/right/arrowID:9"}]}]}
+{"type":"command","attr":[{"type":"selectarrow","attr":[{"arrowid":"World/streetID:5/Colliders/right/arrowID:12"}]}]}
 {"type":"lots","attr":[{"lotID":"1"},{"type":"buildings","attr":[{"type":"house","attr":[{"floors":"7","color":"yellow"},{"type":"roof","attr":[{"color":"green"}]}]}]}]}
 {"type":"streets","attr":[{"streetID":"1"},{"type":"straight","attr":[{"length":"small"}]}]}
 {"type":"streets","attr":[{"streetID":"1"},{"type":"intersection-t","attr":[{"orientation":"leftRight"}]}]}

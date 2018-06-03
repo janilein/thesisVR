@@ -187,8 +187,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   centerPoint: {x: 0, y: 0, z: 0}
   spawnStart: {x: 0, y: 0, z: 0}
-  topPoint: {x: -36.5, y: 0, z: 14.8}
-  bottomPoint: {x: 14.8, y: 0, z: -36.5}
+  topPoint: {x: -36, y: 0, z: 14.92}
+  bottomPoint: {x: 14.92, y: 0, z: -36}
   offsetPoint: {x: -14.92, y: 0, z: 36}
   colliderTopPoint: {x: -1.5, y: 0, z: 0}
   colliderBottomPoint: {x: 0, y: 0, z: -1.5}

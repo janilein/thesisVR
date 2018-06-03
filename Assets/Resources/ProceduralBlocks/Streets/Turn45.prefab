@@ -180,7 +180,7 @@ MonoBehaviour:
   bottomPoint: {x: 7.75, y: 0, z: -38.965}
   offsetPoint: {x: -7.75, y: 0, z: 38.965}
   colliderTopPoint: {x: -1.5, y: 0, z: 1.5}
-  colliderBottomPoint: {x: -1.5, y: 0, z: 0}
+  colliderBottomPoint: {x: 0, y: 0, z: -1.5}
 --- !u!114 &114722343064054058
 MonoBehaviour:
   m_ObjectHideFlags: 1

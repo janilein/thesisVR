@@ -8,13 +8,15 @@ public class Turn45 : GenericStreet {
     public Vector3 topPoint = new Vector3(-22.05f, 0, 33f);
     public Vector3 bottomPoint = new Vector3(7.75f, 0, -38.965f);
     public Vector3 offsetPoint = new Vector3(-7.75f, 0f, 38.965f);
+	
+	private bool isRightTurn = false;
 
     public Vector3 colliderTopPoint, colliderBottomPoint;
 
     public Turn45()
     {
         colliderTopPoint = new Vector3(-1.5f, 0, 1.5f);
-        colliderBottomPoint = new Vector3(-1.5f, 0, 0);
+        colliderBottomPoint = new Vector3(0, 0, -1.5f);
     }
 
     public override void SetAllowedPoints(List<string> allowedDirections = null)
@@ -43,17 +45,30 @@ public class Turn45 : GenericStreet {
     {
         return offsetPoint;
     }
+	
+	public override Vector2 GetDirection(bool back){
+		if(back == false)
+			return direction;
+		
+		//Change direction to match the original direction
+		Vector2 newDirection = direction;
+		int sign = isRightTurn ? -1 : 1;
+		newDirection.x = newDirection.x + sign * 45;
+		
+		return newDirection;
+	}
 
     public override void SetRightTurn()
     {
-
+		isRightTurn = true;
+	
         //topPoint = new Vector3(22.19535f, 0, 32.8234f);
         topPoint = new Vector3(22.05f, 0, 33f);
         bottomPoint = new Vector3(-7.75f, 0, -38.965f);
 		offsetPoint = new Vector3(7.75f, 0f, 38.965f);
 
 		colliderTopPoint = new Vector3(1.5f, 0, 1.5f);
-		colliderBottomPoint = new Vector3(1.5f, 0, 0);
+		colliderBottomPoint = new Vector3(0, 0, -1.5f);
 
         //topPoint = new Vector3(22.05f, 0f, 33.16f);
         //bottomPoint = new Vector3(-7.78f, 0, -39f);

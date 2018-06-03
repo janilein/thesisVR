@@ -238,11 +238,14 @@ public class StreetGeneratorV2 : Generator {
                 currentDirection.x = (currentDirection.x + sign * 45) % 360;
                 break;
         }
-			
+		
+		previousStreetScript.SetDirection(currentDirection);
+		/*
 		foreach (ColliderScript collScript in previousStreetScript.transform.parent.GetComponentsInChildren<ColliderScript>())
         {
             collScript.SetDirection(currentDirection);
         }
+		*/
 
     }
 
@@ -397,10 +400,13 @@ public class StreetGeneratorV2 : Generator {
 
         }
 
+		previousStreetScript.SetDirection(currentDirection);
+		/*
         foreach (ColliderScript collScript in previousStreetScript.transform.parent.GetComponentsInChildren<ColliderScript>())
         {
            collScript.SetDirection(currentDirection);
         }
+		*/
     }
 
     private void UpdateAllowedPointsStraightStreet(GameObject street)

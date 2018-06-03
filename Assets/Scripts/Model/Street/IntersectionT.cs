@@ -20,6 +20,7 @@ public class IntersectionT : GenericStreet
         colliderLeftPoint = new Vector3(1.5f, 0, 0);
         colliderRightPoint = new Vector3(-1.5f, 0, 0);
 		offsetPoint = topPoint;
+		rotateBackCollider = false;
     }
 
     public override void SetAllowedPoints(List<string> allowedDirections = null) {
@@ -58,7 +59,7 @@ public class IntersectionT : GenericStreet
             centerOffset.Add("back", colliderRightPoint);
         } else if(backColliderRight && backColliderStraight)
         {
-            colliderAllowedPoints.Add("back", topPoint);
+            colliderAllowedPoints.Add("back", leftPoint);
             centerOffset.Add("back", colliderLeftPoint);
         }
     }

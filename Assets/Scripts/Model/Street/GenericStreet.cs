@@ -13,10 +13,12 @@ public class GenericStreet : MonoBehaviour
     public static int arrowID = 1;
 
     public Vector3 spawnStart;
+	protected Vector2 direction = Vector2.zero;	//Direction of the street
 	private Dictionary<string, string> connectedStreets = new Dictionary<string, string>();	//Dictionary that contains all other streets connected to this one along with the direction
 	//First string is name of the direction, second one is the other street
 	
 	private static bool quitting = false;
+	protected bool rotateBackCollider = true;	//Back collider should rotate, except for IntersectionT
 	
 	private List<GenericStreet> connectedGenericStreetScripts = new List<GenericStreet>();
 	
@@ -50,6 +52,7 @@ public class GenericStreet : MonoBehaviour
 		//if(connectedStreets.ContainsKey(direction)){
 		//	connectedStreets.Remove(direction);
 		//}
+		
 		connectedStreets[direction] = name;	//other is connected to this street at "direction" point
 		//Debug.LogError("Add to street " + gameObject.transform.parent.name + ": " + direction + " and street " + name);
 		
@@ -181,10 +184,11 @@ public class GenericStreet : MonoBehaviour
 
 			double angle = Mathf.Rad2Deg * Mathf.Atan((secondPoint.x  - firstPoint.x) / (  secondPoint.z -  firstPoint.z));
             //Debug.Log("##########colliderAllowedpoint:" + colliderAllowedPoint.Key + " en de rico is " + Mathf.Atan((secondPoint.x - firstPoint.x) / (secondPoint.z - firstPoint.z)));
-            if (colliderAllowedPoint.Key.Equals("back") && colliderAllowedPoints.Count != 3)
+            if (colliderAllowedPoint.Key.Equals("back") && rotateBackCollider)
             {
                 angle = 180;
             }
+			
 			GameObject spawnedArrow = GameObject.Instantiate (arrow);
 			spawnedArrow.transform.SetParent (newCollider.transform, false);
 			spawnedArrow.transform.localPosition = new Vector3 (centerOffsetPosition.x, 1f, centerOffsetPosition.z);
@@ -236,7 +240,7 @@ public class GenericStreet : MonoBehaviour
 					//if(connectedStreets.ContainsKey(name)){
 					//	connectedStreets.Remove(name);
 					//}
-					//Debug.LogError("Add to street " + gameObject.transform.parent.name + ": " + colliderTransform.name + " and " + name);
+					
 					connectedStreets[colliderTransform.name] = name;
 					//PrintConnectedStreets();
 					colliderScript.SetConnectedStreet(this);
@@ -313,6 +317,15 @@ public class GenericStreet : MonoBehaviour
     {
         centerPoint = newCenterPoint;
     }
+	
+	public void SetDirection(Vector2 dir)
+    {
+        direction = dir;
+    }
+	
+	public virtual Vector2 GetDirection(bool back){
+		return direction;
+	}
 	
 	private void OnDestroy(){	//When this street gets destroyed, the streets it is connected to should re-allow this direction 
 		//Since this will spawn stuff @ OnDestroy, which is also called when the application quits, we should check if the application is quitting when this gets called

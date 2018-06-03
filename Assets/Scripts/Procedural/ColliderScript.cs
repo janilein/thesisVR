@@ -16,6 +16,10 @@ public class ColliderScript : MonoBehaviour
         //Did we collide with a street?
         if (other.gameObject.layer == LayerMask.NameToLayer("CanTeleport"))
         {
+			//Just to make sure the "collision" didn't happen with its own street
+			if(other.gameObject.transform.parent == gameObject.transform.parent.parent)
+				return;
+			
             collidedWithStreet = true;
             collidedStreet = other.transform;
 			nameCollidedStreet = other.transform.parent.name;
@@ -38,11 +42,6 @@ public class ColliderScript : MonoBehaviour
     {
         collidedStreet.GetComponentInParent<GenericStreet>().CheckColliders(false);
     }
-
-    public void SetDirection(Vector2 dir)
-    {
-        direction = dir;
-    }
 	
 	public void SetConnectedStreet(GenericStreet street){
 		collidedStreet.GetComponent<GenericStreet>().AddConnectedStreetScript(street);
@@ -61,6 +60,14 @@ public class ColliderScript : MonoBehaviour
 		 * 			Left, Right, ... whatever exist, this script is attached at this point
 		 * 
 		 */
+		 
+		//Get direction from the street. Bool = backcollider yes or no
+		bool back = false;
+		if(gameObject.transform.name.ToLower().Contains("back")){
+			back = true;
+		}
+		Vector2 direction = gameObject.transform.parent.parent.GetComponentInChildren<GenericStreet>().GetDirection(back);
+		 
 		Orientation orient = OrientationEnumFunctions.GetOrientationFromString (dir);
         GeneratorManager.ChangeDirectionFromCollider(orient, direction);
 

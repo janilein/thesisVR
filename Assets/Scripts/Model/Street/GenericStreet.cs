@@ -193,6 +193,7 @@ public class GenericStreet : MonoBehaviour
 			spawnedArrow.transform.SetParent (newCollider.transform, false);
 			spawnedArrow.transform.localPosition = new Vector3 (centerOffsetPosition.x, 1f, centerOffsetPosition.z);
 			spawnedArrow.transform.Rotate (new Vector3 (0, 1, 0) * (float) angle);
+			//Debug.LogError("ArrowID: " + arrowID);
             spawnedArrow.transform.name = "arrowID:" + arrowID++;
 			//spawnedArrow.transform.localScale = new Vector3 (1, 1, 1);
         }
@@ -329,7 +330,8 @@ public class GenericStreet : MonoBehaviour
 	
 	private void OnDestroy(){	//When this street gets destroyed, the streets it is connected to should re-allow this direction 
 		//Since this will spawn stuff @ OnDestroy, which is also called when the application quits, we should check if the application is quitting when this gets called
-		if(quitting)
+		//Also, since the save manager will destroy lots of objects, we don't want it to happen when changing save games
+		if(quitting || SaveManager.loadingGame)
 			return;
 		
 		foreach (GenericStreet connectedGenericStreet in connectedGenericStreetScripts) {

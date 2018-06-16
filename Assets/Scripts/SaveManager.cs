@@ -123,7 +123,9 @@ public class SaveManager : MonoBehaviour
 
     public static void NewWorld()
     {
+		loadingGame = true;	//So that the street arrows don't respawn
         Instance.ResetGame();
+		loadingGame = false;
     }
 
     private void SaveToFile(string path) {

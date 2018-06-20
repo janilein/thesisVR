@@ -7,7 +7,7 @@ public class StreetGeneratorV2 : Generator {
 
     private Vector3 spawnPosition;
     public static GenericStreet previousStreetScript = null;
-	private bool spawnedStreet = false;
+	public static bool spawnedStreet = false;
     //private string newPointDirection = "";
 
     public static int streetID = 1;

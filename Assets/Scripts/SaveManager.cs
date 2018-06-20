@@ -363,6 +363,7 @@ public class SaveManager : MonoBehaviour
         StreetGeneratorV2.streetID = 1;
         StreetGeneratorV2.lotID = 1;
         StreetGeneratorV2.previousStreetScript = null;
+        StreetGeneratorV2.spawnedStreet = false;
         BuildingGenerator.lotID = 1;
         GeneratorManager.currentDirection = new Vector2(0, 0);
         GeneratorManager.pointDirection = Orientation.straight;
